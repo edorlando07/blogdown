@@ -17,10 +17,10 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
     url = "https://ed-orlando07.netlify.app/pdfs/CV_Orlando.pdf"
 [[menu.main]]
     name = "GitHub"
-    url = "https://github.com/rstudio/blogdown"
+    url = "https://github.com/edorlando07/blogdown"
 [[menu.main]]
-    name = "Twitter"
-    url = "https://google.com"
+    name = "LinkedIn"
+    url = "https://www.linkedin.com/in/edorlando07/"
 
 [params]
     description = "A website built through Hugo and blogdown."
