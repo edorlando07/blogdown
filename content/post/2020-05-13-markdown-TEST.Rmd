@@ -1,7 +1,7 @@
 ---
 title: "TEST_RMARKDOWN"
 author: "Ed Orlando"
-date: 2015-07-23T21:13:14-05:00
+date: 2020-05-13
 categories: ["R"]
 tags: ["R Markdown", "plot", "regression"]
 ---
