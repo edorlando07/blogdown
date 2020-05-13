@@ -1,8 +1,9 @@
 ---
 title: "TEST_RMARKDOWN"
 author: "Ed Orlando"
-date: "5/13/2020"
+date: 2015-07-23T21:13:14-05:00
 output: html_document
+tags: ["R Markdown", "plot", "regression"]
 ---
 
 ```{r setup, include=FALSE}
