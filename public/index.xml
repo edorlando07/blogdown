@@ -12,6 +12,17 @@
     
     
     <item>
+      <title>R Series: Loading Multiple Files &amp; Adding Folder and File Names</title>
+      <link>/2020/05/14/r-series-loading-multiple-files-adding-folder-and-file-names/</link>
+      <pubDate>Thu, 14 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/05/14/r-series-loading-multiple-files-adding-folder-and-file-names/</guid>
+      <description>ExampleLet’s say you have multiple files that you want to load into R and include the folder and file name in the final tibble. In this example, we have Spotify playlist data that was downloaded using Exportify. Each playlist was previously converted to .xlsx files and placed into the appropriate genre’s folder (see below).
+
+Each playlist folder includes multiple .xlsx playlist files. The example below shows the contents inside the Country genre folder.</description>
+    </item>
+    
+    <item>
       <title>Final R Markdown Test</title>
       <link>/2020/05/10/final-r-markdown-test/</link>
       <pubDate>Sun, 10 May 2020 00:00:00 +0000</pubDate>
