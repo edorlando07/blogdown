@@ -6,17 +6,17 @@
     <description>Recent content in Posts on A Hugo website</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 14 May 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 10 May 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>R Series: Loading Multiple Files &amp; Adding Folder and File Names</title>
-      <link>/2020/05/14/r-series-loading-multiple-files-adding-folder-and-file-names/</link>
-      <pubDate>Thu, 14 May 2020 00:00:00 +0000</pubDate>
+      <title>Final R Markdown Test</title>
+      <link>/2020/05/10/final-r-markdown-test/</link>
+      <pubDate>Sun, 10 May 2020 00:00:00 +0000</pubDate>
       
-      <guid>/2020/05/14/r-series-loading-multiple-files-adding-folder-and-file-names/</guid>
+      <guid>/2020/05/10/final-r-markdown-test/</guid>
       <description>R MarkdownThis is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
 When you click the Knit button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:</description>
     </item>

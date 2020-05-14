@@ -1,7 +1,7 @@
 ---
-title: "R Series: Loading Multiple Files & Adding Folder and File Names"
+title: "Final R Markdown Test"
 author: "Ed Orlando"
-date: 2020-05-14
+date: 2020-05-10
 categories: ["R"]
 tags: ["R Markdown", "plot", "regression"]
 ---
