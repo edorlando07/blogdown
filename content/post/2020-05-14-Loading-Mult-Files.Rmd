@@ -15,13 +15,21 @@ knitr::opts_chunk$set(collapse = TRUE)
 
 Let's say you have multiple files that you want to load into R and include the folder and file name in the final tibble.  In this example, we have Spotify playlist data that was downloaded using [Exportify](<https://rawgit.com/watsonbox/exportify/master/exportify.html>).  Each playlist was previously converted to .xlsx files and placed into the appropriate genre's folder (see below).
 
-![](png/2020_05_14_Files.png)
+```{r}
+list.dirs(path = "Data_Sources/2020_05_14_Loading_Mult_Files/Genres/", 
+          full.names = FALSE, 
+          recursive  = FALSE)
+```
 
 <br>
 
 Each playlist folder includes multiple .xlsx playlist files.  The example below shows the contents inside the Country genre folder.
 
-![](png/2020-05-14_Country_Files.png)
+```{r}
+list.files(path = "Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Country/", 
+          full.names = FALSE, 
+          recursive  = FALSE)
+```
 
 <br>
 
@@ -41,14 +49,12 @@ library(readxl)
 First, we can create a function that lists the .xlsx files for each genre folder. The function utilises the **base::list.files()** that will list each file under a particular folder.
 
 ```{r, echo=TRUE}
-
 list_files_in_folder <- function(genre) {
     
     list.files(path = str_c("Data_Sources/2020_05_14_Loading_Mult_Files/Genres/", genre),
                           pattern = "*.xlsx", 
-                          full.names = T) %>% 
+                          full.names = TRUE) %>% 
     tibble::enframe()
-    
 }
 ```
 
@@ -62,14 +68,14 @@ list_files_in_folder("Country")
 
 <br>
 
-Next, we will create a genre list that includes all three genres.  This step will allow us to map the **list_files_in_folder** function to multiple genre folders later on.
+Next, we will create a genre list that includes all three genres.  This step will allow us to map the **list_files_in_folder()** function to multiple genre folders later on.
 ```{r}
 genre_list <- c("Country", "Hip_Hop", "Rock")
 ```
 
 <br>
 
-This list is mapped into the function listed below.  The final result includes a tibble with all .csv files in all the folders we specified above.
+The **genre_list** is mapped into the function listed below.  The final result includes a tibble with all .xlsx files in all the folders we specified above.
 
 ```{r}
 playlist_tbl <- genre_list %>% 
@@ -90,7 +96,7 @@ playlist_list$value
 
 <br>
 
-The **playlist_list$value** can then be mapped into the function below which will read each .csv file and add the file name into a tibble.
+The **playlist_list$value** can then be mapped into the function below which will read each .xlsx file and add the file name into a tibble.
 
 ```{r results="hide", warning=FALSE, error=FALSE, message=FALSE}
 song_tbl <- playlist_list$value %>% 

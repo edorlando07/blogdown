@@ -11,10 +11,17 @@ tags: ["R Markdown", "plot", "regression"]
 <div id="example" class="section level3">
 <h3>Example</h3>
 <p>Let’s say you have multiple files that you want to load into R and include the folder and file name in the final tibble. In this example, we have Spotify playlist data that was downloaded using <a href="https://rawgit.com/watsonbox/exportify/master/exportify.html">Exportify</a>. Each playlist was previously converted to .xlsx files and placed into the appropriate genre’s folder (see below).</p>
-<p><img src="png/2020_05_14_Files.png" /></p>
+<pre class="r"><code>list.dirs(path = &quot;Data_Sources/2020_05_14_Loading_Mult_Files/Genres/&quot;, 
+          full.names = FALSE, 
+          recursive  = FALSE)
+## [1] &quot;Country&quot; &quot;Hip_Hop&quot; &quot;Rock&quot;</code></pre>
 <p><br></p>
 <p>Each playlist folder includes multiple .xlsx playlist files. The example below shows the contents inside the Country genre folder.</p>
-<p><img src="png/2020-05-14_Country_Files.png" /></p>
+<pre class="r"><code>list.files(path = &quot;Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Country/&quot;, 
+          full.names = FALSE, 
+          recursive  = FALSE)
+## [1] &quot;90s_country.xlsx&quot;            &quot;chillin_on_a_dirt_road.xlsx&quot;
+## [3] &quot;women_of_country.xlsx&quot;</code></pre>
 <p><br></p>
 </div>
 <div id="load-libraries" class="section level3">
@@ -27,14 +34,12 @@ library(readxl)</code></pre>
 <div id="view-files-in-each-folder" class="section level3">
 <h3>View Files in Each Folder</h3>
 <p>First, we can create a function that lists the .xlsx files for each genre folder. The function utilises the <strong>base::list.files()</strong> that will list each file under a particular folder.</p>
-<pre class="r"><code>
-list_files_in_folder &lt;- function(genre) {
+<pre class="r"><code>list_files_in_folder &lt;- function(genre) {
     
     list.files(path = str_c(&quot;Data_Sources/2020_05_14_Loading_Mult_Files/Genres/&quot;, genre),
                           pattern = &quot;*.xlsx&quot;, 
-                          full.names = T) %&gt;% 
+                          full.names = TRUE) %&gt;% 
     tibble::enframe()
-    
 }</code></pre>
 <p><br></p>
 <p>For example, if we want to view all the files in the Country genre folder, we can easily pass “Country” into the function.</p>
@@ -46,10 +51,10 @@ list_files_in_folder &lt;- function(genre) {
 ## 2     2 Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Country/chillin_on_a_~
 ## 3     3 Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Country/women_of_coun~</code></pre>
 <p><br></p>
-<p>Next, we will create a genre list that includes all three genres. This step will allow us to map the <strong>list_files_in_folder</strong> function to multiple genre folders later on.</p>
+<p>Next, we will create a genre list that includes all three genres. This step will allow us to map the <strong>list_files_in_folder()</strong> function to multiple genre folders later on.</p>
 <pre class="r"><code>genre_list &lt;- c(&quot;Country&quot;, &quot;Hip_Hop&quot;, &quot;Rock&quot;)</code></pre>
 <p><br></p>
-<p>This list is mapped into the function listed below. The final result includes a tibble with all .csv files in all the folders we specified above.</p>
+<p>The <strong>genre_list</strong> is mapped into the function listed below. The final result includes a tibble with all .xlsx files in all the folders we specified above.</p>
 <pre class="r"><code>playlist_tbl &lt;- genre_list %&gt;% 
   map_df(list_files_in_folder)</code></pre>
 <p><br></p>
@@ -69,7 +74,7 @@ playlist_list$value
 ## [8] &quot;Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Rock/pulp.xlsx&quot;                     
 ## [9] &quot;Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Rock/yacht_rock.xlsx&quot;</code></pre>
 <p><br></p>
-<p>The <strong>playlist_list$value</strong> can then be mapped into the function below which will read each .csv file and add the file name into a tibble.</p>
+<p>The <strong>playlist_list$value</strong> can then be mapped into the function below which will read each .xlsx file and add the file name into a tibble.</p>
 <pre class="r"><code>song_tbl &lt;- playlist_list$value %&gt;% 
     
     map_df(function(add_file_name)
