@@ -12,13 +12,13 @@
     
     
     <item>
-      <title>R Series: Loading Multiple Files With Folder and File Names</title>
-      <link>/2020/05/14/r-series-loading-multiple-files-with-folder-and-file-names/</link>
+      <title>Loading Multiple Files from Various Folders in R</title>
+      <link>/2020/05/14/loading-multiple-files-from-various-folders-in-r/</link>
       <pubDate>Thu, 14 May 2020 00:00:00 +0000</pubDate>
       
-      <guid>/2020/05/14/r-series-loading-multiple-files-with-folder-and-file-names/</guid>
-      <description>ExampleLet’s say you have multiple files that you want to load into R and include the folder and file name in the final tibble. In this example, we have Spotify playlist data that was downloaded using Exportify. Each playlist was previously converted to .xlsx files and placed into the appropriate genre’s folder (see below).
-list.dirs(path = &amp;quot;Data_Sources/2020_05_14_Loading_Mult_Files/Genres/&amp;quot;, full.names = FALSE, recursive = FALSE)## [1] &amp;quot;Country&amp;quot; &amp;quot;Hip_Hop&amp;quot; &amp;quot;Rock&amp;quot;</description>
+      <guid>/2020/05/14/loading-multiple-files-from-various-folders-in-r/</guid>
+      <description>Author: Ed OrlandoProblem StatementR Programmers sometimes have to load multiple files into R. It might also be the case where the files are located in various folders. This short tutorial walks you through some slick ways on how to programatically read the files in. As a bonus, the article will also show you how to add the folder and file names to the tibble.
+Load LibrariesThe tidyverse and readxl are the only libraries required for this tutorial.</description>
     </item>
     
     <item>

@@ -8,12 +8,22 @@
   </url>
   
   <url>
-    <loc>/tags/plot/</loc>
+    <loc>/tags/exportify/</loc>
+    <lastmod>2020-05-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2020/05/14/loading-multiple-files-from-various-folders-in-r/</loc>
     <lastmod>2020-05-14T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/post/</loc>
+    <lastmod>2020-05-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/purrr/</loc>
     <lastmod>2020-05-14T00:00:00+00:00</lastmod>
   </url>
   
@@ -28,17 +38,27 @@
   </url>
   
   <url>
-    <loc>/2020/05/14/r-series-loading-multiple-files-with-folder-and-file-names/</loc>
+    <loc>/tags/r-studio/</loc>
     <lastmod>2020-05-14T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/regression/</loc>
+    <loc>/tags/readxl/</loc>
+    <lastmod>2020-05-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/spotify/</loc>
     <lastmod>2020-05-14T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/tags/</loc>
+    <lastmod>2020-05-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/tidyverse/</loc>
     <lastmod>2020-05-14T00:00:00+00:00</lastmod>
   </url>
   
@@ -54,6 +74,16 @@
   
   <url>
     <loc>/2015/07/23/hello-r-markdown/</loc>
+    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/plot/</loc>
+    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/regression/</loc>
     <lastmod>2015-07-23T21:13:14-05:00</lastmod>
   </url>
   

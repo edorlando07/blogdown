@@ -6,8 +6,8 @@
 <meta name="generator" content="Hugo 0.69.2" />
 
 
-<title>R Series: Loading Multiple Files With Folder and File Names - A Hugo website</title>
-<meta property="og:title" content="R Series: Loading Multiple Files With Folder and File Names - A Hugo website">
+<title>Loading Multiple Files from Various Folders in R - A Hugo website</title>
+<meta property="og:title" content="Loading Multiple Files from Various Folders in R - A Hugo website">
 
 
   <link href='/favicon.ico' rel='icon' type='image/x-icon'/>
@@ -64,10 +64,10 @@
 
   <article class="article">
     
-    <span class="article-duration">4 min read</span>
+    <span class="article-duration">5 min read</span>
     
 
-    <h1 class="article-title">R Series: Loading Multiple Files With Folder and File Names</h1>
+    <h1 class="article-title">Loading Multiple Files from Various Folders in R</h1>
 
     
     <span class="article-date">2020-05-14</span>
@@ -82,15 +82,36 @@
 </div>
 <div id="problem-statement" class="section level3">
 <h3>Problem Statement</h3>
-<p>R Programmers sometimes have to load multiple files into R. It might also be the case where the files are located in various folders. This short tutorial walks you through some slick ways on how to programatically read the files in and show you how to add the folder and file names to the tibble.</p>
+<p>R Programmers sometimes have to load multiple files into R. It might also be the case where the files are located in various folders. This short tutorial walks you through some slick ways on how to programatically read the files in. As a bonus, the article will also show you how to add the folder and file names to the tibble.</p>
+</div>
+<div id="load-libraries" class="section level3">
+<h3>Load Libraries</h3>
+<p>The tidyverse and readxl are the only libraries required for this tutorial.</p>
+<pre class="r"><code>library(tidyverse)
+library(readxl)</code></pre>
+<p><br></p>
 </div>
 <div id="data-description" class="section level3">
 <h3>Data Description</h3>
-<p>In this example, we have Spotify playlist data that was downloaded using <a href="https://rawgit.com/watsonbox/exportify/master/exportify.html">Exportify</a>. Each Excel file contains information about the playlist including items as the artist name, the track name, the album name, and the duration.</p>
+<p>In this example, we have Spotify playlist data that was downloaded using <a href="https://rawgit.com/watsonbox/exportify/master/exportify.html">Exportify</a>. Each .xlsx file contains information about the playlist including the artist name, track name, album name, and song duration.</p>
+<p>A sample of one of the the data files is listed below.</p>
+<pre class="r"><code>data_sample %&gt;% glimpse()
+## Observations: 62
+## Variables: 9
+## $ `&lt;U+FEFF&gt;Spotify URI`         &lt;chr&gt; &quot;spotify:track:3hP7U1NmWEyeZRpLA1BhYj&quot;, &quot;spo...
+## $ `Track Name`          &lt;chr&gt; &quot;Prop Me Up Beside the Jukebox (If I Die)&quot;, &quot;...
+## $ `Artist Name`         &lt;chr&gt; &quot;Joe Diffie&quot;, &quot;Brooks &amp; Dunn&quot;, &quot;Deana Carter&quot;...
+## $ `Album Name`          &lt;chr&gt; &quot;The Essential Joe Diffie&quot;, &quot;#1s ... and then...
+## $ `Disc Number`         &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+## $ `Track Number`        &lt;dbl&gt; 7, 15, 1, 6, 2, 5, 2, 11, 9, 2, 1, 7, 2, 1, 2...
+## $ `Track Duration (ms)` &lt;dbl&gt; 226973, 198226, 290466, 247626, 223832, 21669...
+## $ `Added By`            &lt;chr&gt; &quot;spotify:user:&quot;, &quot;spotify:user:&quot;, &quot;spotify:us...
+## $ `Added At`            &lt;chr&gt; &quot;2020-03-29T22:18:52Z&quot;, &quot;2020-03-29T22:18:52Z...</code></pre>
+<p><br></p>
 </div>
 <div id="folder-structure" class="section level3">
 <h3>Folder Structure</h3>
-<p>Each playlist was previously converted to .xlsx files and placed into the appropriate genre’s folder within the project (see below).</p>
+<p>Each playlist was previously converted to .xlsx files and placed into the appropriate genre’s folder within the project. The three genre folders are Country, Hip-Hop, and Rock.</p>
 <pre class="r"><code>list.dirs(path = &quot;Data_Sources/2020_05_14_Loading_Mult_Files/Genres/&quot;, 
           full.names = FALSE, 
           recursive  = FALSE)
@@ -99,7 +120,7 @@
 </div>
 <div id="file-structure" class="section level3">
 <h3>File Structure</h3>
-<p>Each playlist folder included multiple playlist files. The example below shows the three files that existed inside the Country genre folder.</p>
+<p>Each playlist folder includes multiple playlist files. The example below shows the three playlists that exist inside the Country genre folder.</p>
 <pre class="r"><code>list.files(path = &quot;Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Country/&quot;, 
           full.names = FALSE, 
           recursive  = FALSE)
@@ -107,16 +128,9 @@
 ## [3] &quot;women_of_country.xlsx&quot;</code></pre>
 <p><br></p>
 </div>
-<div id="load-libraries" class="section level3">
-<h3>Load Libraries</h3>
-<p>The tidyverse and readxl libraries were the only ones required for this quick tutorial.</p>
-<pre class="r"><code>library(tidyverse)
-library(readxl)</code></pre>
-<p><br></p>
-</div>
 <div id="view-files-in-each-folder" class="section level3">
 <h3>View Files in Each Folder</h3>
-<p>First, a function was created that lists the .xlsx files in each genre folder. The function utilizes the <strong>base::list.files()</strong> function that lists each file under a particular folder.</p>
+<p>A function was created that lists the .xlsx files in each genre folder. The function utilizes the <strong>base::list.files()</strong> function that lists each file under a particular folder.</p>
 <pre class="r"><code>list_files_in_folder &lt;- function(genre) {
     
     list.files(path = str_c(&quot;Data_Sources/2020_05_14_Loading_Mult_Files/Genres/&quot;, genre),
@@ -134,10 +148,10 @@ library(readxl)</code></pre>
 ## 2     2 Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Country/chillin_on_a_~
 ## 3     3 Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Country/women_of_coun~</code></pre>
 <p><br></p>
-<p>Next, we will create a genre list that includes all three genres. This step will allow us to map the <strong>list_files_in_folder()</strong> function to multiple genre folders later on.</p>
+<p>Next, a genre list was created that includes all three genres. This step will allow us to map the <strong>list_files_in_folder()</strong> function to multiple genre folders later on.</p>
 <pre class="r"><code>genre_list &lt;- c(&quot;Country&quot;, &quot;Hip_Hop&quot;, &quot;Rock&quot;)</code></pre>
 <p><br></p>
-<p>The <strong>genre_list</strong> is mapped into the function listed below. The final result includes a tibble with all .xlsx files in all the folders we specified above.</p>
+<p>The <strong>genre_list</strong> was mapped into the function listed below. The final result is a tibble with all .xlsx files from the folders we specified above.</p>
 <pre class="r"><code>playlist_tbl &lt;- genre_list %&gt;% 
   map_df(list_files_in_folder)</code></pre>
 <pre class="r"><code>playlist_tbl %&gt;% glimpse()
@@ -146,7 +160,7 @@ library(readxl)</code></pre>
 ## $ name  &lt;int&gt; 1, 2, 3, 1, 2, 3, 1, 2, 3
 ## $ value &lt;chr&gt; &quot;Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Country/90...</code></pre>
 <p><br></p>
-<p>The value column is extracted from the <strong>playlist_tbl</strong> above and transformed into a list.</p>
+<p>The value column was extracted from the <strong>playlist_tbl</strong> above and transformed into a list.</p>
 <pre class="r"><code>playlist_list &lt;- playlist_tbl %&gt;%
   select(value) %&gt;%
   as.list()
@@ -187,7 +201,7 @@ playlist_list$value
 ## $ playlist_name         &lt;chr&gt; &quot;90s_country&quot;, &quot;90s_country&quot;, &quot;90s_country&quot;, ...
 ## $ filename              &lt;chr&gt; &quot;Data_Sources/2020_05_14_Loading_Mult_Files/G...</code></pre>
 <p><br></p>
-<p>Since the entire path and file name are all listed in the same column, the <strong>separate()</strong> function was used to split out the 3 folders, the Genre, and the Playlist into separate columns.</p>
+<p>Since the entire path and file name are all listed in the same column, the <strong>separate()</strong> function was used to split out Folders 1:3, Genre, and the Playlist into separate columns.</p>
 <pre class="r"><code>song_tidy_tbl &lt;- song_tbl %&gt;% 
             separate(col    = filename, 
                      into   = c(&quot;Folder_01&quot;, 

@@ -12,11 +12,20 @@
     
     
     <item>
-      <title>plot</title>
-      <link>/tags/plot/</link>
+      <title>Exportify</title>
+      <link>/tags/exportify/</link>
       <pubDate>Thu, 14 May 2020 00:00:00 +0000</pubDate>
       
-      <guid>/tags/plot/</guid>
+      <guid>/tags/exportify/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>purrr</title>
+      <link>/tags/purrr/</link>
+      <pubDate>Thu, 14 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/purrr/</guid>
       <description></description>
     </item>
     
@@ -30,9 +39,54 @@
     </item>
     
     <item>
+      <title>R Studio</title>
+      <link>/tags/r-studio/</link>
+      <pubDate>Thu, 14 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/r-studio/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>readxl</title>
+      <link>/tags/readxl/</link>
+      <pubDate>Thu, 14 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/readxl/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Spotify</title>
+      <link>/tags/spotify/</link>
+      <pubDate>Thu, 14 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/spotify/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tidyverse</title>
+      <link>/tags/tidyverse/</link>
+      <pubDate>Thu, 14 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/tidyverse/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>plot</title>
+      <link>/tags/plot/</link>
+      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
+      
+      <guid>/tags/plot/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>regression</title>
       <link>/tags/regression/</link>
-      <pubDate>Thu, 14 May 2020 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
       
       <guid>/tags/regression/</guid>
       <description></description>

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>R on A Hugo website</title>
-    <link>/categories/r/</link>
-    <description>Recent content in R on A Hugo website</description>
+    <title>purrr on A Hugo website</title>
+    <link>/tags/purrr/</link>
+    <description>Recent content in purrr on A Hugo website</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 14 May 2020 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/categories/r/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/purrr/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -19,17 +19,6 @@
       <guid>/2020/05/14/loading-multiple-files-from-various-folders-in-r/</guid>
       <description>Author: Ed OrlandoProblem StatementR Programmers sometimes have to load multiple files into R. It might also be the case where the files are located in various folders. This short tutorial walks you through some slick ways on how to programatically read the files in. As a bonus, the article will also show you how to add the folder and file names to the tibble.
 Load LibrariesThe tidyverse and readxl are the only libraries required for this tutorial.</description>
-    </item>
-    
-    <item>
-      <title>Hello R Markdown</title>
-      <link>/2015/07/23/hello-r-markdown/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
-      
-      <guid>/2015/07/23/hello-r-markdown/</guid>
-      <description>R MarkdownThis is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
-You can embed an R code chunk like this:
-summary(cars)## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 26.00 ## Median :15.0 Median : 36.00 ## Mean :15.4 Mean : 42.98 ## 3rd Qu.</description>
     </item>
     
   </channel>

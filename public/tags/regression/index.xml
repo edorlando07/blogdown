@@ -6,20 +6,10 @@
     <description>Recent content in regression on A Hugo website</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 14 May 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 23 Jul 2015 21:13:14 -0500</lastBuildDate>
     
 	<atom:link href="/tags/regression/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>R Series: Loading Multiple Files With Folder and File Names</title>
-      <link>/2020/05/14/r-series-loading-multiple-files-with-folder-and-file-names/</link>
-      <pubDate>Thu, 14 May 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/2020/05/14/r-series-loading-multiple-files-with-folder-and-file-names/</guid>
-      <description>ExampleLet’s say you have multiple files that you want to load into R and include the folder and file name in the final tibble. In this example, we have Spotify playlist data that was downloaded using Exportify. Each playlist was previously converted to .xlsx files and placed into the appropriate genre’s folder (see below).
-list.dirs(path = &amp;quot;Data_Sources/2020_05_14_Loading_Mult_Files/Genres/&amp;quot;, full.names = FALSE, recursive = FALSE)## [1] &amp;quot;Country&amp;quot; &amp;quot;Hip_Hop&amp;quot; &amp;quot;Rock&amp;quot;</description>
-    </item>
     
     <item>
       <title>Hello R Markdown</title>
