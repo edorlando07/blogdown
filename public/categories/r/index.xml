@@ -6,39 +6,30 @@
     <description>Recent content in R on A Hugo website</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 13 May 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 14 May 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/r/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>TEST_RMARKDOWN</title>
-      <link>/2020/05/13/test_rmarkdown/</link>
-      <pubDate>Wed, 13 May 2020 00:00:00 +0000</pubDate>
+      <title>R Series: Loading Multiple Files &amp; Adding Folder and File Names</title>
+      <link>/2020/05/14/r-series-loading-multiple-files-adding-folder-and-file-names/</link>
+      <pubDate>Thu, 14 May 2020 00:00:00 +0000</pubDate>
       
-      <guid>/2020/05/13/test_rmarkdown/</guid>
-      <description>R MarkdownThis is a TEST R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
-When you click the Knit button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:</description>
-    </item>
-    
-    <item>
-      <title>Final R Markdown Test</title>
-      <link>/2020/05/11/final-r-markdown-test/</link>
-      <pubDate>Mon, 11 May 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/2020/05/11/final-r-markdown-test/</guid>
+      <guid>/2020/05/14/r-series-loading-multiple-files-adding-folder-and-file-names/</guid>
       <description>R MarkdownThis is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
 When you click the Knit button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:</description>
     </item>
     
     <item>
-      <title>2020-05-14-change title</title>
-      <link>/2020/05/10/2020-05-14-change-title/</link>
-      <pubDate>Sun, 10 May 2020 00:00:00 +0000</pubDate>
+      <title>R Series: Loading Multiple Files &amp; Adding Folder and File Names</title>
+      <link>/2020/05/14/r-series-loading-multiple-files-adding-folder-and-file-names/</link>
+      <pubDate>Thu, 14 May 2020 00:00:00 +0000</pubDate>
       
-      <guid>/2020/05/10/2020-05-14-change-title/</guid>
-      <description>R MarkdownThis is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
-When you click the Knit button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:</description>
+      <guid>/2020/05/14/r-series-loading-multiple-files-adding-folder-and-file-names/</guid>
+      <description>ExampleLet’s say you have multiple files that you want to load into R and include the folder and file name in the final tibble. In this example, we have Spotify playlist data that was downloaded using Exportify. Each playlist was previously converted to .xlsx files and placed into the appropriate genre’s folder (see below).
+
+Each playlist folder includes multiple .xlsx playlist files. The example below shows the contents inside the Country genre folder.</description>
     </item>
     
     <item>

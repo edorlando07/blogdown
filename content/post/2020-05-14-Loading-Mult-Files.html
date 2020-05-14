@@ -1,0 +1,125 @@
+---
+title: "R Series: Loading Multiple Files & Adding Folder and File Names"
+author: "Ed Orlando"
+date: 2020-05-14
+categories: ["R"]
+tags: ["R Markdown", "plot", "regression"]
+---
+
+
+
+<div id="example" class="section level3">
+<h3>Example</h3>
+<p>Let’s say you have multiple files that you want to load into R and include the folder and file name in the final tibble. In this example, we have Spotify playlist data that was downloaded using <a href="https://rawgit.com/watsonbox/exportify/master/exportify.html">Exportify</a>. Each playlist was previously converted to .xlsx files and placed into the appropriate genre’s folder (see below).</p>
+<p><img src="png/2020_05_14_Files.png" /></p>
+<p><br></p>
+<p>Each playlist folder includes multiple .xlsx playlist files. The example below shows the contents inside the Country genre folder.</p>
+<p><img src="png/2020-05-14_Country_Files.png" /></p>
+<p><br></p>
+</div>
+<div id="load-libraries" class="section level3">
+<h3>Load Libraries</h3>
+<p>The tidyverse and readxl libraries are the only ones required for this quick tutorial.</p>
+<pre class="r"><code>library(tidyverse)
+library(readxl)</code></pre>
+<p><br></p>
+</div>
+<div id="view-files-in-each-folder" class="section level3">
+<h3>View Files in Each Folder</h3>
+<p>First, we can create a function that lists the .xlsx files for each genre folder. The function utilises the <strong>base::list.files()</strong> that will list each file under a particular folder.</p>
+<pre class="r"><code>
+list_files_in_folder &lt;- function(genre) {
+    
+    list.files(path = str_c(&quot;Data_Sources/2020_05_14_Loading_Mult_Files/Genres/&quot;, genre),
+                          pattern = &quot;*.xlsx&quot;, 
+                          full.names = T) %&gt;% 
+    tibble::enframe()
+    
+}</code></pre>
+<p><br></p>
+<p>For example, if we want to view all the files in the Country genre folder, we can easily pass “Country” into the function.</p>
+<pre class="r"><code>list_files_in_folder(&quot;Country&quot;)
+## # A tibble: 3 x 2
+##    name value                                                                   
+##   &lt;int&gt; &lt;chr&gt;                                                                   
+## 1     1 Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Country/90s_country.x~
+## 2     2 Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Country/chillin_on_a_~
+## 3     3 Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Country/women_of_coun~</code></pre>
+<p><br></p>
+<p>Next, we will create a genre list that includes all three genres. This step will allow us to map the <strong>list_files_in_folder</strong> function to multiple genre folders later on.</p>
+<pre class="r"><code>genre_list &lt;- c(&quot;Country&quot;, &quot;Hip_Hop&quot;, &quot;Rock&quot;)</code></pre>
+<p><br></p>
+<p>This list is mapped into the function listed below. The final result includes a tibble with all .csv files in all the folders we specified above.</p>
+<pre class="r"><code>playlist_tbl &lt;- genre_list %&gt;% 
+  map_df(list_files_in_folder)</code></pre>
+<p><br></p>
+<p>The value column is extracted from the tibble above and transformed into a list.</p>
+<pre class="r"><code>playlist_list &lt;- playlist_tbl %&gt;%
+  select(value) %&gt;%
+  as.list()
+
+playlist_list$value
+## [1] &quot;Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Country/90s_country.xlsx&quot;           
+## [2] &quot;Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Country/chillin_on_a_dirt_road.xlsx&quot;
+## [3] &quot;Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Country/women_of_country.xlsx&quot;      
+## [4] &quot;Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Hip_Hop/i_love_my_90s_hip-hop.xlsx&quot; 
+## [5] &quot;Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Hip_Hop/jazz_rap.xlsx&quot;              
+## [6] &quot;Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Hip_Hop/workout_twerkout.xlsx&quot;      
+## [7] &quot;Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Rock/new_core.xlsx&quot;                 
+## [8] &quot;Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Rock/pulp.xlsx&quot;                     
+## [9] &quot;Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Rock/yacht_rock.xlsx&quot;</code></pre>
+<p><br></p>
+<p>The <strong>playlist_list$value</strong> can then be mapped into the function below which will read each .csv file and add the file name into a tibble.</p>
+<pre class="r"><code>song_tbl &lt;- playlist_list$value %&gt;% 
+    
+    map_df(function(add_file_name)
+        
+        read_excel(add_file_name) %&gt;%
+            
+            mutate(playlist_name = gsub(&quot;.xlsx&quot;, 
+                                        &quot;&quot;, 
+                                        basename(add_file_name))) %&gt;%
+            mutate(filename = add_file_name)
+    )</code></pre>
+<p><br></p>
+<pre class="r"><code>song_tbl %&gt;% 
+  select(-`&lt;U+FEFF&gt;Spotify URI`) %&gt;%
+  glimpse()
+## Observations: 794
+## Variables: 10
+## $ `Track Name`          &lt;chr&gt; &quot;Prop Me Up Beside the Jukebox (If I Die)&quot;, &quot;...
+## $ `Artist Name`         &lt;chr&gt; &quot;Joe Diffie&quot;, &quot;Brooks &amp; Dunn&quot;, &quot;Deana Carter&quot;...
+## $ `Album Name`          &lt;chr&gt; &quot;The Essential Joe Diffie&quot;, &quot;#1s ... and then...
+## $ `Disc Number`         &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+## $ `Track Number`        &lt;dbl&gt; 7, 15, 1, 6, 2, 5, 2, 11, 9, 2, 1, 7, 2, 1, 2...
+## $ `Track Duration (ms)` &lt;dbl&gt; 226973, 198226, 290466, 247626, 223832, 21669...
+## $ `Added By`            &lt;chr&gt; &quot;spotify:user:&quot;, &quot;spotify:user:&quot;, &quot;spotify:us...
+## $ `Added At`            &lt;chr&gt; &quot;2020-03-29T22:18:52Z&quot;, &quot;2020-03-29T22:18:52Z...
+## $ playlist_name         &lt;chr&gt; &quot;90s_country&quot;, &quot;90s_country&quot;, &quot;90s_country&quot;, ...
+## $ filename              &lt;chr&gt; &quot;Data_Sources/2020_05_14_Loading_Mult_Files/G...</code></pre>
+<p><br></p>
+<pre class="r"><code>song_tidy_tbl &lt;- song_tbl %&gt;% 
+            separate(col    = filename, 
+                     into   = c(&quot;Folder_01&quot;, &quot;Folder_02&quot;, &quot;Folder_03&quot;, &quot;Genre&quot;, &quot;Playlist&quot;),
+                     sep    = &quot;/&quot;,
+                     remove = FALSE)</code></pre>
+<pre class="r"><code>song_tidy_tbl %&gt;% glimpse()
+## Observations: 794
+## Variables: 16
+## $ `&lt;U+FEFF&gt;Spotify URI`         &lt;chr&gt; &quot;spotify:track:3hP7U1NmWEyeZRpLA1BhYj&quot;, &quot;spo...
+## $ `Track Name`          &lt;chr&gt; &quot;Prop Me Up Beside the Jukebox (If I Die)&quot;, &quot;...
+## $ `Artist Name`         &lt;chr&gt; &quot;Joe Diffie&quot;, &quot;Brooks &amp; Dunn&quot;, &quot;Deana Carter&quot;...
+## $ `Album Name`          &lt;chr&gt; &quot;The Essential Joe Diffie&quot;, &quot;#1s ... and then...
+## $ `Disc Number`         &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+## $ `Track Number`        &lt;dbl&gt; 7, 15, 1, 6, 2, 5, 2, 11, 9, 2, 1, 7, 2, 1, 2...
+## $ `Track Duration (ms)` &lt;dbl&gt; 226973, 198226, 290466, 247626, 223832, 21669...
+## $ `Added By`            &lt;chr&gt; &quot;spotify:user:&quot;, &quot;spotify:user:&quot;, &quot;spotify:us...
+## $ `Added At`            &lt;chr&gt; &quot;2020-03-29T22:18:52Z&quot;, &quot;2020-03-29T22:18:52Z...
+## $ playlist_name         &lt;chr&gt; &quot;90s_country&quot;, &quot;90s_country&quot;, &quot;90s_country&quot;, ...
+## $ filename              &lt;chr&gt; &quot;Data_Sources/2020_05_14_Loading_Mult_Files/G...
+## $ Folder_01             &lt;chr&gt; &quot;Data_Sources&quot;, &quot;Data_Sources&quot;, &quot;Data_Sources...
+## $ Folder_02             &lt;chr&gt; &quot;2020_05_14_Loading_Mult_Files&quot;, &quot;2020_05_14_...
+## $ Folder_03             &lt;chr&gt; &quot;Genres&quot;, &quot;Genres&quot;, &quot;Genres&quot;, &quot;Genres&quot;, &quot;Genr...
+## $ Genre                 &lt;chr&gt; &quot;Country&quot;, &quot;Country&quot;, &quot;Country&quot;, &quot;Country&quot;, &quot;...
+## $ Playlist              &lt;chr&gt; &quot;90s_country.xlsx&quot;, &quot;90s_country.xlsx&quot;, &quot;90s_...</code></pre>
+</div>
