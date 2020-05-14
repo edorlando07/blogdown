@@ -76,11 +76,9 @@ playlist_list$value
 <p><br></p>
 <p>The <strong>playlist_list$value</strong> can then be mapped into the function below which will read each .xlsx file and add the file name into a tibble.</p>
 <pre class="r"><code>song_tbl &lt;- playlist_list$value %&gt;% 
-    
     map_df(function(add_file_name)
-        
+      
         read_excel(add_file_name) %&gt;%
-            
             mutate(playlist_name = gsub(&quot;.xlsx&quot;, 
                                         &quot;&quot;, 
                                         basename(add_file_name))) %&gt;%

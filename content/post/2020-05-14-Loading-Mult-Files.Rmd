@@ -100,11 +100,9 @@ The **playlist_list$value** can then be mapped into the function below which wil
 
 ```{r results="hide", warning=FALSE, error=FALSE, message=FALSE}
 song_tbl <- playlist_list$value %>% 
-    
     map_df(function(add_file_name)
-        
+      
         read_excel(add_file_name) %>%
-            
             mutate(playlist_name = gsub(".xlsx", 
                                         "", 
                                         basename(add_file_name))) %>%
