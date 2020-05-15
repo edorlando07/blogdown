@@ -18,7 +18,7 @@ knitr::opts_chunk$set(collapse = TRUE)
 This tutorial shows you how to load multiple files from multiple folders using R.  As a bonus, this article will also show you how to add the folder and file names to the tibble.
 
 ### Load Libraries
-Tidyverse and readxl are the only libraries required for this tutorial.
+**Tidyverse** and **readxl** are the only libraries required for this tutorial.
 
 ```{r, echo=TRUE, results="hide", warning=FALSE, error=FALSE, message=FALSE}
 library(tidyverse)
@@ -28,7 +28,7 @@ library(readxl)
 <br>
 
 ### Data Description
-In this example, Spotify playlist data was downloaded using [Exportify](<https://rawgit.com/watsonbox/exportify/master/exportify.html>).  Each .xlsx file contains information about the playlist including the artist name, track name, album name, and song duration.  
+In this example, **Spotify playlist data** was downloaded using **[Exportify](<https://rawgit.com/watsonbox/exportify/master/exportify.html>)**.  Each .xlsx file contains information about the playlist including the artist name, track name, album name, and song duration.  
 
 A sample of one of the the data files is listed below.
 
@@ -44,6 +44,8 @@ data_sample %>% glimpse()
 ### Folder Structure
 
 Each playlist was previously converted to .xlsx files and placed into the appropriate genre's folder within the R project.  The three genre folders include Country, Hip-Hop, and Rock.
+
+**Warning**: please make sure to update your paths below to represent your appropriate Project paths.
 
 ```{r}
 list.dirs(path = "Data_Sources/2020_05_14_Loading_Mult_Files/Genres/", 
@@ -71,7 +73,6 @@ A custom function called **list_files_in_folder()** was created that lists the .
 
 ```{r, echo=TRUE}
 list_files_in_folder <- function(genre) {
-    
     list.files(path = str_c("Data_Sources/2020_05_14_Loading_Mult_Files/Genres/", genre),
                           pattern = "*.xlsx", 
                           full.names = TRUE) %>% 
@@ -92,7 +93,7 @@ list_files_in_folder("Country")
 <br>
 
 ### Create Genre List
-Next, the **genre_list()** is generated to includes all three genres.  This list will allow us to map the **list_files_in_folder()** function to multiple genre folders later on.
+Next, the **genre_list()** is generated which includes all three (3) genres.  This list will allow us to map the **list_files_in_folder()** function to multiple genre folders later on.
 ```{r}
 genre_list <- c("Country", "Hip_Hop", "Rock")
 ```
@@ -100,14 +101,14 @@ genre_list <- c("Country", "Hip_Hop", "Rock")
 <br>
 
 ### View All Files In All Genre Folders
-Using the **purrr::map_df()** function, we can pass the **genre_list()** into the **list_files_in_folder()** function.  The final result produces a tibble with all .xlsx files from all three genre folders we specified above.
+Using the **purrr::map_df()** function, we can pass the **genre_list()** into the **list_files_in_folder()** function.  The final result produces a tibble which includes all the playlists from all of the genre folders.
 
 ```{r}
 playlist_tbl <- genre_list %>% 
   purrr::map_df(list_files_in_folder)
 ```
 
-The **playlist_tbl** below now includes 9 observations.  Each of the three genre folders includes 3 playlist .xlsx files.  
+As you can see below, the **playlist_tbl** now includes 9 observations.  Each of the three (3) genre folders includes three (3) playlist .xlsx files.  
 
 ```{r}
 playlist_tbl
@@ -116,7 +117,7 @@ playlist_tbl
 <br>
 
 ### Extract "value" Column From playlist_tbl
-The value column was extracted from the **playlist_tbl** above and converted into a list.  
+The value column was then selected from the **playlist_tbl** above and converted into a list.  
 
 ```{r}
 playlist_list <- playlist_tbl %>%
@@ -130,7 +131,7 @@ playlist_list$value
 
 ### Read All Excel Files and Add Folder and File Names
 
-The **playlist_list$value** was then mapped into the function below which loaded each .xlsx file.  The code below also added the file name and entire path into a column called **filename**.
+The **playlist_list$value** was mapped into the function below which loaded each .xlsx file.  The code below also added the filename and entire path into a column called **filename**.
 
 ```{r results="hide", warning=FALSE, error=FALSE, message=FALSE}
 song_tbl <- playlist_list$value %>% 
@@ -152,7 +153,7 @@ song_tbl %>%
 
 ### Separate "filename" Column
 
-Since the entire path and filename are all listed in the **filename** column, the **separate()** function was used to split out three (3) folders, Genre, and the Playlist into five (5) separate columns.
+The entire path and filename are all listed in the **filename** column in the **song_tbl**.  Using the **separate()** function we can split out three (3) folders, Genre, and the Playlist into five (5) separate columns.
 
 ```{r}
 song_tidy_tbl <- song_tbl %>% 
