@@ -3,7 +3,8 @@ title: "Loading Multiple Files from Various Folders in R"
 author: "Ed Orlando"
 date: 2020-05-14
 categories: ["R"]
-tags: ["R Markdown", "tidyverse", "purrr", "readxl", "Spotify", "Exportify", "R Studio"]
+tags: ["R Markdown", "tidyverse", "purrr", "readxl", "Spotify", "Exportify", "R Studio", "map", "function"]
+description: "This blog walks viewers through how to programatically load multiple files from multiple folders using R.  It also shows them how to add the file and folder names to the tibble using the map function."
 ---
 
 ```{r setup, include=FALSE}
@@ -14,7 +15,7 @@ knitr::opts_chunk$set(collapse = TRUE)
 
 ### Problem Statement
 
-R Programmers sometimes have to load multiple files into R. It might also be the case where the files are located in various folders.  This short tutorial walks you through some slick ways on how to programatically read the files in.  As a bonus, the article will also show you how to add the folder and file names to the tibble.
+This tutorial shows you how to load multiple files from multiple folders using R.  As a bonus, this article will also show you how to add the folder and file names to the tibble.
 
 ### Load Libraries
 Tidyverse and readxl are the only libraries required for this tutorial.
@@ -42,7 +43,7 @@ data_sample %>% glimpse()
 
 ### Folder Structure
 
-Each playlist was previously converted to .xlsx files and placed into the appropriate genre's folder within the R project.  The three genre folders are Country, Hip-Hop, and Rock.
+Each playlist was previously converted to .xlsx files and placed into the appropriate genre's folder within the R project.  The three genre folders include Country, Hip-Hop, and Rock.
 
 ```{r}
 list.dirs(path = "Data_Sources/2020_05_14_Loading_Mult_Files/Genres/", 
@@ -54,7 +55,7 @@ list.dirs(path = "Data_Sources/2020_05_14_Loading_Mult_Files/Genres/",
 
 ### File Structure
 
-Each genre folder includes multiple playlist files.  The example below shows the three playlists that exist inside the Country genre folder.
+Each genre folder includes multiple playlist files.  The example below shows the three (3) playlists that exist inside the **Country genre folder**.
 
 ```{r}
 list.files(path = "Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Country/", 
@@ -66,7 +67,7 @@ list.files(path = "Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Country/",
 
 ### Create Function to List All Files in Each Folder
 
-A function was created that can list the .xlsx files in each genre folder. The function utilizes the **base::list.files()** function that lists each file under a particular folder.
+A custom function called **list_files_in_folder()** was created that lists the .xlsx files in each genre folder. The function utilizes the **base::list.files()** function that lists each file under a particular folder.
 
 ```{r, echo=TRUE}
 list_files_in_folder <- function(genre) {
@@ -82,7 +83,7 @@ list_files_in_folder <- function(genre) {
 
 
 ### View Files in Country Genre Folder
-For example, if we want to view all the files in the Country genre folder, we can now easily pass "Country" into the function.
+For example, if we want to view all the files in the Country genre folder, we can now easily pass **"Country"** into the function.
 
 ```{r}
 list_files_in_folder("Country")
@@ -91,7 +92,7 @@ list_files_in_folder("Country")
 <br>
 
 ### Create Genre List
-Next, a genre list was created that includes all three genres.  This step will allow us to map the **list_files_in_folder()** function to multiple genre folders later on.
+Next, the **genre_list()** is generated to includes all three genres.  This list will allow us to map the **list_files_in_folder()** function to multiple genre folders later on.
 ```{r}
 genre_list <- c("Country", "Hip_Hop", "Rock")
 ```
@@ -99,20 +100,23 @@ genre_list <- c("Country", "Hip_Hop", "Rock")
 <br>
 
 ### View All Files In All Genre Folders
-The **genre_list** was mapped into the function listed below.  The final result is a tibble with all .xlsx files from the folders we specified above.
+Using the **purrr::map_df()** function, we can pass the **genre_list()** into the **list_files_in_folder()** function.  The final result produces a tibble with all .xlsx files from all three genre folders we specified above.
 
 ```{r}
 playlist_tbl <- genre_list %>% 
-  map_df(list_files_in_folder)
+  purrr::map_df(list_files_in_folder)
 ```
 
+The **playlist_tbl** below now includes 9 observations.  Each of the three genre folders includes 3 playlist .xlsx files.  
+
 ```{r}
-playlist_tbl %>% glimpse()
+playlist_tbl
 ```
 
 <br>
 
-The value column was extracted from the **playlist_tbl** above and transformed into a list.
+### Extract "value" Column From playlist_tbl
+The value column was extracted from the **playlist_tbl** above and converted into a list.  
 
 ```{r}
 playlist_list <- playlist_tbl %>%
@@ -126,7 +130,7 @@ playlist_list$value
 
 ### Read All Excel Files and Add Folder and File Names
 
-The **playlist_list$value** was then mapped into the function below which read each .xlsx file and added the file name and path into a tibble.
+The **playlist_list$value** was then mapped into the function below which loaded each .xlsx file.  The code below also added the file name and entire path into a column called **filename**.
 
 ```{r results="hide", warning=FALSE, error=FALSE, message=FALSE}
 song_tbl <- playlist_list$value %>% 
@@ -146,9 +150,9 @@ song_tbl %>%
 
 <br>
 
-### Separate Filename Column
+### Separate "filename" Column
 
-Since the entire path and file name are all listed in the **filename** column, the **separate()** function was used to split out three (3) folders, Genre, and the Playlist into five (5) separate columns.
+Since the entire path and filename are all listed in the **filename** column, the **separate()** function was used to split out three (3) folders, Genre, and the Playlist into five (5) separate columns.
 
 ```{r}
 song_tidy_tbl <- song_tbl %>% 
@@ -164,7 +168,7 @@ song_tidy_tbl <- song_tbl %>%
 
 <br>
 
-The final tibble is complete and tidy.
+The final tibble is complete and **tidy** with all **794 songs** listed.
 
 ```{r}
 song_tidy_tbl %>% glimpse()
