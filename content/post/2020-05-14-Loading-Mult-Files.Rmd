@@ -28,7 +28,9 @@ library(readxl)
 <br>
 
 ### Data Description
-In this example, **Spotify playlist data** was downloaded using **[Exportify](<https://rawgit.com/watsonbox/exportify/master/exportify.html>)**.  Each .xlsx file contains information about the playlist including the artist name, track name, album name, and song duration.  
+In this example, **Spotify playlist data** was downloaded using **[Exportify](<https://rawgit.com/watsonbox/exportify/master/exportify.html>)**.  Each .xlsx file contains information about the playlist including the artist name, track name, album name, and song duration.
+
+To access the .xlsx files and the folder structure, [click here](https://ed-orlando07.netlify.app/zip_files/Genres.zip).
 
 A sample of one of the the data files is listed below.
 
