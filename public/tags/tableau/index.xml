@@ -1,27 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>R Studio on A Hugo website</title>
-    <link>/tags/r-studio/</link>
-    <description>Recent content in R Studio on A Hugo website</description>
+    <title>Tableau on A Hugo website</title>
+    <link>/tags/tableau/</link>
+    <description>Recent content in Tableau on A Hugo website</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 14 May 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 10 May 2020 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/tags/r-studio/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/tableau/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>Loading Multiple Files from Various Folders in R</title>
-      <link>/2020/05/14/loading-multiple-files-from-various-folders-in-r/</link>
-      <pubDate>Thu, 14 May 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/2020/05/14/loading-multiple-files-from-various-folders-in-r/</guid>
-      <description>Author: Ed OrlandoProblem StatementThis tutorial shows you how to load multiple files from multiple folders using R. As a bonus, this article will also show you how to add the folder and file names to the tibble.
-Load LibrariesTidyverse and readxl are the only libraries required for this tutorial.
-library(tidyverse)library(readxl)
-Data DescriptionIn this example, Spotify playlist data was downloaded using Exportify.</description>
-    </item>
     
     <item>
       <title>My First Post: Gratitude and Motivation</title>

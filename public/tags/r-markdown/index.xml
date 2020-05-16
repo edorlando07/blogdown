@@ -24,14 +24,13 @@ library(tidyverse)library(readxl)
     </item>
     
     <item>
-      <title>Hello R Markdown</title>
-      <link>/2015/07/23/hello-r-markdown/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
+      <title>My First Post: Gratitude and Motivation</title>
+      <link>/2020/05/10/my-first-post-gratitude-and-motivation/</link>
+      <pubDate>Sun, 10 May 2020 00:00:00 +0000</pubDate>
       
-      <guid>/2015/07/23/hello-r-markdown/</guid>
-      <description>R MarkdownThis is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
-You can embed an R code chunk like this:
-summary(cars)## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 26.00 ## Median :15.0 Median : 36.00 ## Mean :15.4 Mean : 42.98 ## 3rd Qu.</description>
+      <guid>/2020/05/10/my-first-post-gratitude-and-motivation/</guid>
+      <description>First, I want to give a shout out to the individuals I grind it out every day with at White Lodging. The team leader Adam Hutsler and BI Manager Max Thomas are always coming up with creative ways to solve complex problems and create business value using Tableau and R.
+I was also inspired to create this data science blog based on the work performed by Matt Dancho. His online learning platform Business Science University (BSU) walks you through how professional data scientists set up, build, and deploy bleeding edge machine learning models using R.</description>
     </item>
     
   </channel>
