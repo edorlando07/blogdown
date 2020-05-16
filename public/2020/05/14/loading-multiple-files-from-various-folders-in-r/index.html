@@ -98,8 +98,7 @@ library(readxl)</code></pre>
 <p>In this example, <strong>Spotify playlist data</strong> was downloaded using <strong><a href="https://rawgit.com/watsonbox/exportify/master/exportify.html">Exportify</a></strong>. Each .xlsx file contains information about the playlist including the artist name, track name, album name, and song duration.</p>
 <p>To access the .xlsx files and the folder structure, <a href="https://ed-orlando07.netlify.app/zip_files/Genres.zip">click here</a>.</p>
 <p>A sample of one of the the data files is listed below.</p>
-<pre class="r"><code>data_sample %&gt;% glimpse()
-## Observations: 62
+<pre><code>## Observations: 62
 ## Variables: 9
 ## $ `&lt;U+FEFF&gt;Spotify URI`         &lt;chr&gt; &quot;spotify:track:3hP7U1NmWEyeZRpLA1BhYj&quot;, &quot;spo...
 ## $ `Track Name`          &lt;chr&gt; &quot;Prop Me Up Beside the Jukebox (If I Die)&quot;, &quot;...
@@ -114,8 +113,8 @@ library(readxl)</code></pre>
 </div>
 <div id="folder-structure" class="section level3">
 <h3>Folder Structure</h3>
-<p>Each playlist was previously converted to .xlsx files and placed into the appropriate genre’s folder within the R project. The three genre folders include Country, Hip-Hop, and Rock.</p>
-<p><strong>Warning</strong>: please make sure to update your paths below to represent your appropriate Project paths.</p>
+<p>Each playlist was previously converted to a .xlsx file and placed into the appropriate genre’s folder. The three (3) genre folders include Country, Hip-Hop, and Rock.</p>
+<p><strong>Warning</strong>: please make sure to update your paths below to represent your appropriate project paths.</p>
 <pre class="r"><code>list.dirs(path = &quot;Data_Sources/2020_05_14_Loading_Mult_Files/Genres/&quot;, 
           full.names = FALSE, 
           recursive  = FALSE)
@@ -124,7 +123,7 @@ library(readxl)</code></pre>
 </div>
 <div id="file-structure" class="section level3">
 <h3>File Structure</h3>
-<p>Each genre folder includes multiple playlist files. The example below shows the three (3) playlists that exist inside the <strong>Country genre folder</strong>.</p>
+<p>Each genre folder included multiple playlist files. The example below shows the three (3) playlists that exist inside the <strong>Country genre folder</strong>.</p>
 <pre class="r"><code>list.files(path = &quot;Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Country/&quot;, 
           full.names = FALSE, 
           recursive  = FALSE)
@@ -134,7 +133,7 @@ library(readxl)</code></pre>
 </div>
 <div id="create-function-to-list-all-files-in-each-folder" class="section level3">
 <h3>Create Function to List All Files in Each Folder</h3>
-<p>A custom function called <strong>list_files_in_folder()</strong> was created that lists the .xlsx files in each genre folder. The function utilizes the <strong>base::list.files()</strong> function that lists each file under a particular folder.</p>
+<p>A custom function called <strong>list_files_in_folder()</strong> was created that lists the .xlsx files in each genre folder. The custom function utilized <strong>base::list.files()</strong> that lists each file under a particular folder.</p>
 <pre class="r"><code>list_files_in_folder &lt;- function(genre) {
     list.files(path = str_c(&quot;Data_Sources/2020_05_14_Loading_Mult_Files/Genres/&quot;, genre),
                           pattern = &quot;*.xlsx&quot;, 
@@ -157,7 +156,7 @@ library(readxl)</code></pre>
 </div>
 <div id="create-genre-list" class="section level3">
 <h3>Create Genre List</h3>
-<p>Next, the <strong>genre_list()</strong> is generated which includes all three (3) genres. This list will allow us to map the <strong>list_files_in_folder()</strong> function to multiple genre folders later on.</p>
+<p>Next, the <strong>genre_list()</strong> was generated which included all three (3) genres. This list allows us to map the <strong>list_files_in_folder()</strong> function to multiple genre folders later on.</p>
 <pre class="r"><code>genre_list &lt;- c(&quot;Country&quot;, &quot;Hip_Hop&quot;, &quot;Rock&quot;)</code></pre>
 <p><br></p>
 </div>
@@ -203,7 +202,7 @@ playlist_list$value
 </div>
 <div id="read-all-excel-files-and-add-folder-and-file-names" class="section level3">
 <h3>Read All Excel Files and Add Folder and File Names</h3>
-<p>The <strong>playlist_list$value</strong> was mapped into the function below which loaded each .xlsx file. The code below also added the filename and entire path into a column called <strong>filename</strong>.</p>
+<p>The <strong>playlist_list$value</strong> was mapped into the function below which read and loaded each .xlsx file. The code below also added the filename and entire path into a <strong>new column</strong> called <strong>filename</strong>.</p>
 <pre class="r"><code>song_tbl &lt;- playlist_list$value %&gt;% 
     map_df(function(add_file_name)
         read_excel(add_file_name) %&gt;%
@@ -231,7 +230,7 @@ playlist_list$value
 </div>
 <div id="separate-filename-column" class="section level3">
 <h3>Separate “filename” Column</h3>
-<p>The entire path and filename are all listed in the <strong>filename</strong> column in the <strong>song_tbl</strong>. Using the <strong>separate()</strong> function we can split out three (3) folders, Genre, and the Playlist into five (5) separate columns.</p>
+<p>The entire path and filename were listed in the new <strong>filename</strong> column in the <strong>song_tbl</strong>. Using the <strong>separate()</strong> function we can split out three (3) folders, Genre, and the Playlist into five (5) separate columns.</p>
 <pre class="r"><code>song_tidy_tbl &lt;- song_tbl %&gt;% 
             separate(col    = filename, 
                      into   = c(&quot;Folder_01&quot;, 
