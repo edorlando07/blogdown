@@ -29,8 +29,8 @@ library(tidyverse)library(readxl)
       <pubDate>Sun, 10 May 2020 00:00:00 +0000</pubDate>
       
       <guid>/2020/05/10/my-first-post-gratitude-and-motivation/</guid>
-      <description>Author: Ed OrlandoFirst, I want to give a shout out to the individuals that I grind it out with every day at White Lodging. Our team leader Adam Hutsler and BI Manager Max Thomas are always coming up with creative ways to solve complex problems and create business value using Tableau and R.
-I was also inspired to create this data science blog based on the work performed by Matt Dancho.</description>
+      <description>Author: Ed OrlandoFirst, I want to give a shout out to the individuals that I grind it out every day with at White Lodging. The team leader Adam Hutsler and BI Manager Max Thomas are always coming up with creative ways to solve complex problems and create business value using Tableau and R.
+First, I want to give a shout out to the individuals that I grind it out with every day at White Lodging.</description>
     </item>
     
     <item>
