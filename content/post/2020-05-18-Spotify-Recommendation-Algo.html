@@ -1,7 +1,7 @@
 ---
-title: "Spotify Recommendation Model With R"
+title: "Building a Spotify Recommendation Model With R"
 author: "Ed Orlando"
-date: 2020-05-18
+date: 2020-05-20
 categories: ["R"]
 tags: ["R Markdown", "tidyverse", "plotly", "recommenderlab", "arules", "arulesViz"]
 description: "This blog walks viewers through how to create a playlist recommendation algorithm using recommenderlab and arules packages"
@@ -31,5 +31,11 @@ library(arulesViz)</code></pre>
 </div>
 <div id="load-data" class="section level3">
 <h3>Load Data</h3>
-<p>Data was previously downloaded and organized. You may view the data <a href="https://ed-orlando07.netlify.app/zip_files/Spotify_Playlist.zip">here</a></p>
+<p>The data was previously downloaded and organized. The data was orignally downloaded using <strong><a href="https://rawgit.com/watsonbox/exportify/master/exportify.html">Exportify</a></strong>.</p>
+<pre class="r"><code>playlist_tbl &lt;- read_csv2(&quot;Data_Sources/2020_05_20_Spotify_Playlist_Data/all_playlists.csv&quot;)</code></pre>
+</div>
+<div id="viewing-the-data" class="section level3">
+<h3>Viewing the Data</h3>
+<p>The data consists of ~100K songs and inlude You may view the data <a href="https://ed-orlando07.netlify.app/zip_files/Spotify_Playlist.zip">here</a></p>
+<p>playlist_tbl %&gt;% View()</p>
 </div>

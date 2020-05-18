@@ -12,18 +12,6 @@
     
     
     <item>
-      <title>Spotify Recommendation Model With R</title>
-      <link>/2020/05/18/spotify-recommendation-model-with-r/</link>
-      <pubDate>Mon, 18 May 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/2020/05/18/spotify-recommendation-model-with-r/</guid>
-      <description>Author: Ed OrlandoProblem StatementThis tutorial shows you how to create a Spotify Recommendation Algorithm using the recommenderlab() and arules() packages.
-Load LibrariesTo get started, first load the libbraries listed below.
-# Core &amp;amp; Vizlibrary(tidyverse)library(tidyquant)library(plotly)# Modelinglibrary(recommenderlab)library(arules)library(arulesViz)Load DataData was previously downloaded and organized. You may view the data here
-</description>
-    </item>
-    
-    <item>
       <title>Loading Multiple Files from Various Folders in R</title>
       <link>/2020/05/14/loading-multiple-files-from-various-folders-in-r/</link>
       <pubDate>Thu, 14 May 2020 00:00:00 +0000</pubDate>
