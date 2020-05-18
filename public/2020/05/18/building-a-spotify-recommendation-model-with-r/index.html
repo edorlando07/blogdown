@@ -166,16 +166,14 @@ g_00</code></pre>
 <div id="which-songs-are-the-most-frequent" class="section level3">
 <h3>Which Songs Are the Most Frequent?</h3>
 <p>We can also see which songs appear the most in multiple playlists.</p>
-<pre class="r"><code># song_frequency_tbl &lt;- playlist_tbl %&gt;%
-#     count(artist_name, track_name) %&gt;%
-#     arrange(desc(n)) %&gt;%
-#     rowid_to_column(var = &quot;rank&quot;) %&gt;%
-#     mutate(label_text = str_glue(&quot;Rank: {rank}
-#                                  Artist Name: {artist_name}
-#                                  Track Name: {track_name}
-#                                  Count: {n}&quot;))
-#     
-# song_frequency_tbl %&gt;% glimpse()
+<pre class="r"><code>song_frequency_tbl &lt;- playlist_tbl %&gt;%
+    count(artist_name, track_name) %&gt;%
+    arrange(desc(n)) %&gt;%
+    rowid_to_column(var = &quot;rank&quot;) %&gt;%
+    mutate(label_text = str_glue(&quot;Rank: {rank}
+                                 Artist Name: {artist_name}
+                                 Track Name: {track_name}
+                                 Count: {n}&quot;))
 
 # g_01 &lt;- song_frequency_tbl %&gt;%
 #     filter(artist_name != &quot;NA&quot;) %&gt;%
@@ -194,8 +192,7 @@ g_00</code></pre>
 #           axis.title.y = element_blank()) + 
 #     labs(title = &quot;Most Popular Songs&quot;)
 
-# g_01
-</code></pre>
+# g_01</code></pre>
 </div>
 
     </div>

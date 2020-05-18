@@ -89,16 +89,14 @@ g_00
 We can also see which songs appear the most in multiple playlists.
 
 ```{r, warning=FALSE, error=FALSE, message=FALSE}
-# song_frequency_tbl <- playlist_tbl %>%
-#     count(artist_name, track_name) %>%
-#     arrange(desc(n)) %>%
-#     rowid_to_column(var = "rank") %>%
-#     mutate(label_text = str_glue("Rank: {rank}
-#                                  Artist Name: {artist_name}
-#                                  Track Name: {track_name}
-#                                  Count: {n}"))
-#     
-# song_frequency_tbl %>% glimpse()
+song_frequency_tbl <- playlist_tbl %>%
+    count(artist_name, track_name) %>%
+    arrange(desc(n)) %>%
+    rowid_to_column(var = "rank") %>%
+    mutate(label_text = str_glue("Rank: {rank}
+                                 Artist Name: {artist_name}
+                                 Track Name: {track_name}
+                                 Count: {n}"))
 
 # g_01 <- song_frequency_tbl %>%
 #     filter(artist_name != "NA") %>%
