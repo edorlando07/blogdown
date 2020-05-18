@@ -10,7 +10,10 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
     post = "/:year/:month/:day/:title/"
 
 [[menu.main]]
-    name = "Articles"
+    name = "Home"
+    url = "https://ed-orlando07-home.netlify.app/"
+[[menu.main]]
+    name = "Blog"
     url = "/"
 [[menu.main]]
     name = "CV"
