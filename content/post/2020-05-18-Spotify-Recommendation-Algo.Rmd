@@ -13,9 +13,13 @@ knitr::opts_chunk$set(collapse = TRUE)
 
 ### Author: Ed Orlando
 
+<br>
+
 ### Problem Statement
 
 This tutorial shows you how to create a Spotify Recommendation Algorithm using the **recommenderlab()** and **arules()** packages. 
+
+<br>
 
 ### Load Libraries
 To get started, first load the libbraries listed below.
@@ -32,6 +36,8 @@ library(arules)
 library(arulesViz)
 ```
 
+<br>
+
 ### Load Data
 The data was previously downloaded using **[Exportify](<https://rawgit.com/watsonbox/exportify/master/exportify.html>)**.  There were 27 various genres included and each genre has 10-60 various playlists included.  We will analyze more of this detail later, but first, let's load the data. 
 
@@ -40,15 +46,19 @@ The data was previously downloaded using **[Exportify](<https://rawgit.com/watso
 playlist_tbl <- read_csv2("Data_Sources/2020_05_20_Spotify_Playlist_Data/all_playlists.csv")
 ```
 
+<br>
+
 ### Viewing the Data
 
-The data consists of **~103K songs** and has **18 variables**. You may view the .csv file **[here](https://ed-orlando07.netlify.app/zip_files/Spotify_Playlist.zip)**.  The columns included in the data set are listed below.  
+The data consists of **~103K songs** and **18 variables**. You may view the .csv file **[here](https://ed-orlando07.netlify.app/zip_files/Spotify_Playlist.zip)**.  The features included in the data set are listed below.  
 
 Additional columns, including the genre, playlist, artist/track name concatenation were all previously engineered.  For more information related to engineering these columns, please visit my previous post **[here](<https://ed-orlando07.netlify.app/2020/05/14/loading-multiple-files-from-various-folders-in-r/>)**.  
 
 ```{r}
 playlist_tbl %>% glimpse()
 ```
+
+<br>
 
 ### Which Genres Have the Most Playlists?
 
@@ -66,7 +76,7 @@ g_00 <- genre_frequency_tbl %>%
                            fill = n)) +
     geom_bar(stat = "identity",
              show.legend = FALSE) +
-    scale_fill_gradient2(low="#FFFFFF", mid="#A9A9A9", high="#000000") +
+    scale_fill_gradient2(low="#000000", mid="#000000", high="#000000") +
     coord_flip() +
     theme_tq() +
     scale_color_tq() +
@@ -90,32 +100,32 @@ We can also see which songs appear the most in multiple playlists.
 
 ```{r, warning=FALSE, error=FALSE, message=FALSE}
 song_frequency_tbl <- playlist_tbl %>%
-    count(artist_name, track_name) %>%
+    count(artist_name, track_name, artist_track_name) %>%
     arrange(desc(n)) %>%
     rowid_to_column(var = "rank") %>%
-    mutate(label_text = str_glue("Rank: {rank}
-                                 Artist Name: {artist_name}
-                                 Track Name: {track_name}
-                                 Count: {n}"))
+    filter(rank <= 10)
 
-# g_01 <- song_frequency_tbl %>%
-#     filter(artist_name != "NA") %>%
-#     slice(1:30) %>%
-#     ggplot(aes(rank, n)) +
-#     geom_point(aes(size = n, color = popular_song, text = label_text), alpha = 0.2) +
-#     theme_tq() +
-#     scale_color_tq() +
-#     theme(legend.direction = "vertical", 
-#           legend.position  = "right",
-#           panel.grid.major.x = element_blank(),
-#           panel.grid.major.y = element_blank(),
-#           axis.text.x  = element_text(color="#000000"),
-#           axis.text.y  = element_text(color="#000000"),
-#           axis.title.x = element_blank(),
-#           axis.title.y = element_blank()) + 
-#     labs(title = "Most Popular Songs")
+g_01 <- song_frequency_tbl %>%
+    ggplot(aes(x = reorder(artist_track_name, n), 
+                           y    = n, 
+                           fill = n)) +
+    geom_bar(stat = "identity",
+             show.legend = FALSE) +
+    scale_fill_gradient2(low="#000000", mid="#000000", high="#000000") +
+    coord_flip() +
+    theme_tq() +
+    scale_color_tq() +
+    theme(legend.direction = "vertical", 
+          legend.position  = "right",
+          panel.grid.major.x = element_blank(),
+          panel.grid.major.y = element_blank(),
+          axis.text.x  = element_text(color="#000000"),
+          axis.text.y  = element_text(color="#000000"),
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank()) + 
+    labs(title = "Top 10 Songs")
 
-# g_01
+g_01
 
 ```
 

@@ -83,10 +83,12 @@
 
 <div id="author-ed-orlando" class="section level3">
 <h3>Author: Ed Orlando</h3>
+<p><br></p>
 </div>
 <div id="problem-statement" class="section level3">
 <h3>Problem Statement</h3>
 <p>This tutorial shows you how to create a Spotify Recommendation Algorithm using the <strong>recommenderlab()</strong> and <strong>arules()</strong> packages.</p>
+<p><br></p>
 </div>
 <div id="load-libraries" class="section level3">
 <h3>Load Libraries</h3>
@@ -100,15 +102,17 @@ library(plotly)
 library(recommenderlab)
 library(arules)
 library(arulesViz)</code></pre>
+<p><br></p>
 </div>
 <div id="load-data" class="section level3">
 <h3>Load Data</h3>
 <p>The data was previously downloaded using <strong><a href="https://rawgit.com/watsonbox/exportify/master/exportify.html">Exportify</a></strong>. There were 27 various genres included and each genre has 10-60 various playlists included. We will analyze more of this detail later, but first, let’s load the data.</p>
 <pre class="r"><code>playlist_tbl &lt;- read_csv2(&quot;Data_Sources/2020_05_20_Spotify_Playlist_Data/all_playlists.csv&quot;)</code></pre>
+<p><br></p>
 </div>
 <div id="viewing-the-data" class="section level3">
 <h3>Viewing the Data</h3>
-<p>The data consists of <strong>~103K songs</strong> and has <strong>18 variables</strong>. You may view the .csv file <strong><a href="https://ed-orlando07.netlify.app/zip_files/Spotify_Playlist.zip">here</a></strong>. The columns included in the data set are listed below.</p>
+<p>The data consists of <strong>~103K songs</strong> and <strong>18 variables</strong>. You may view the .csv file <strong><a href="https://ed-orlando07.netlify.app/zip_files/Spotify_Playlist.zip">here</a></strong>. The features included in the data set are listed below.</p>
 <p>Additional columns, including the genre, playlist, artist/track name concatenation were all previously engineered. For more information related to engineering these columns, please visit my previous post <strong><a href="https://ed-orlando07.netlify.app/2020/05/14/loading-multiple-files-from-various-folders-in-r/">here</a></strong>.</p>
 <pre class="r"><code>playlist_tbl %&gt;% glimpse()
 ## Observations: 103,517
@@ -131,6 +135,7 @@ library(arulesViz)</code></pre>
 ## $ playlist              &lt;chr&gt; &quot;african_heat.csv&quot;, &quot;african_heat.csv&quot;, &quot;afri...
 ## $ artist_track_name     &lt;chr&gt; &quot;E Kelly, Joeboy ||| Oreke&quot;, &quot;Khalid, Disclos...
 ## $ source_playlist_id    &lt;chr&gt; &quot;Afro_african_heat&quot;, &quot;Afro_african_heat&quot;, &quot;Af...</code></pre>
+<p><br></p>
 </div>
 <div id="which-genres-have-the-most-playlists" class="section level3">
 <h3>Which Genres Have the Most Playlists?</h3>
@@ -146,7 +151,7 @@ g_00 &lt;- genre_frequency_tbl %&gt;%
                            fill = n)) +
     geom_bar(stat = &quot;identity&quot;,
              show.legend = FALSE) +
-    scale_fill_gradient2(low=&quot;#FFFFFF&quot;, mid=&quot;#A9A9A9&quot;, high=&quot;#000000&quot;) +
+    scale_fill_gradient2(low=&quot;#000000&quot;, mid=&quot;#000000&quot;, high=&quot;#000000&quot;) +
     coord_flip() +
     theme_tq() +
     scale_color_tq() +
@@ -167,32 +172,33 @@ g_00</code></pre>
 <h3>Which Songs Are the Most Frequent?</h3>
 <p>We can also see which songs appear the most in multiple playlists.</p>
 <pre class="r"><code>song_frequency_tbl &lt;- playlist_tbl %&gt;%
-    count(artist_name, track_name) %&gt;%
+    count(artist_name, track_name, artist_track_name) %&gt;%
     arrange(desc(n)) %&gt;%
     rowid_to_column(var = &quot;rank&quot;) %&gt;%
-    mutate(label_text = str_glue(&quot;Rank: {rank}
-                                 Artist Name: {artist_name}
-                                 Track Name: {track_name}
-                                 Count: {n}&quot;))
+    filter(rank &lt;= 10)
 
-# g_01 &lt;- song_frequency_tbl %&gt;%
-#     filter(artist_name != &quot;NA&quot;) %&gt;%
-#     slice(1:30) %&gt;%
-#     ggplot(aes(rank, n)) +
-#     geom_point(aes(size = n, color = popular_song, text = label_text), alpha = 0.2) +
-#     theme_tq() +
-#     scale_color_tq() +
-#     theme(legend.direction = &quot;vertical&quot;, 
-#           legend.position  = &quot;right&quot;,
-#           panel.grid.major.x = element_blank(),
-#           panel.grid.major.y = element_blank(),
-#           axis.text.x  = element_text(color=&quot;#000000&quot;),
-#           axis.text.y  = element_text(color=&quot;#000000&quot;),
-#           axis.title.x = element_blank(),
-#           axis.title.y = element_blank()) + 
-#     labs(title = &quot;Most Popular Songs&quot;)
+g_01 &lt;- song_frequency_tbl %&gt;%
+    ggplot(aes(x = reorder(artist_track_name, n), 
+                           y    = n, 
+                           fill = n)) +
+    geom_bar(stat = &quot;identity&quot;,
+             show.legend = FALSE) +
+    scale_fill_gradient2(low=&quot;#000000&quot;, mid=&quot;#000000&quot;, high=&quot;#000000&quot;) +
+    coord_flip() +
+    theme_tq() +
+    scale_color_tq() +
+    theme(legend.direction = &quot;vertical&quot;, 
+          legend.position  = &quot;right&quot;,
+          panel.grid.major.x = element_blank(),
+          panel.grid.major.y = element_blank(),
+          axis.text.x  = element_text(color=&quot;#000000&quot;),
+          axis.text.y  = element_text(color=&quot;#000000&quot;),
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank()) + 
+    labs(title = &quot;Top 10 Songs&quot;)
 
-# g_01</code></pre>
+g_01</code></pre>
+<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 </div>
 
     </div>
