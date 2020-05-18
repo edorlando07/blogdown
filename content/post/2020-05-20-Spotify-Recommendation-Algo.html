@@ -1,0 +1,35 @@
+---
+title: "Spotify Recommendation Model With R"
+author: "Ed Orlando"
+date: 2020-05-20
+categories: ["R"]
+tags: ["R Markdown", "tidyverse", "plotly", "recommenderlab", "arules", "arulesViz"]
+description: "This blog walks viewers through how to create a playlist recommendation algorithm using recommenderlab and arules packages"
+---
+
+
+
+<div id="author-ed-orlando" class="section level3">
+<h3>Author: Ed Orlando</h3>
+</div>
+<div id="problem-statement" class="section level3">
+<h3>Problem Statement</h3>
+<p>This tutorial shows you how to create a Spotify Recommendation Algorithm using the <strong>recommenderlab()</strong> and <strong>arules()</strong> packages.</p>
+</div>
+<div id="load-libraries" class="section level3">
+<h3>Load Libraries</h3>
+<p>To get started, first load the libbraries listed below.</p>
+<pre class="r"><code># Core &amp; Viz
+library(tidyverse)
+library(tidyquant)
+library(plotly)
+
+# Modeling
+library(recommenderlab)
+library(arules)
+library(arulesViz)</code></pre>
+</div>
+<div id="load-data" class="section level3">
+<h3>Load Data</h3>
+<p>Data was previously downloaded and organized. You may view the data <a href="https://ed-orlando07.netlify.app/zip_files/Spotify_Playlist.zip">here</a></p>
+</div>
