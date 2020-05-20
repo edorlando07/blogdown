@@ -5,6 +5,9 @@ date: 2020-05-18
 categories: ["R"]
 tags: ["R Markdown", "tidyverse", "plotly", "recommenderlab", "arules", "arulesViz"]
 description: "This blog walks viewers through how to create a playlist recommendation algorithm using recommenderlab and arules packages"
+
+params:
+    interactive: TRUE
 ---
 
 
@@ -29,7 +32,7 @@ library(plotly)
 # Modeling
 library(recommenderlab)
 library(arules)
-library(arulesViz)</code></pre>
+#library(arulesViz)</code></pre>
 <p><br></p>
 </div>
 <div id="load-data" class="section level3">
@@ -94,7 +97,7 @@ g_00 &lt;- genre_frequency_tbl %&gt;%
     labs(title = &quot;Genre Song Frequency&quot;)
 
 g_00</code></pre>
-<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-4-1.png" width="100%" height="600px" /></p>
 </div>
 <div id="which-songs-are-the-most-frequent" class="section level3">
 <h3>Which Songs Are the Most Frequent?</h3>
@@ -102,10 +105,10 @@ g_00</code></pre>
 <pre class="r"><code>song_frequency_tbl &lt;- playlist_tbl %&gt;%
     count(artist_name, track_name, artist_track_name) %&gt;%
     arrange(desc(n)) %&gt;%
-    rowid_to_column(var = &quot;rank&quot;) %&gt;%
-    filter(rank &lt;= 10)
+    rowid_to_column(var = &quot;rank&quot;)
 
 g_01 &lt;- song_frequency_tbl %&gt;%
+    filter(rank &lt;= 10) %&gt;% 
     ggplot(aes(x = reorder(artist_track_name, n), 
                            y    = n, 
                            fill = n)) +
@@ -123,8 +126,100 @@ g_01 &lt;- song_frequency_tbl %&gt;%
           axis.text.y  = element_text(color=&quot;#000000&quot;),
           axis.title.x = element_blank(),
           axis.title.y = element_blank()) + 
-    labs(title = &quot;Top 10 Songs&quot;)
+    labs(title = &quot;Top 10 Artist/Track Names&quot;)
 
 g_01</code></pre>
-<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-5-1.png" width="100%" /></p>
+</div>
+<div id="condense-the-number-of-songs-in-tibble" class="section level3">
+<h3>Condense the Number of Songs in Tibble</h3>
+<p>In order for the Recommendation algorithm to run more efficiently, we can reduce the number of songs that do not appear at least 3 times.</p>
+<pre class="r"><code>playlist_condensed_tbl &lt;- playlist_tbl %&gt;%
+    left_join(song_frequency_tbl) %&gt;%
+    filter(n &gt;= 3) %&gt;%
+    select(source_playlist_id, artist_track_name) %&gt;%
+    distinct() %&gt;%
+    mutate(value = 1) %&gt;%
+    spread(artist_track_name, value, fill = 0)
+## Joining, by = c(&quot;track_name&quot;, &quot;artist_name&quot;, &quot;artist_track_name&quot;)
+
+playlist_song_rlab &lt;- playlist_condensed_tbl %&gt;%
+    select(-source_playlist_id) %&gt;%
+    as.matrix() %&gt;%
+    as(&quot;binaryRatingMatrix&quot;)
+    </code></pre>
+<pre class="r"><code># eval_recipe &lt;- playlist_song_rlab %&gt;%
+#     evaluationScheme(method = &quot;cross-validation&quot;, k = 5, given = -1)
+# 
+# eval_recipe</code></pre>
+<pre class="r"><code># algorithms_list &lt;- list(
+#     &quot;association rules1&quot;  = list(name  = &quot;AR&quot;,
+#                                    param = list(supp = 0.003, conf = 0.70)),
+#     &quot;association rules2&quot;  = list(name  = &quot;AR&quot;,
+#                                    param = list(supp = 0.003, conf = 0.75)),
+#     &quot;association rules3&quot;  = list(name  = &quot;AR&quot;,
+#                                   param = list(supp = 0.004, conf = 0.70)),
+#     &quot;association rules4&quot;  = list(name  = &quot;AR&quot;,
+#                                   param = list(supp = 0.004, conf = 0.75))
+#  )</code></pre>
+<pre class="r"><code># !!! WARNING - This section is commented out since it is a long-running script !!!
+
+# results_rlab_arules &lt;- eval_recipe %&gt;%
+#     recommenderlab::evaluate(
+#          method    = algorithms_list,
+#          type      = &quot;topNList&quot;,
+#          n         = 1:10)</code></pre>
+<pre class="r"><code>
+# saveRDS(results_rlab_arules, file = &quot;Models/results_arules.rds&quot;)
+
+results_rlab_arules &lt;- read_rds(&quot;Models/results_arules.rds&quot;)
+
+# plot(results_rlab_arules, annotate = TRUE)
+
+arules01_tbl &lt;- results_rlab_arules$`association rules1`@results[[1]]@cm %&gt;% 
+    as_tibble() %&gt;% 
+    mutate(arules_model = &quot;arules_model_01&quot;)
+    
+arules02_tbl &lt;- results_rlab_arules$`association rules2`@results[[1]]@cm %&gt;%
+    as_tibble() %&gt;% 
+    mutate(arules_model = &quot;arules_model_02&quot;)
+    
+arules03_tbl &lt;- results_rlab_arules$`association rules3`@results[[1]]@cm %&gt;%
+    as_tibble() %&gt;% 
+    mutate(arules_model = &quot;arules_model_03&quot;)
+    
+arules04_tbl &lt;- results_rlab_arules$`association rules4`@results[[1]]@cm %&gt;%
+    as_tibble() %&gt;% 
+    mutate(arules_model = &quot;arules_model_04&quot;)
+
+arules_combined_tbl &lt;- rbind(arules01_tbl, arules02_tbl, arules03_tbl, arules04_tbl)
+
+arules_combined_tbl %&gt;% glimpse()
+## Observations: 40
+## Variables: 9
+## $ TP           &lt;dbl&gt; 0.008333333, 0.012500000, 0.016666667, 0.016666667, 0....
+## $ FP           &lt;dbl&gt; 0.5708333, 1.1125000, 1.6166667, 2.1041667, 2.5666667,...
+## $ FN           &lt;dbl&gt; 0.9916667, 0.9875000, 0.9833333, 0.9833333, 0.9833333,...
+## $ TN           &lt;dbl&gt; 7990.429, 7989.887, 7989.383, 7988.896, 7988.433, 7988...
+## $ precision    &lt;dbl&gt; 0.014388489, 0.010791367, 0.009592326, 0.007194245, 0....
+## $ recall       &lt;dbl&gt; 0.008333333, 0.012500000, 0.016666667, 0.016666667, 0....
+## $ TPR          &lt;dbl&gt; 0.008333333, 0.012500000, 0.016666667, 0.016666667, 0....
+## $ FPR          &lt;dbl&gt; 7.143453e-05, 1.392191e-04, 2.023109e-04, 2.633171e-04...
+## $ arules_model &lt;chr&gt; &quot;arules_model_01&quot;, &quot;arules_model_01&quot;, &quot;arules_model_01...</code></pre>
+<pre class="r"><code>arules_combined_tbl %&gt;% 
+    ggplot(aes(x=FPR, y=TPR, group=arules_model, color=arules_model)) +
+    geom_line(size = 1) +
+    theme_minimal() +
+    
+    scale_colour_manual(values = c(&quot;#000000&quot;, &quot;#808080&quot;, &quot;#F08080&quot;, &quot;#DC143C&quot;)) +
+    
+    #scale_color_tq() +
+    theme(legend.direction = &quot;vertical&quot;, 
+          legend.position  = &quot;right&quot;,
+          panel.grid.major.x = element_blank(),
+          panel.grid.major.y = element_blank(),
+          axis.text.x  = element_text(color=&quot;#000000&quot;),
+          axis.text.y  = element_text(color=&quot;#000000&quot;)) +
+    labs(title = &quot;A Rules Model Comprarisons&quot;)</code></pre>
+<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-11-1.png" width="100%" /></p>
 </div>

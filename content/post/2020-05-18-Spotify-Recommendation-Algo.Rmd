@@ -5,10 +5,16 @@ date: 2020-05-18
 categories: ["R"]
 tags: ["R Markdown", "tidyverse", "plotly", "recommenderlab", "arules", "arulesViz"]
 description: "This blog walks viewers through how to create a playlist recommendation algorithm using recommenderlab and arules packages"
+
+params:
+    interactive: TRUE
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(collapse = TRUE)
+knitr::opts_chunk$set(
+    echo = TRUE,
+    collapse = TRUE,
+    out.width = "100%")
 ```
 
 ### Author: Ed Orlando
@@ -33,7 +39,7 @@ library(plotly)
 # Modeling
 library(recommenderlab)
 library(arules)
-library(arulesViz)
+#library(arulesViz)
 ```
 
 <br>
@@ -64,7 +70,7 @@ playlist_tbl %>% glimpse()
 
 Next, we can view which genre's have the highest number of playlists in the data file using **ggplot2()**.  
 
-```{r, warning=FALSE, error=FALSE, message=FALSE}
+```{r, warning=FALSE, error=FALSE, message=FALSE, out.height="600px"}
 genre_frequency_tbl <- playlist_tbl %>%
     count(genre) %>%
     arrange(desc(n)) %>%
@@ -102,10 +108,10 @@ We can also see which songs appear the most in multiple playlists.
 song_frequency_tbl <- playlist_tbl %>%
     count(artist_name, track_name, artist_track_name) %>%
     arrange(desc(n)) %>%
-    rowid_to_column(var = "rank") %>%
-    filter(rank <= 10)
+    rowid_to_column(var = "rank")
 
 g_01 <- song_frequency_tbl %>%
+    filter(rank <= 10) %>% 
     ggplot(aes(x = reorder(artist_track_name, n), 
                            y    = n, 
                            fill = n)) +
@@ -123,9 +129,112 @@ g_01 <- song_frequency_tbl %>%
           axis.text.y  = element_text(color="#000000"),
           axis.title.x = element_blank(),
           axis.title.y = element_blank()) + 
-    labs(title = "Top 10 Songs")
+    labs(title = "Top 10 Artist/Track Names")
 
 g_01
 
 ```
+
+### Condense the Number of Songs in Tibble
+
+In order for the Recommendation algorithm to run more efficiently, we can reduce the number of songs that do not appear at least 3 times.    
+
+```{r}
+playlist_condensed_tbl <- playlist_tbl %>%
+    left_join(song_frequency_tbl) %>%
+    filter(n >= 3) %>%
+    select(source_playlist_id, artist_track_name) %>%
+    distinct() %>%
+    mutate(value = 1) %>%
+    spread(artist_track_name, value, fill = 0)
+
+playlist_song_rlab <- playlist_condensed_tbl %>%
+    select(-source_playlist_id) %>%
+    as.matrix() %>%
+    as("binaryRatingMatrix")
+    
+```
+
+```{r}
+# eval_recipe <- playlist_song_rlab %>%
+#     evaluationScheme(method = "cross-validation", k = 5, given = -1)
+# 
+# eval_recipe
+```
+
+
+```{r}
+# algorithms_list <- list(
+#     "association rules1"  = list(name  = "AR",
+#                                    param = list(supp = 0.003, conf = 0.70)),
+#     "association rules2"  = list(name  = "AR",
+#                                    param = list(supp = 0.003, conf = 0.75)),
+#     "association rules3"  = list(name  = "AR",
+#                                   param = list(supp = 0.004, conf = 0.70)),
+#     "association rules4"  = list(name  = "AR",
+#                                   param = list(supp = 0.004, conf = 0.75))
+#  )
+```
+
+
+```{r}
+# !!! WARNING - This section is commented out since it is a long-running script !!!
+
+# results_rlab_arules <- eval_recipe %>%
+#     recommenderlab::evaluate(
+#          method    = algorithms_list,
+#          type      = "topNList",
+#          n         = 1:10)
+```
+
+
+```{r}
+
+# saveRDS(results_rlab_arules, file = "Models/results_arules.rds")
+
+results_rlab_arules <- read_rds("Models/results_arules.rds")
+
+# plot(results_rlab_arules, annotate = TRUE)
+
+arules01_tbl <- results_rlab_arules$`association rules1`@results[[1]]@cm %>% 
+    as_tibble() %>% 
+    mutate(arules_model = "arules_model_01")
+    
+arules02_tbl <- results_rlab_arules$`association rules2`@results[[1]]@cm %>%
+    as_tibble() %>% 
+    mutate(arules_model = "arules_model_02")
+    
+arules03_tbl <- results_rlab_arules$`association rules3`@results[[1]]@cm %>%
+    as_tibble() %>% 
+    mutate(arules_model = "arules_model_03")
+    
+arules04_tbl <- results_rlab_arules$`association rules4`@results[[1]]@cm %>%
+    as_tibble() %>% 
+    mutate(arules_model = "arules_model_04")
+
+arules_combined_tbl <- rbind(arules01_tbl, arules02_tbl, arules03_tbl, arules04_tbl)
+
+arules_combined_tbl %>% glimpse()
+```
+
+```{r}
+arules_combined_tbl %>% 
+    ggplot(aes(x=FPR, y=TPR, group=arules_model, color=arules_model)) +
+    geom_line(size = 1) +
+    theme_minimal() +
+    
+    scale_colour_manual(values = c("#000000", "#808080", "#F08080", "#DC143C")) +
+    
+    #scale_color_tq() +
+    theme(legend.direction = "vertical", 
+          legend.position  = "right",
+          panel.grid.major.x = element_blank(),
+          panel.grid.major.y = element_blank(),
+          axis.text.x  = element_text(color="#000000"),
+          axis.text.y  = element_text(color="#000000")) +
+    labs(title = "A Rules Model Comprarisons")
+```
+
+
+
 
