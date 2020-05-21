@@ -1,13 +1,21 @@
 ---
-title: "Building a Spotify Recommendation Model With R"
+title: "Building a Spotify Playlist Recommendation Model With R"
 author: "Ed Orlando"
-date: 2020-05-18
-categories: ["R"]
-tags: ["R Markdown", "tidyverse", "plotly", "recommenderlab", "arules", "arulesViz"]
-description: "This blog walks viewers through how to create a playlist recommendation algorithm using recommenderlab and arules packages"
-
-params:
-    interactive: TRUE
+date: '2020-05-18'
+output:
+  html_document:
+    df_print: paged
+    code_folding: hide
+description: This blog walks viewers through how to create a playlist recommendation
+  algorithm using recommenderlab and arules packages
+tags:
+- R Markdown
+- tidyverse
+- plotly
+- recommenderlab
+- arules
+- arulesViz
+categories: R
 ---
 
 ```{r setup, include=FALSE}
@@ -21,14 +29,19 @@ knitr::opts_chunk$set(
 
 <br>
 
-### Problem Statement
+### Problem & Solution Statements
+Many companies and products you interact with every day include some type of Recommendation system.  For example, the Netflix app recommends movies and shows for you based on your history as well as what is trending.  Amazon lists recommendations based on products that compliment current or previous purchases.   
 
-This tutorial shows you how to create a Spotify Recommendation Algorithm using the **recommenderlab()** and **arules()** packages. 
+How are these recommendation algorithms developed?
+
+This tutorial shows you how to create create a Spotify Recommendation Algorithm in R.  For more info about Spotify and their products, click [here](<https://www.spotify.com/us/about-us/contact/>). 
+
+We will  using the **recommenderlab()** and **arules()** packages. 
 
 <br>
 
 ### Load Libraries
-To get started, first load the libbraries listed below.
+To get started, first load the libraries listed below.
 
 ```{r, echo=TRUE, results="hide", warning=FALSE, error=FALSE, message=FALSE}
 # Core & Viz
@@ -39,13 +52,15 @@ library(plotly)
 # Modeling
 library(recommenderlab)
 library(arules)
-#library(arulesViz)
+library(arulesViz)
 ```
 
 <br>
 
 ### Load Data
-The data was previously downloaded using **[Exportify](<https://rawgit.com/watsonbox/exportify/master/exportify.html>)**.  There were 27 various genres included and each genre has 10-60 various playlists included.  We will analyze more of this detail later, but first, let's load the data. 
+The data was previously downloaded using **[Exportify](<https://rawgit.com/watsonbox/exportify/master/exportify.html>)**.  Exportify is an app that allows you to convert playlists into .csv files.  There were 27 various genres included in the data set.  
+
+In all, the data consists of **~103K songs** and **18 variables**. You may download the .csv file and its contents **[here](https://ed-orlando07.netlify.app/zip_files/Spotify_Playlist.zip)** if you want to follow along.   
 
 
 ```{r, warning=FALSE, error=FALSE, message=FALSE}
@@ -56,26 +71,30 @@ playlist_tbl <- read_csv2("Data_Sources/2020_05_20_Spotify_Playlist_Data/all_pla
 
 ### Viewing the Data
 
-The data consists of **~103K songs** and **18 variables**. You may view the .csv file **[here](https://ed-orlando07.netlify.app/zip_files/Spotify_Playlist.zip)**.  The features included in the data set are listed below.  
-
-Additional columns, including the genre, playlist, artist/track name concatenation were all previously engineered.  For more information related to engineering these columns, please visit my previous post **[here](<https://ed-orlando07.netlify.app/2020/05/14/loading-multiple-files-from-various-folders-in-r/>)**.  
+The features included in the data set are listed below.
 
 ```{r}
 playlist_tbl %>% glimpse()
 ```
 
+Additional columns, including the genre, playlist, and the artist/track name concatenation were all previously added.  For more information related to adding columns to the data set, please visit my previous post **[here](<https://ed-orlando07.netlify.app/2020/05/14/loading-multiple-files-from-various-folders-in-r/>)**.  
+
 <br>
 
-### Which Genres Have the Most Playlists?
+### Analyzing the Data: Which Genres Have the Most Playlists?
 
-Next, we can view which genre's have the highest number of playlists in the data file using **ggplot2()**.  
+First, we can sort the genres based on the total number of playlists included in each genre. 
 
 ```{r, warning=FALSE, error=FALSE, message=FALSE, out.height="600px"}
 genre_frequency_tbl <- playlist_tbl %>%
     count(genre) %>%
     arrange(desc(n)) %>%
     rowid_to_column(var = "rank")
+```
 
+Next, we can view which genre's have the highest number of playlists in the data file using **ggplot2()**. 
+
+```{r}
 g_00 <- genre_frequency_tbl %>%
     ggplot2::ggplot(aes(x = reorder(genre, n), 
                            y    = n, 
@@ -102,7 +121,7 @@ g_00
 
 ### Which Songs Are the Most Frequent?
 
-We can also see which songs appear the most in multiple playlists.
+We can also see which songs appear the most in multiple playlists.  Many companies include "most popular" items as part of their recommendations to customers.  
 
 ```{r, warning=FALSE, error=FALSE, message=FALSE}
 song_frequency_tbl <- playlist_tbl %>%
@@ -137,7 +156,7 @@ g_01
 
 ### Condense the Number of Songs in Tibble
 
-In order for the Recommendation algorithm to run more efficiently, we can reduce the number of songs that do not appear at least 3 times.    
+In order for the Recommendation algorithm to run more efficiently, we can reduce the number of songs that do not appear at least 3 times.  We also need to convert the condensed playlist tibble into a "wide" format in order to convert it into the proper "matrix" format later.  
 
 ```{r}
 playlist_condensed_tbl <- playlist_tbl %>%
@@ -147,7 +166,18 @@ playlist_condensed_tbl <- playlist_tbl %>%
     distinct() %>%
     mutate(value = 1) %>%
     spread(artist_track_name, value, fill = 0)
+```
 
+The data is now in the proper format using 1s and 0s to identify if a song is included in a particular playlist.
+
+```{r}
+head(playlist_condensed_tbl)
+```
+
+
+The recommendation algorithms need the data 
+
+```{r}
 playlist_song_rlab <- playlist_condensed_tbl %>%
     select(-source_playlist_id) %>%
     as.matrix() %>%
