@@ -34,7 +34,7 @@ categories: R
 </div>
 <div id="solution-statement" class="section level3">
 <h3>Solution Statement</h3>
-<p>This tutorial shows you some of the methods used to create these types of algorithms. In the example presented, we utilized the The Rolling Stones song “Gimme Shelter” to produce the playlist.</p>
+<p>This tutorial shows you some of the methods used to create these types of algorithms. In the example presented, we utilized the <strong>The Rolling Stones song</strong> <em>Gimme Shelter</em> to produce the following playlist.</p>
 <ul>
 <li>Creedence Clearwater Revival | <em>Fortunate Son</em><br />
 </li>
@@ -59,7 +59,7 @@ categories: R
 </div>
 <div id="load-libraries" class="section level3">
 <h3>Load Libraries</h3>
-<p>To get started, first load the libraries listed below. We will be using the <strong>recommenderlab()</strong> and <strong>arules()</strong> packages along with some other core and visualization libraries.</p>
+<p>To get started, first load the libraries listed below.</p>
 <pre class="r"><code># Core &amp; Viz
 library(tidyverse)
 library(tidyquant)
@@ -74,13 +74,13 @@ library(arulesViz)</code></pre>
 <div id="load-data" class="section level3">
 <h3>Load Data</h3>
 <p>The data was previously downloaded using <strong><a href="https://rawgit.com/watsonbox/exportify/master/exportify.html">Exportify</a></strong>. Exportify is an app that allows you to convert playlists into .csv files. There were 27 various genres included in the final data set.</p>
-<p>In all, the final data set consists of <strong>~103K songs</strong> and <strong>18 variables</strong>. You may download the .csv file and its contents <strong><a href="https://ed-orlando07.netlify.app/zip_files/Spotify_Playlist.zip">here</a></strong> if you want to follow along.</p>
+<p>In all, the final data set consisted of <strong>~103K songs</strong> and <strong>18 variables</strong>. You may download the .csv file and its contents <strong><a href="https://ed-orlando07.netlify.app/zip_files/Spotify_Playlist.zip">here</a></strong> if you want to follow along.</p>
 <pre class="r"><code>playlist_tbl &lt;- read_csv2(&quot;Data_Sources/2020_05_20_Spotify_Playlist_Data/all_playlists.csv&quot;)</code></pre>
 <p><br></p>
 </div>
 <div id="viewing-the-data" class="section level3">
 <h3>Viewing the Data</h3>
-<p>A sample of the data set is listed below.</p>
+<p>A sample of the first 10 observations in the data set is listed below.</p>
 <pre class="r"><code>playlist_sample_tbl &lt;- playlist_tbl %&gt;% 
   slice(1:10) %&gt;% 
   glimpse()
@@ -138,9 +138,9 @@ library(arulesViz)</code></pre>
 g_00</code></pre>
 <p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-5-1.png" width="100%" /></p>
 </div>
-<div id="which-songs-are-the-most-frequent" class="section level3">
-<h3>Which Songs Are the Most Frequent?</h3>
-<p>We can also see which songs appear the most across multiple playlists. It is common for many companies to include “most popular” items as part of their recommendations to customers. We will compare a “most popular” recommendation algorithm to other algorithms a little later.</p>
+<div id="which-songs-appear-the-most-in-the-data-set" class="section level3">
+<h3>Which Songs Appear the Most in the Data Set?</h3>
+<p>We can also see which songs appear the most across multiple playlists. It is common for many companies to include “most popular” items as part of their recommendations to customers. We compare a “most popular” recommendation algorithm to other algorithms a little later.</p>
 <pre class="r"><code>song_frequency_tbl &lt;- playlist_tbl %&gt;%
     count(artist_name, track_name, artist_track_name) %&gt;%
     arrange(desc(n)) %&gt;%
@@ -167,12 +167,13 @@ g_01 &lt;- song_frequency_tbl %&gt;%
           axis.title.x = element_blank(),
           axis.title.y = element_blank()) + 
     labs(title = &quot;Top 10 Artist/Track Names&quot;)
+
 g_01</code></pre>
 <p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-6-1.png" width="100%" /></p>
 </div>
 <div id="condense-the-number-of-songs-in-data-set" class="section level3">
 <h3>Condense the Number of Songs in Data Set</h3>
-<p>In order for the Recommendation algorithm to run more efficiently, we can reduce the number of songs that do not appear at least 3 times. We also need to convert the condensed playlist tibble into a “wide” format.</p>
+<p>In order for the Recommendation algorithm to run more efficiently, we reduced the number of songs that do not appear at least 3 times. We also converted the condensed playlist tibble into a “wide” format.</p>
 <pre class="r"><code>playlist_condensed_tbl &lt;- playlist_tbl %&gt;%
     left_join(song_frequency_tbl) %&gt;%
     filter(n &gt;= 3) %&gt;%
@@ -181,7 +182,7 @@ g_01</code></pre>
     mutate(value = 1) %&gt;%
     spread(artist_track_name, value, fill = 0)
 ## Joining, by = c(&quot;track_name&quot;, &quot;artist_name&quot;, &quot;artist_track_name&quot;)</code></pre>
-<p>The data is now in the proper “wide” format using 1s and 0s to identify if a song is included in a particular playlist. Below is a sample of the first 10 columns and 10 rows of the widely formatted tibble.</p>
+<p>The data was transformed using 1s and 0s to identify if a song is included in a particular playlist. Below is a sample of the first 10 columns and 10 rows of the widely formatted tibble.</p>
 <pre class="r"><code>playlist_condensed_tbl %&gt;% 
   select(1:10) %&gt;%
   slice(1:10)
@@ -202,34 +203,29 @@ g_01</code></pre>
 ## #   Bye` &lt;dbl&gt;, `*NSYNC ||| It&#39;s Gonna Be Me` &lt;dbl&gt;, `.anxious. ||| Crooked
 ## #   Teeth` &lt;dbl&gt;, `? &amp; The Mysterians ||| 96 Tears` &lt;dbl&gt;, `[ocean jams] |||
 ## #   Nova` &lt;dbl&gt;</code></pre>
-<p>The recommendation algorithms then need the data converted into a matrix format. The code below performs that transformation.</p>
+<p>The recommendation algorithms need the data converted into a matrix format before it can be loaded. The code below performs the matrix transformation.</p>
 <pre class="r"><code>playlist_song_rlab &lt;- playlist_condensed_tbl %&gt;%
     select(-source_playlist_id) %&gt;%
     as.matrix() %&gt;%
     as(&quot;binaryRatingMatrix&quot;)
     </code></pre>
 </div>
-<div id="models-part-1" class="section level3">
-<h3>Models Part 1:</h3>
+<div id="modeling-part-1" class="section level3">
+<h3>Modeling Part 1:</h3>
 </div>
 <div id="set-up-the-association-rules-arules-algorithm-and-parameters" class="section level3">
-<h3>Set Up the Association Rules (Arules) Algorithm and Parameters</h3>
-<p>One popular method used to identify freqent item sets is called <strong><a href="https://cran.r-project.org/web/packages/arules/arules.pdf">Association Rules (arules)</a></strong>. In order to identify a solid arules model, we will set up and compare 4 different models using 4 different paramters in each.</p>
-<p>In order to do so, we first need to set up a recipe for the recommendation algorithm using the evaluationScheme function. For more information related to this package, please click <strong><a href="https://www.rdocumentation.org/packages/recommenderlab/versions/0.2-5/topics/evaluationScheme">here</a></strong>.</p>
+<h3>Set Up the Association Rules (arules) Algorithm and Parameters</h3>
+<p>One popular method used to identify freqent item sets is called <strong><a href="https://cran.r-project.org/web/packages/arules/arules.pdf">Association Rules (arules)</a></strong>. In order to identify an appropriate arules model, we set up and compared 4 different models using 4 different parameters in each.</p>
+<p>In the first step, we set up a recipe for the recommendation algorithm using the evaluationScheme function. For more information related to this package, please click <strong><a href="https://www.rdocumentation.org/packages/recommenderlab/versions/0.2-5/topics/evaluationScheme">here</a></strong>.</p>
 <pre class="r"><code>eval_recipe &lt;- playlist_song_rlab %&gt;%
    evaluationScheme(method = &quot;cross-validation&quot;, k = 5, given = -1)
-## Warning in .local(data, ...): The following users do not have enough items
-## leaving no given items: 4, 13, 21, 30, 31, 36, 58, 59, 77, 113, 201, 208, 211,
-## 217, 218, 228, 229, 231, 233, 236, 313, 322, 337, 341, 373, 427, 444, 483, 495,
-## 556, 570, 613, 655, 658, 659, 695, 696, 699, 701, 705, 721, 755, 756, 757, 761,
-## 875, 905, 968, 976, 1004, 1020, 1025, 1026, 1074, 1109, 1124, 1125, 1193
 
 eval_recipe
 ## Evaluation scheme using all-but-1 items
 ## Method: &#39;cross-validation&#39; with 5 run(s).
 ## Good ratings: NA
 ## Data set: 1200 x 7991 rating matrix of class &#39;binaryRatingMatrix&#39; with 33577 ratings.</code></pre>
-<p>Next, we will now set up 4 various Association Rules settings so that each algorithm can be compared to find the most appropriate support and confidence levels. For more information related to the <strong>recommenderlab::evaluate()</strong> please click <a href="https://cran.r-project.org/web/packages/recommenderlab/vignettes/recommenderlab.pdf">here</a>.</p>
+<p>Next, we set up four (4) various Association Rules settings so that each algorithm can be compared to find the most appropriate support and confidence levels. For more information related to the <strong>recommenderlab::evaluate()</strong> please click <a href="https://cran.r-project.org/web/packages/recommenderlab/vignettes/recommenderlab.pdf">here</a>.</p>
 <pre class="r"><code>algorithms_list &lt;- list(
     &quot;association rules1&quot;  = list(name  = &quot;AR&quot;,
                                    param = list(supp = 0.003, conf = 0.70)),
@@ -250,7 +246,7 @@ eval_recipe
 #          n         = 1:10)
 
 # saveRDS(results_rlab_arules, file = &quot;Models/results_arules.rds&quot;)</code></pre>
-<p>In the code below, we pull out the True Positive Rate (TPR) as well as the False Positive Rate (FPR) in order to compare and contrast the various parameters in the four (4) Association Rules algorithms.</p>
+<p>In the code below, we pulled out the True Positive Rate (TPR) and the False Positive Rate (FPR) in order to compare and contrast the various parameters in the four (4) Association Rules algorithms.</p>
 <pre class="r"><code>results_rlab_arules &lt;- read_rds(&quot;Models/results_arules.rds&quot;)
 arules01_tbl &lt;- results_rlab_arules$`association rules1`@results[[1]]@cm %&gt;% 
     as_tibble() %&gt;% 
@@ -285,19 +281,21 @@ arules_combined_tbl &lt;- rbind(arules01_tbl, arules02_tbl, arules03_tbl, arules
 </div>
 <div id="association-rules-best-model" class="section level3">
 <h3>Association Rules Best Model</h3>
-<p>The <strong>arules_model_01</strong> performs the best since we get most results/recommendations back. In other words, arules_model_01 produced 10 song recommendations, and the other models did not. The other algorithms fall short of that goal either because the support or confidence levels were set too high.</p>
-<p>Going forward, we will only use the arules_model_01 since it performed the best.</p>
+<p>Although models 2-4 showed a more promising ROC curve, the <strong>arules_model_01</strong> performed the best since it produced the most results/recommendations back. In other words, arules_model_01 produced 10 song recommendations, while the other models did not. The other algorithms fall short of the 10 song goal either because the support or confidence levels were set too high.</p>
+</div>
+<div id="modeling-part-2" class="section level3">
+<h3>Modeling Part 2:</h3>
 </div>
 <div id="setting-up-all-algorithms" class="section level3">
 <h3>Setting Up All Algorithms</h3>
 <p>Next, we will compare the Association Rules best performing algorithm will 4 other methods. Those methods include:</p>
 <ul>
-<li>Random (base model)</li>
+<li>Random Selection</li>
 <li>Popular Items</li>
 <li>User-Based CF</li>
 <li>Item-Based CF</li>
 </ul>
-<p>Just as we did previously, we will set up the algorithm list.</p>
+<p>Just as we did previously, we set up the various algorithm list with the 5 models shown above.</p>
 <pre class="r"><code>algorithms_list &lt;- list(
     &quot;random items&quot;        = list(name  = &quot;RANDOM&quot;,
                                  param = NULL),
@@ -310,7 +308,7 @@ arules_combined_tbl &lt;- rbind(arules01_tbl, arules02_tbl, arules03_tbl, arules
     &quot;association rules1&quot;  = list(name  = &quot;AR&quot;,
                                   param = list(supp = 0.003, conf = 0.70))
 )</code></pre>
-<p>Next, will run the <strong>evaluate()</strong> function which will produce the same TPR and FPR stats just as we did before with the Association Rules algorithms.</p>
+<p>Next, we ran the <strong>evaluate()</strong> function which produced the same TPR and FPR stats just as we did before with the Association Rules algorithms.</p>
 <p><strong>Warning</strong>, the code below is commented out below since the algorithm was already previously built and saved.</p>
 <pre class="r"><code># !!! WARNING - Long Running Script !!!
 
@@ -321,7 +319,7 @@ arules_combined_tbl &lt;- rbind(arules01_tbl, arules02_tbl, arules03_tbl, arules
 #          n         = 1:10)
 
 # saveRDS(results_rlab, file = &quot;Models/results_all_models.rds&quot;)</code></pre>
-<p>Similar to before, we will pull out the True Positive Rate (TPR) as well as the False Positive Rate (FPR) in order to compare and contrast the various parameters in the five (5) recommendation algorithms.</p>
+<p>Similar to before, we pulled out the True Positive Rate (TPR) as well as the False Positive Rate (FPR) in order to compare and contrast the various parameters in the five (5) recommendation algorithms.</p>
 <pre class="r"><code>results_rlab &lt;- read_rds(&quot;Models/results_all_models.rds&quot;)
 
 random_tbl  &lt;- results_rlab$`random items`@results[[1]]@cm %&gt;% 
@@ -357,15 +355,15 @@ all_models_combined_tbl &lt;- rbind(random_tbl, popular_tbl, UBCF_tbl, IBCF_tbl,
 </div>
 <div id="the-best-model-user-based-cf" class="section level3">
 <h3>The Best Model = User-Based CF</h3>
-<p>The best performing model based on the true positive rate (TPR) and false-positive rate (FPR) was the <strong><a href="https://cran.r-project.org/web/packages/recommenderlab/vignettes/recommenderlab.pdf">User-Based Collaborative Filtering (UBCF)</a></strong> algorithm. We will use this model to produce the recommended playlist below.</p>
+<p>The best performing model based on the true positive rate (TPR) and false-positive rate (FPR) was the <strong><a href="https://cran.r-project.org/web/packages/recommenderlab/vignettes/recommenderlab.pdf">User-Based Collaborative Filtering (UBCF)</a></strong> algorithm. We used this model to produce the recommendedation model and playlist below.</p>
 <pre class="r"><code>model_ucbf &lt;- recommenderlab::Recommender(
     data = playlist_song_rlab, 
     method = &quot;UBCF&quot;, 
     param  = list(method = &quot;Cosine&quot;, nn = 500))</code></pre>
 </div>
-<div id="set-up-favorite-song" class="section level3">
-<h3>Set Up Favorite Song</h3>
-<p>We can make playlist recommendations using the model_ucbf and by passing through 1 song. For this example, we will plug in one my favorite songs written by the Rolling Stones called “Paint It Black.”</p>
+<div id="enter-a-favorite-song" class="section level3">
+<h3>Enter A Favorite Song</h3>
+<p>We can make playlist recommendations using the <strong>model_ucbf</strong> and by passing through 1 song. For this example, we will plug in one my favorite songs by the <strong>Rolling Stones</strong> called <em>Gimme Shelter</em>.</p>
 <pre class="r"><code>playlist_rec_01 &lt;- c(&quot;The Rolling Stones ||| Gimme Shelter&quot;)
 
 new_playlist_rlab &lt;- tibble(items = playlist_song_rlab@data %&gt;% colnames()) %&gt;%
@@ -379,7 +377,7 @@ new_playlist_rlab
 </div>
 <div id="make-a-playlist-prediction" class="section level3">
 <h3>Make a Playlist Prediction</h3>
-<p>Below we are passing the artist/track name into the model to produce a recommended playlist of 10 songs. Some songs recommended include Jimi Hendrix’s “All Along the Watchtower” as well as The Doors’ “Light My Fire”. For the full list of recommendations, please see the list below.</p>
+<p>Below we passed the artist/track name into the model to produce a recommended playlist of 10 songs. Some songs recommended were <strong>Jimi Hendrix’s</strong> <em>All Along the Watchtower</em> as well as <strong>The Doors’</strong> <em>Light My Fire</em>. For the full list of recommendations, please see the list below.</p>
 <pre class="r"><code>prediction_ucbf &lt;- predict(model_ucbf, newdata = new_playlist_rlab, n = 10)
 
 playlist_recommendation_tbl &lt;- tibble(items = prediction_ucbf@itemLabels) %&gt;%
@@ -402,5 +400,5 @@ playlist_recommendation_tbl &lt;- tibble(items = prediction_ucbf@itemLabels) %&g
 </div>
 <div id="next-steps" class="section level3">
 <h3>Next steps</h3>
-<p>In the next few weeks, I plan to create a Shiny app which will allow you to enter your favorite song and receive a recommended playlist. For questions or comments about this article, please send me a message on <a href="https://www.linkedin.com/in/edorlando07/">linkedin</a>.</p>
+<p>In the next few weeks, I plan to create a Shiny app which will allow you to enter your favorite song and receive your recommended playlist. For questions or comments about this article, please send me a message on <a href="https://www.linkedin.com/in/edorlando07/">linkedin</a>.</p>
 </div>
