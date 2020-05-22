@@ -1,5 +1,5 @@
 ---
-title: "Building a Spotify Playlist Recommendation Model With R"
+title: "Build a Spotify Playlist Recommendation Model With R"
 author: "Ed Orlando"
 date: '2020-05-18'
 output:
@@ -26,22 +26,27 @@ knitr::opts_chunk$set(
 
 #### Author: Ed Orlando
 
-#### Recognition & Credit
-This article and its contents were heavily influenced by Matt Dancho's Business Science University's (BSU) Learning Labs #11 session.  For more about BSU's Learning Labs, please click [here](<https://university.business-science.io/p/learning-labs-pro>).
+### Recognition & Credit
+This article and its contents were heavily influenced by Matt Dancho's Learning Labs Pro Session #11. For more about Learning Labs Pro, please click [here](<https://university.business-science.io/p/learning-labs-pro>).
 
 <br>
 
 ### Problem & Solution Statements
-Many companies and products you interact with every day include some type of Recommendation system.  For example, the **[Netflix](<https://www.netflix.com/>)** app recommends movies based on your history and what is trending.  **[Amazon](<https://www.amazon.com/>)** lists recommendations based on your product purchase history or what you have recently viewed.   
+Many companies and products you interact with every day include some type of Recommendation system.  For example, the **[Netflix](<https://www.netflix.com/>)** app recommends movies based on your history and what is trending.  **[Amazon](<https://www.amazon.com/>)** lists recommended items based on your product purchase history or what you have recently viewed.   
 
-How are these recommendation algorithms developed?  This article does not go into detail on how Netflix and Amazon create Recommendation algorithms.  However, this tutorial does show you how to create a Spotify Recommendation Algorithm in R.  For more info about Spotify and their products, click [here](<https://www.spotify.com/us/about-us/contact/>). 
+How are these recommendation algorithms developed?  
 
-We will be using the **recommenderlab()** and **arules()** packages along with some other core and visualization libraries.
+This tutorial shows you some of the methods used to create these types of algorithms.  The idea is that a user will be able to select an artist and a song they enjoy.  The algorithm will then populate 10 new songs that the user might also like.  An example of the final output product is listed below. For more info about Spotify  click **[here](<https://www.spotify.com/us/about-us/contact/>)**.
+
+
+```{r}
+#knitr::include_graphics("../../static/")
+```
 
 <br>
 
 ### Load Libraries
-To get started, first load the libraries listed below.
+To get started, first load the libraries listed below.  We will be using the **recommenderlab()** and **arules()** packages along with some other core and visualization libraries.
 
 ```{r, echo=TRUE, results="hide", warning=FALSE, error=FALSE, message=FALSE}
 # Core & Viz
@@ -53,6 +58,7 @@ library(plotly)
 library(recommenderlab)
 library(arules)
 library(arulesViz)
+
 ```
 
 <br>
@@ -374,7 +380,7 @@ model_ucbf <- recommenderlab::Recommender(
 We can make playlist recommendations using the model_ucbf.
 
 ```{r}
-playlist_rec_01 <- c("Pearl Jam ||| Even Flow")
+playlist_rec_01 <- c("The Rolling Stones ||| Paint It, Black")
 
 new_playlist_rlab <- tibble(items = playlist_song_rlab@data %>% colnames()) %>%
     mutate(value = as.numeric(items %in% playlist_rec_01)) %>%

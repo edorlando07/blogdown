@@ -1,5 +1,5 @@
 ---
-title: "Building a Spotify Playlist Recommendation Model With R"
+title: "Build a Spotify Playlist Recommendation Model With R"
 author: "Ed Orlando"
 date: '2020-05-18'
 output:
@@ -22,21 +22,22 @@ categories: R
 <div id="author-ed-orlando" class="section level4">
 <h4>Author: Ed Orlando</h4>
 </div>
-<div id="recognition-credit" class="section level4">
-<h4>Recognition &amp; Credit</h4>
-<p>This article and its contents were heavily influenced by Matt Dancho’s Business Science University’s (BSU) Learning Labs #11 session. For more about BSU’s Learning Labs, please click <a href="https://university.business-science.io/p/learning-labs-pro">here</a>.</p>
+<div id="recognition-credit" class="section level3">
+<h3>Recognition &amp; Credit</h3>
+<p>This article and its contents were heavily influenced by Matt Dancho’s Learning Labs Pro Session #11. For more about Learning Labs Pro, please click <a href="https://university.business-science.io/p/learning-labs-pro">here</a>.</p>
 <p><br></p>
 </div>
 <div id="problem-solution-statements" class="section level3">
 <h3>Problem &amp; Solution Statements</h3>
-<p>Many companies and products you interact with every day include some type of Recommendation system. For example, the <strong><a href="https://www.netflix.com/">Netflix</a></strong> app recommends movies based on your history and what is trending. <strong><a href="https://www.amazon.com/">Amazon</a></strong> lists recommendations based on your product purchase history or what you have recently viewed.</p>
-<p>How are these recommendation algorithms developed? This article does not go into detail on how Netflix and Amazon create Recommendation algorithms. However, this tutorial does show you how to create a Spotify Recommendation Algorithm in R. For more info about Spotify and their products, click <a href="https://www.spotify.com/us/about-us/contact/">here</a>.</p>
-<p>We will be using the <strong>recommenderlab()</strong> and <strong>arules()</strong> packages along with some other core and visualization libraries.</p>
+<p>Many companies and products you interact with every day include some type of Recommendation system. For example, the <strong><a href="https://www.netflix.com/">Netflix</a></strong> app recommends movies based on your history and what is trending. <strong><a href="https://www.amazon.com/">Amazon</a></strong> lists recommended items based on your product purchase history or what you have recently viewed.</p>
+<p>How are these recommendation algorithms developed?</p>
+<p>This tutorial shows you some of the methods used to create these types of algorithms. The idea is that a user will be able to select an artist and a song they enjoy. The algorithm will then populate 10 new songs that the user might also like. An example of the final output product is listed below. For more info about Spotify click <strong><a href="https://www.spotify.com/us/about-us/contact/">here</a></strong>.</p>
+<pre class="r"><code>#knitr::include_graphics(&quot;../../static/&quot;)</code></pre>
 <p><br></p>
 </div>
 <div id="load-libraries" class="section level3">
 <h3>Load Libraries</h3>
-<p>To get started, first load the libraries listed below.</p>
+<p>To get started, first load the libraries listed below. We will be using the <strong>recommenderlab()</strong> and <strong>arules()</strong> packages along with some other core and visualization libraries.</p>
 <pre class="r"><code># Core &amp; Viz
 library(tidyverse)
 library(tidyquant)
@@ -113,7 +114,7 @@ library(arulesViz)</code></pre>
           axis.title.y = element_blank()) + 
     labs(title = &quot;Genre Song Frequency&quot;)
 g_00</code></pre>
-<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-5-1.png" width="100%" /></p>
+<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-6-1.png" width="100%" /></p>
 </div>
 <div id="which-songs-are-the-most-frequent" class="section level3">
 <h3>Which Songs Are the Most Frequent?</h3>
@@ -145,7 +146,7 @@ g_01 &lt;- song_frequency_tbl %&gt;%
           axis.title.y = element_blank()) + 
     labs(title = &quot;Top 10 Artist/Track Names&quot;)
 g_01</code></pre>
-<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-6-1.png" width="100%" /></p>
+<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-7-1.png" width="100%" /></p>
 </div>
 <div id="condense-the-number-of-songs-in-data-set" class="section level3">
 <h3>Condense the Number of Songs in Data Set</h3>
@@ -267,7 +268,7 @@ arules_combined_tbl &lt;- rbind(arules01_tbl, arules02_tbl, arules03_tbl, arules
           axis.text.x  = element_text(color=&quot;#000000&quot;),
           axis.text.y  = element_text(color=&quot;#000000&quot;)) +
     labs(title = &quot;A Rules Model Comparison&quot;)</code></pre>
-<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-15-1.png" width="100%" /></p>
+<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-16-1.png" width="100%" /></p>
 </div>
 <div id="association-rules-best-model" class="section level3">
 <h3>Association Rules Best Model</h3>
@@ -353,7 +354,7 @@ all_models_combined_tbl &lt;- rbind(random_tbl, popular_tbl, UCBF_tbl, ICBF_tbl,
           axis.text.x  = element_text(color=&quot;#000000&quot;),
           axis.text.y  = element_text(color=&quot;#000000&quot;)) +
     labs(title = &quot;All Model Comparison&quot;)</code></pre>
-<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-20-1.png" width="100%" /></p>
+<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-21-1.png" width="100%" /></p>
 </div>
 <div id="the-best-model-user-based-cf" class="section level3">
 <h3>The Best Model = User-Based CF</h3>
@@ -366,7 +367,7 @@ all_models_combined_tbl &lt;- rbind(random_tbl, popular_tbl, UCBF_tbl, ICBF_tbl,
 <div id="make-predictions" class="section level3">
 <h3>Make predictions</h3>
 <p>We can make playlist recommendations using the model_ucbf.</p>
-<pre class="r"><code>playlist_rec_01 &lt;- c(&quot;Pearl Jam ||| Even Flow&quot;)
+<pre class="r"><code>playlist_rec_01 &lt;- c(&quot;The Rolling Stones ||| Paint It, Black&quot;)
 
 new_playlist_rlab &lt;- tibble(items = playlist_song_rlab@data %&gt;% colnames()) %&gt;%
     mutate(value = as.numeric(items %in% playlist_rec_01)) %&gt;%
@@ -383,16 +384,16 @@ playlist_recommendation_tbl &lt;- tibble(items = prediction_ucbf@itemLabels) %&g
   rename(Song_Recommendations = items)</code></pre>
 <pre class="r"><code>playlist_recommendation_tbl
 ## # A tibble: 10 x 1
-##    Song_Recommendations                                   
-##    &lt;chr&gt;                                                  
-##  1 Soundgarden ||| Black Hole Sun                         
-##  2 Nirvana ||| Smells Like Teen Spirit                    
-##  3 Nirvana ||| Heart-Shaped Box                           
-##  4 The Smashing Pumpkins ||| Cherub Rock - Remastered 2011
-##  5 Rage Against The Machine ||| Killing In The Name       
-##  6 Nirvana ||| Come As You Are                            
-##  7 Alice In Chains ||| Would?                             
-##  8 Stone Temple Pilots ||| Interstate Love Song           
-##  9 Queens of the Stone Age ||| No One Knows               
-## 10 Red Hot Chili Peppers ||| Under the Bridge</code></pre>
+##    Song_Recommendations                             
+##    &lt;chr&gt;                                            
+##  1 Jerry Lee Lewis ||| Great Balls of Fire          
+##  2 Ike &amp; Tina Turner ||| River Deep - Mountain High 
+##  3 The Beach Boys ||| Surfin&#39; U.S.A. - Remastered   
+##  4 Sex Pistols ||| God Save The Queen               
+##  5 Castaways ||| Liar, Liar                         
+##  6 The Standells ||| Dirty Water                    
+##  7 Foghat ||| Slow Ride                             
+##  8 Heart ||| Barracuda                              
+##  9 Heart ||| Crazy On You                           
+## 10 Led Zeppelin ||| Whole Lotta Love - 1990 Remaster</code></pre>
 </div>
