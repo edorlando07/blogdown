@@ -92,8 +92,7 @@
 <div id="problem-solution-statements" class="section level3">
 <h3>Problem &amp; Solution Statements</h3>
 <p>Many companies and products you interact with every day include some type of Recommendation system. For example, the <strong><a href="https://www.netflix.com/">Netflix</a></strong> app recommends movies based on your history and what is trending. <strong><a href="https://www.amazon.com/">Amazon</a></strong> lists recommended items based on your product purchase history or what you have recently viewed.</p>
-<p>How are these recommendation algorithms developed?</p>
-<p>This tutorial shows you some of the methods used to create these types of algorithms. The idea is that a user will be able to select an artist and a song they enjoy. The algorithm will then populate 10 new songs that the user might also like. For more info about Spotify, click <strong><a href="https://www.spotify.com/us/about-us/contact/">here</a></strong>.</p>
+<p>This tutorial shows you some of the methods used to create these types of algorithms. In the example presented, a user will be able to select an musical artist and a song they enjoy. The algorithm will then populate 10 new songs that the user might also like. For more info about Spotify and the products they offer, click <strong><a href="https://www.spotify.com/us/about-us/contact/">here</a></strong>.</p>
 <p><br></p>
 </div>
 <div id="load-libraries" class="section level3">
@@ -143,17 +142,17 @@ library(arulesViz)</code></pre>
 ## $ playlist              &lt;chr&gt; &quot;african_heat.csv&quot;, &quot;african_heat.csv&quot;, &quot;afri...
 ## $ artist_track_name     &lt;chr&gt; &quot;E Kelly, Joeboy ||| Oreke&quot;, &quot;Khalid, Disclos...
 ## $ source_playlist_id    &lt;chr&gt; &quot;Afro_african_heat&quot;, &quot;Afro_african_heat&quot;, &quot;Af...</code></pre>
-<p>Additional columns, including the genre, playlist, and the artist/track name concatenation were all previously added. For more information on how to add columns to the data set, please visit my previous post <strong><a href="https://ed-orlando07.netlify.app/2020/05/14/loading-multiple-files-from-various-folders-in-r/">here</a></strong>.</p>
+<p>Additional columns, including the genre, playlist, and the artist/track name concatenation were all previously added. For more information on how to add these new columns to the data set, please visit my previous post <strong><a href="https://ed-orlando07.netlify.app/2020/05/14/loading-multiple-files-from-various-folders-in-r/">here</a></strong>.</p>
 <p><br></p>
 </div>
 <div id="analyzing-the-data-which-genres-have-the-most-playlists" class="section level3">
 <h3>Analyzing the Data: Which Genres Have the Most Playlists?</h3>
-<p>First, we can sort the genres based on the total number of playlists included in each genre.</p>
+<p>Before building the algorithm, let’s get a better understanding of the data set. We can aggregate the total number of songs for each genre with the code below.</p>
 <pre class="r"><code>genre_frequency_tbl &lt;- playlist_tbl %&gt;%
     count(genre) %&gt;%
     arrange(desc(n)) %&gt;%
     rowid_to_column(var = &quot;rank&quot;)</code></pre>
-<p>Next, we can view which genre’s have the highest number of playlists in the data file using <strong>ggplot2()</strong>.</p>
+<p>Next, we can visually see which genre’s have the highest number of playlists in the data file using <strong>ggplot2()</strong>.</p>
 <pre class="r"><code>g_00 &lt;- genre_frequency_tbl %&gt;%
     ggplot2::ggplot(aes(x = reorder(genre, n), 
                         y = n)) +
@@ -179,7 +178,7 @@ g_00</code></pre>
 </div>
 <div id="which-songs-are-the-most-frequent" class="section level3">
 <h3>Which Songs Are the Most Frequent?</h3>
-<p>We can also see which songs appear the most in multiple playlists. Many companies include “most popular” items as part of their recommendations to customers. We will compare a “most popular” recommendation algorithm to other algorithms a little later.</p>
+<p>We can also see which songs appear the most across multiple playlists. It is common for many companies to include “most popular” items as part of their recommendations to customers. We will compare a “most popular” recommendation algorithm to other algorithms a little later.</p>
 <pre class="r"><code>song_frequency_tbl &lt;- playlist_tbl %&gt;%
     count(artist_name, track_name, artist_track_name) %&gt;%
     arrange(desc(n)) %&gt;%
@@ -211,7 +210,7 @@ g_01</code></pre>
 </div>
 <div id="condense-the-number-of-songs-in-data-set" class="section level3">
 <h3>Condense the Number of Songs in Data Set</h3>
-<p>In order for the Recommendation algorithm to run more efficiently, we can reduce the number of songs that do not appear at least 3 times. We also need to convert the condensed playlist tibble into a “wide” format in order to convert it into the proper “matrix” format later.</p>
+<p>In order for the Recommendation algorithm to run more efficiently, we can reduce the number of songs that do not appear at least 3 times. We also need to convert the condensed playlist tibble into a “wide” format.</p>
 <pre class="r"><code>playlist_condensed_tbl &lt;- playlist_tbl %&gt;%
     left_join(song_frequency_tbl) %&gt;%
     filter(n &gt;= 3) %&gt;%
@@ -220,7 +219,7 @@ g_01</code></pre>
     mutate(value = 1) %&gt;%
     spread(artist_track_name, value, fill = 0)
 ## Joining, by = c(&quot;track_name&quot;, &quot;artist_name&quot;, &quot;artist_track_name&quot;)</code></pre>
-<p>The data is now in the proper format using 1s and 0s to identify if a song is included in a particular playlist. Below is a sample of the first 10 columns and 10 rows of the widely formatted tibble.</p>
+<p>The data is now in the proper “wide” format using 1s and 0s to identify if a song is included in a particular playlist. Below is a sample of the first 10 columns and 10 rows of the widely formatted tibble.</p>
 <pre class="r"><code>playlist_condensed_tbl %&gt;% 
   select(1:10) %&gt;%
   slice(1:10)
@@ -241,16 +240,20 @@ g_01</code></pre>
 ## #   Bye` &lt;dbl&gt;, `*NSYNC ||| It&#39;s Gonna Be Me` &lt;dbl&gt;, `.anxious. ||| Crooked
 ## #   Teeth` &lt;dbl&gt;, `? &amp; The Mysterians ||| 96 Tears` &lt;dbl&gt;, `[ocean jams] |||
 ## #   Nova` &lt;dbl&gt;</code></pre>
-<p>The recommendation algorithms need the data in a matrix format. The code below performs that transformation.</p>
+<p>The recommendation algorithms then need the data converted into a matrix format. The code below performs that transformation.</p>
 <pre class="r"><code>playlist_song_rlab &lt;- playlist_condensed_tbl %&gt;%
     select(-source_playlist_id) %&gt;%
     as.matrix() %&gt;%
     as(&quot;binaryRatingMatrix&quot;)
     </code></pre>
 </div>
-<div id="setting-up-the-association-rules-algorithm-and-parameters" class="section level3">
-<h3>Setting Up the Association Rules Algorithm and Parameters</h3>
-<p>Next we will set up a recipe for the recommendation algorithm using the evaluationScheme function. For more information related to this package, please click <strong><a href="https://www.rdocumentation.org/packages/recommenderlab/versions/0.2-5/topics/evaluationScheme">here</a></strong>.</p>
+<div id="models-part-1" class="section level3">
+<h3>Models Part 1:</h3>
+</div>
+<div id="set-up-the-association-rules-arules-algorithm-and-parameters" class="section level3">
+<h3>Set Up the Association Rules (Arules) Algorithm and Parameters</h3>
+<p>One popular method used to identify freqent item sets is called <strong><a href="https://cran.r-project.org/web/packages/arules/arules.pdf">Association Rules (arules)</a></strong>. In order to identify a solid arules model, we will set up and compare 4 different models using 4 different paramters in each.</p>
+<p>In order to do so, we first need to set up a recipe for the recommendation algorithm using the evaluationScheme function. For more information related to this package, please click <strong><a href="https://www.rdocumentation.org/packages/recommenderlab/versions/0.2-5/topics/evaluationScheme">here</a></strong>.</p>
 <pre class="r"><code>eval_recipe &lt;- playlist_song_rlab %&gt;%
    evaluationScheme(method = &quot;cross-validation&quot;, k = 5, given = -1)
 ## Warning in .local(data, ...): The following users do not have enough items
@@ -264,7 +267,7 @@ eval_recipe
 ## Method: &#39;cross-validation&#39; with 5 run(s).
 ## Good ratings: NA
 ## Data set: 1200 x 7991 rating matrix of class &#39;binaryRatingMatrix&#39; with 33577 ratings.</code></pre>
-<p>Next, we will set up 4 various Association Rules settings so that each algorithm can be compared to find the most appropriate support and confidence levels. For more information related to the <strong>recommenderlab::evaluate()</strong> please click <a href="https://cran.r-project.org/web/packages/recommenderlab/vignettes/recommenderlab.pdf">here</a>.</p>
+<p>Next, we will now set up 4 various Association Rules settings so that each algorithm can be compared to find the most appropriate support and confidence levels. For more information related to the <strong>recommenderlab::evaluate()</strong> please click <a href="https://cran.r-project.org/web/packages/recommenderlab/vignettes/recommenderlab.pdf">here</a>.</p>
 <pre class="r"><code>algorithms_list &lt;- list(
     &quot;association rules1&quot;  = list(name  = &quot;AR&quot;,
                                    param = list(supp = 0.003, conf = 0.70)),
@@ -275,7 +278,7 @@ eval_recipe
     &quot;association rules4&quot;  = list(name  = &quot;AR&quot;,
                                   param = list(supp = 0.004, conf = 0.75))
  )</code></pre>
-<p><strong>Warning</strong>, the code below is commented out below since the algorithm was already previously built.</p>
+<p><strong>Warning</strong>, the code below is commented out below since the algorithm was already previously built and saved to the path identified below.</p>
 <pre class="r"><code># !!! WARNING - This section is commented out since it is a long-running script !!!
 
 # results_rlab_arules &lt;- eval_recipe %&gt;%
@@ -285,7 +288,7 @@ eval_recipe
 #          n         = 1:10)
 
 # saveRDS(results_rlab_arules, file = &quot;Models/results_arules.rds&quot;)</code></pre>
-<p>The four (4) various models are saved to the path below. In the code below, we also pull out the True Positive Rate (TPR) as well as the False Positive Rate (FPR) in order to compare and contrast the various parameters in the four (4) Association Rules algorithms.</p>
+<p>In the code below, we pull out the True Positive Rate (TPR) as well as the False Positive Rate (FPR) in order to compare and contrast the various parameters in the four (4) Association Rules algorithms.</p>
 <pre class="r"><code>results_rlab_arules &lt;- read_rds(&quot;Models/results_arules.rds&quot;)
 arules01_tbl &lt;- results_rlab_arules$`association rules1`@results[[1]]@cm %&gt;% 
     as_tibble() %&gt;% 
@@ -303,20 +306,7 @@ arules_combined_tbl &lt;- rbind(arules01_tbl, arules02_tbl, arules03_tbl, arules
 </div>
 <div id="analyzing-the-four-4-association-rules-algorithms" class="section level3">
 <h3>Analyzing the Four (4) Association Rules Algorithms</h3>
-<p>The final results tibble looks like this.</p>
-<pre class="r"><code>arules_combined_tbl %&gt;% glimpse()
-## Observations: 40
-## Variables: 9
-## $ TP           &lt;dbl&gt; 0.008333333, 0.012500000, 0.016666667, 0.016666667, 0....
-## $ FP           &lt;dbl&gt; 0.5708333, 1.1125000, 1.6166667, 2.1041667, 2.5666667,...
-## $ FN           &lt;dbl&gt; 0.9916667, 0.9875000, 0.9833333, 0.9833333, 0.9833333,...
-## $ TN           &lt;dbl&gt; 7990.429, 7989.887, 7989.383, 7988.896, 7988.433, 7988...
-## $ precision    &lt;dbl&gt; 0.014388489, 0.010791367, 0.009592326, 0.007194245, 0....
-## $ recall       &lt;dbl&gt; 0.008333333, 0.012500000, 0.016666667, 0.016666667, 0....
-## $ TPR          &lt;dbl&gt; 0.008333333, 0.012500000, 0.016666667, 0.016666667, 0....
-## $ FPR          &lt;dbl&gt; 7.143453e-05, 1.392191e-04, 2.023109e-04, 2.633171e-04...
-## $ arules_model &lt;chr&gt; &quot;arules_model_01&quot;, &quot;arules_model_01&quot;, &quot;arules_model_01...</code></pre>
-<p>We can graph the four (4) various models as well.</p>
+<p>A comparison of the four (4) various models are shown below.</p>
 <pre class="r"><code>arules_combined_tbl %&gt;% 
     ggplot(aes(x=FPR, y=TPR, group=arules_model, color=arules_model)) +
     geom_line(size = 1) +
@@ -329,12 +319,12 @@ arules_combined_tbl &lt;- rbind(arules01_tbl, arules02_tbl, arules03_tbl, arules
           axis.text.x  = element_text(color=&quot;#000000&quot;),
           axis.text.y  = element_text(color=&quot;#000000&quot;)) +
     labs(title = &quot;A Rules Model Comparison&quot;)</code></pre>
-<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-15-1.png" width="100%" /></p>
+<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-14-1.png" width="100%" /></p>
 </div>
 <div id="association-rules-best-model" class="section level3">
 <h3>Association Rules Best Model</h3>
-<p>The <strong>arules_model_01</strong> performs the best since we get most results/recommendations back. In other words, arules_Model_01 will produce 10 song recommendations, which is exactly what we want. The other algorithms fall short of that goal either because the support or confidence levels were set too high.</p>
-<p>We will use the arules_model_01 parameters when comparing this algorithm to other popular methods.</p>
+<p>The <strong>arules_model_01</strong> performs the best since we get most results/recommendations back. In other words, arules_model_01 produced 10 song recommendations, and the other models did not. The other algorithms fall short of that goal either because the support or confidence levels were set too high.</p>
+<p>Going forward, we will only use the arules_model_01 since it performed the best.</p>
 </div>
 <div id="setting-up-all-algorithms" class="section level3">
 <h3>Setting Up All Algorithms</h3>
@@ -344,9 +334,8 @@ arules_combined_tbl &lt;- rbind(arules01_tbl, arules02_tbl, arules03_tbl, arules
 <li>Popular Items</li>
 <li>User-Based CF</li>
 <li>Item-Based CF</li>
-<li>Association Rules Model 01</li>
 </ul>
-<p>First, we will set up the algorithm list.</p>
+<p>Just as we did previously, we will set up the algorithm list.</p>
 <pre class="r"><code>algorithms_list &lt;- list(
     &quot;random items&quot;        = list(name  = &quot;RANDOM&quot;,
                                  param = NULL),
@@ -356,11 +345,11 @@ arules_combined_tbl &lt;- rbind(arules01_tbl, arules02_tbl, arules03_tbl, arules
                                  param = list(method = &quot;Cosine&quot;, nn = 500)),
     &quot;item-based CF&quot;       = list(name  = &quot;IBCF&quot;,
                                  param = list(k = 5)),
-     &quot;association rules1&quot;  = list(name  = &quot;AR&quot;,
+    &quot;association rules1&quot;  = list(name  = &quot;AR&quot;,
                                   param = list(supp = 0.003, conf = 0.70))
 )</code></pre>
 <p>Next, will run the <strong>evaluate()</strong> function which will produce the same TPR and FPR stats just as we did before with the Association Rules algorithms.</p>
-<p><strong>Warning</strong>, the code below is commented out below since the algorithm was already previously built.</p>
+<p><strong>Warning</strong>, the code below is commented out below since the algorithm was already previously built and saved.</p>
 <pre class="r"><code># !!! WARNING - Long Running Script !!!
 
 # results_rlab &lt;- eval_recipe %&gt;%
@@ -379,30 +368,17 @@ random_tbl  &lt;- results_rlab$`random items`@results[[1]]@cm %&gt;%
 popular_tbl &lt;- results_rlab$`popular items`@results[[1]]@cm %&gt;% 
      as_tibble() %&gt;% 
      mutate(arules_model = &quot;popular_model&quot;) 
-UCBF_tbl  &lt;- results_rlab$`user-based CF`@results[[1]]@cm %&gt;% 
+UBCF_tbl  &lt;- results_rlab$`user-based CF`@results[[1]]@cm %&gt;% 
      as_tibble() %&gt;% 
      mutate(arules_model = &quot;user_based_CF&quot;)
-ICBF_tbl  &lt;- results_rlab$`item-based CF`@results[[1]]@cm %&gt;% 
+IBCF_tbl  &lt;- results_rlab$`item-based CF`@results[[1]]@cm %&gt;% 
      as_tibble() %&gt;% 
      mutate(arules_model = &quot;item_based_CF&quot;)
-all_models_combined_tbl &lt;- rbind(random_tbl, popular_tbl, UCBF_tbl, ICBF_tbl, arules01_tbl)</code></pre>
+all_models_combined_tbl &lt;- rbind(random_tbl, popular_tbl, UBCF_tbl, IBCF_tbl, arules01_tbl)</code></pre>
 </div>
 <div id="analyzing-the-five-5-various-algorithms" class="section level3">
 <h3>Analyzing the five (5) Various Algorithms</h3>
-<p>The final results tibble looks like this.</p>
-<pre class="r"><code>all_models_combined_tbl %&gt;% glimpse()
-## Observations: 50
-## Variables: 9
-## $ TP           &lt;dbl&gt; 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000,...
-## $ FP           &lt;dbl&gt; 1.000000, 2.000000, 3.000000, 4.000000, 5.000000, 6.00...
-## $ FN           &lt;dbl&gt; 1.0000000, 1.0000000, 1.0000000, 1.0000000, 1.0000000,...
-## $ TN           &lt;dbl&gt; 7990.000, 7989.000, 7988.000, 7987.000, 7986.000, 7985...
-## $ precision    &lt;dbl&gt; 0.00000000, 0.00000000, 0.00000000, 0.00000000, 0.0000...
-## $ recall       &lt;dbl&gt; 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000,...
-## $ TPR          &lt;dbl&gt; 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000,...
-## $ FPR          &lt;dbl&gt; 0.0001251408, 0.0002502816, 0.0003754224, 0.0005005631...
-## $ arules_model &lt;chr&gt; &quot;random_model&quot;, &quot;random_model&quot;, &quot;random_model&quot;, &quot;rando...</code></pre>
-<p>We can graph the five (5) various models for comparison purposes.</p>
+<p>The five (5) various models are graphed below for comparison purposes.</p>
 <pre class="r"><code>all_models_combined_tbl %&gt;% 
     ggplot(aes(x=FPR, y=TPR, group=arules_model, color=arules_model)) +
     geom_line(size = 1) +
@@ -415,19 +391,19 @@ all_models_combined_tbl &lt;- rbind(random_tbl, popular_tbl, UCBF_tbl, ICBF_tbl,
           axis.text.x  = element_text(color=&quot;#000000&quot;),
           axis.text.y  = element_text(color=&quot;#000000&quot;)) +
     labs(title = &quot;All Model Comparison&quot;)</code></pre>
-<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-20-1.png" width="100%" /></p>
+<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-18-1.png" width="100%" /></p>
 </div>
 <div id="the-best-model-user-based-cf" class="section level3">
 <h3>The Best Model = User-Based CF</h3>
-<p>The best performing mdeol based on the true positive rate (TPR) and false-positive rate (FPR) was the User-Based Collaborative Filtering algorithm. We will use this model to produce the recommended playlist below.</p>
+<p>The best performing model based on the true positive rate (TPR) and false-positive rate (FPR) was the <strong><a href="https://cran.r-project.org/web/packages/recommenderlab/vignettes/recommenderlab.pdf">User-Based Collaborative Filtering (UBCF)</a></strong> algorithm. We will use this model to produce the recommended playlist below.</p>
 <pre class="r"><code>model_ucbf &lt;- recommenderlab::Recommender(
     data = playlist_song_rlab, 
     method = &quot;UBCF&quot;, 
     param  = list(method = &quot;Cosine&quot;, nn = 500))</code></pre>
 </div>
-<div id="make-predictions" class="section level3">
-<h3>Make predictions</h3>
-<p>We can make playlist recommendations using the model_ucbf.</p>
+<div id="set-up-favorite-song" class="section level3">
+<h3>Set Up Favorite Song</h3>
+<p>We can make playlist recommendations using the model_ucbf and by passing through 1 song. For this example, we will plug in one my favorite songs written by the Rolling Stones called “Paint It Black.”</p>
 <pre class="r"><code>playlist_rec_01 &lt;- c(&quot;The Rolling Stones ||| Paint It, Black&quot;)
 
 new_playlist_rlab &lt;- tibble(items = playlist_song_rlab@data %&gt;% colnames()) %&gt;%
@@ -438,6 +414,10 @@ new_playlist_rlab &lt;- tibble(items = playlist_song_rlab@data %&gt;% colnames()
 
 new_playlist_rlab
 ## 1 x 7991 rating matrix of class &#39;binaryRatingMatrix&#39; with 1 ratings.</code></pre>
+</div>
+<div id="make-a-playlist-prediction" class="section level3">
+<h3>Make a Playlist Prediction</h3>
+<p>Below we are passing the artist/track name into the model to produce a recommended playlist of 10 songs. Some songs recommended include Jerry Lee Lewis - Great Balls of Fire as well as Foghat - Slow Ride. For the full list of recommendations, please see the list below.</p>
 <pre class="r"><code>prediction_ucbf &lt;- predict(model_ucbf, newdata = new_playlist_rlab, n = 10)
 
 playlist_recommendation_tbl &lt;- tibble(items = prediction_ucbf@itemLabels) %&gt;%
@@ -457,6 +437,10 @@ playlist_recommendation_tbl &lt;- tibble(items = prediction_ucbf@itemLabels) %&g
 ##  8 Heart ||| Barracuda                              
 ##  9 Heart ||| Crazy On You                           
 ## 10 Led Zeppelin ||| Whole Lotta Love - 1990 Remaster</code></pre>
+</div>
+<div id="next-steps" class="section level3">
+<h3>Next steps</h3>
+<p>In the next few weeks, I plan to create a Shiny app which will allow you to enter your favorite song and receive a recommended playlist. For questions or comments about this article, please send me a message on <a href="https://www.linkedin.com/in/edorlando07/">linkedin</a>.</p>
 </div>
 
     </div>
