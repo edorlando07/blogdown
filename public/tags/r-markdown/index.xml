@@ -17,10 +17,9 @@
       <pubDate>Mon, 18 May 2020 00:00:00 +0000</pubDate>
       
       <guid>/2020/05/18/building-a-spotify-playlist-recommendation-model-with-r/</guid>
-      <description>Author: Ed Orlando
-Problem &amp;amp; Solution StatementsMany companies and products you interact with every day include some type of Recommendation system. For example, the Netflix app recommends movies and shows for you based on your history as well as what is trending. Amazon lists recommendations based on products that compliment current or previous purchases.
-How are these recommendation algorithms developed?
-This tutorial shows you how to create create a Spotify Recommendation Algorithm in R.</description>
+      <description>Author: Ed OrlandoRecognition &amp;amp; CreditThis article and its contents were heavily influenced by Matt Dancho’s Business Science University’s (BSU) Learning Labs #11 session. For more about BSU’s Learning Labs, please click here.
+
+Problem &amp;amp; Solution StatementsMany companies and products you interact with every day include some type of Recommendation system. For example, the Netflix app recommends movies based on your history and what is trending.</description>
     </item>
     
     <item>

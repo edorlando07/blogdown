@@ -5,7 +5,6 @@ date: '2020-05-18'
 output:
   html_document:
     df_print: paged
-    code_folding: hide
 description: This blog walks viewers through how to create a playlist recommendation
   algorithm using recommenderlab and arules packages
 tags:
@@ -20,16 +19,19 @@ categories: R
 
 
 
-<div id="author-ed-orlando" class="section level3">
-<h3>Author: Ed Orlando</h3>
+<div id="author-ed-orlando" class="section level4">
+<h4>Author: Ed Orlando</h4>
+</div>
+<div id="recognition-credit" class="section level4">
+<h4>Recognition &amp; Credit</h4>
+<p>This article and its contents were heavily influenced by Matt Dancho’s Business Science University’s (BSU) Learning Labs #11 session. For more about BSU’s Learning Labs, please click <a href="https://university.business-science.io/p/learning-labs-pro">here</a>.</p>
 <p><br></p>
 </div>
 <div id="problem-solution-statements" class="section level3">
 <h3>Problem &amp; Solution Statements</h3>
-<p>Many companies and products you interact with every day include some type of Recommendation system. For example, the Netflix app recommends movies and shows for you based on your history as well as what is trending. Amazon lists recommendations based on products that compliment current or previous purchases.</p>
-<p>How are these recommendation algorithms developed?</p>
-<p>This tutorial shows you how to create create a Spotify Recommendation Algorithm in R. For more info about Spotify and their products, click <a href="https://www.spotify.com/us/about-us/contact/">here</a>.</p>
-<p>We will using the <strong>recommenderlab()</strong> and <strong>arules()</strong> packages.</p>
+<p>Many companies and products you interact with every day include some type of Recommendation system. For example, the <strong><a href="https://www.netflix.com/">Netflix</a></strong> app recommends movies based on your history and what is trending. <strong><a href="https://www.amazon.com/">Amazon</a></strong> lists recommendations based on your product purchase history or what you have recently viewed.</p>
+<p>How are these recommendation algorithms developed? This article does not go into detail on how Netflix and Amazon create Recommendation algorithms. However, this tutorial does show you how to create a Spotify Recommendation Algorithm in R. For more info about Spotify and their products, click <a href="https://www.spotify.com/us/about-us/contact/">here</a>.</p>
+<p>We will be using the <strong>recommenderlab()</strong> and <strong>arules()</strong> packages along with some other core and visualization libraries.</p>
 <p><br></p>
 </div>
 <div id="load-libraries" class="section level3">
@@ -48,36 +50,38 @@ library(arulesViz)</code></pre>
 </div>
 <div id="load-data" class="section level3">
 <h3>Load Data</h3>
-<p>The data was previously downloaded using <strong><a href="https://rawgit.com/watsonbox/exportify/master/exportify.html">Exportify</a></strong>. Exportify is an app that allows you to convert playlists into .csv files. There were 27 various genres included in the data set.</p>
-<p>In all, the data consists of <strong>~103K songs</strong> and <strong>18 variables</strong>. You may download the .csv file and its contents <strong><a href="https://ed-orlando07.netlify.app/zip_files/Spotify_Playlist.zip">here</a></strong> if you want to follow along.</p>
+<p>The data was previously downloaded using <strong><a href="https://rawgit.com/watsonbox/exportify/master/exportify.html">Exportify</a></strong>. Exportify is an app that allows you to convert playlists into .csv files. There were 27 various genres included in the final data set.</p>
+<p>In all, the final data set consists of <strong>~103K songs</strong> and <strong>18 variables</strong>. You may download the .csv file and its contents <strong><a href="https://ed-orlando07.netlify.app/zip_files/Spotify_Playlist.zip">here</a></strong> if you want to follow along.</p>
 <pre class="r"><code>playlist_tbl &lt;- read_csv2(&quot;Data_Sources/2020_05_20_Spotify_Playlist_Data/all_playlists.csv&quot;)</code></pre>
 <p><br></p>
 </div>
 <div id="viewing-the-data" class="section level3">
 <h3>Viewing the Data</h3>
-<p>The features included in the data set are listed below.</p>
-<pre class="r"><code>playlist_tbl %&gt;% glimpse()
-## Observations: 103,517
+<p>A sample of the data set is listed below.</p>
+<pre class="r"><code>playlist_sample_tbl &lt;- playlist_tbl %&gt;% 
+  slice(1:10) %&gt;% 
+  glimpse()
+## Observations: 10
 ## Variables: 18
 ## $ spotify_uri           &lt;chr&gt; &quot;spotify:track:7EFnbc7UnvOyFcb6IhJq9v&quot;, &quot;spot...
 ## $ track_name            &lt;chr&gt; &quot;Oreke&quot;, &quot;Know Your Worth&quot;, &quot;Don&#39;t Rush (feat...
 ## $ artist_name           &lt;chr&gt; &quot;E Kelly, Joeboy&quot;, &quot;Khalid, Disclosure, DaVid...
 ## $ album_name            &lt;chr&gt; &quot;No Secrets&quot;, &quot;Know Your Worth&quot;, &quot;Don&#39;t Rush ...
-## $ disc_number           &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
-## $ track_number          &lt;dbl&gt; 3, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, ...
+## $ disc_number           &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+## $ track_number          &lt;dbl&gt; 3, 1, 1, 1, 1, 1, 1, 1, 2, 1
 ## $ `track_duration_(ms)` &lt;dbl&gt; 182639, 191067, 207640, 164571, 176962, 19609...
 ## $ added_by              &lt;chr&gt; &quot;spotify:user:&quot;, &quot;spotify:user:&quot;, &quot;spotify:us...
 ## $ added_at              &lt;dttm&gt; 2020-05-07 21:59:00, 2020-04-24 07:33:23, 20...
 ## $ playlist_name         &lt;chr&gt; &quot;african_heat&quot;, &quot;african_heat&quot;, &quot;african_heat...
 ## $ filename              &lt;chr&gt; &quot;./00_Data_Sources/Genres_Moods/Afro/african_...
-## $ dot                   &lt;chr&gt; &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, ...
+## $ dot                   &lt;chr&gt; &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;
 ## $ folder_01             &lt;chr&gt; &quot;00_Data_Sources&quot;, &quot;00_Data_Sources&quot;, &quot;00_Dat...
 ## $ folder_02             &lt;chr&gt; &quot;Genres_Moods&quot;, &quot;Genres_Moods&quot;, &quot;Genres_Moods...
 ## $ genre                 &lt;chr&gt; &quot;Afro&quot;, &quot;Afro&quot;, &quot;Afro&quot;, &quot;Afro&quot;, &quot;Afro&quot;, &quot;Afro...
 ## $ playlist              &lt;chr&gt; &quot;african_heat.csv&quot;, &quot;african_heat.csv&quot;, &quot;afri...
 ## $ artist_track_name     &lt;chr&gt; &quot;E Kelly, Joeboy ||| Oreke&quot;, &quot;Khalid, Disclos...
 ## $ source_playlist_id    &lt;chr&gt; &quot;Afro_african_heat&quot;, &quot;Afro_african_heat&quot;, &quot;Af...</code></pre>
-<p>Additional columns, including the genre, playlist, and the artist/track name concatenation were all previously added. For more information related to adding columns to the data set, please visit my previous post <strong><a href="https://ed-orlando07.netlify.app/2020/05/14/loading-multiple-files-from-various-folders-in-r/">here</a></strong>.</p>
+<p>Additional columns, including the genre, playlist, and the artist/track name concatenation were all previously added. For more information on how to add columns to the data set, please visit my previous post <strong><a href="https://ed-orlando07.netlify.app/2020/05/14/loading-multiple-files-from-various-folders-in-r/">here</a></strong>.</p>
 <p><br></p>
 </div>
 <div id="analyzing-the-data-which-genres-have-the-most-playlists" class="section level3">
@@ -90,30 +94,30 @@ library(arulesViz)</code></pre>
 <p>Next, we can view which genre’s have the highest number of playlists in the data file using <strong>ggplot2()</strong>.</p>
 <pre class="r"><code>g_00 &lt;- genre_frequency_tbl %&gt;%
     ggplot2::ggplot(aes(x = reorder(genre, n), 
-                           y    = n, 
-                           fill = n)) +
+                        y = n)) +
     geom_bar(stat = &quot;identity&quot;,
              show.legend = FALSE) +
-    scale_fill_gradient2(low=&quot;#000000&quot;, mid=&quot;#000000&quot;, high=&quot;#000000&quot;) +
     coord_flip() +
-    theme_tq() +
-    scale_color_tq() +
+    theme_minimal() +
     theme(legend.direction = &quot;vertical&quot;, 
           legend.position  = &quot;right&quot;,
           panel.grid.major.x = element_blank(),
           panel.grid.major.y = element_blank(),
+          panel.border = element_rect(size     = 0.50, 
+                                      linetype = &quot;solid&quot;,
+                                      colour   = &quot;gray&quot;,
+                                      fill     = NA),
           axis.text.x  = element_text(color=&quot;#000000&quot;),
           axis.text.y  = element_text(color=&quot;#000000&quot;),
           axis.title.x = element_blank(),
           axis.title.y = element_blank()) + 
     labs(title = &quot;Genre Song Frequency&quot;)
-
 g_00</code></pre>
 <p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-5-1.png" width="100%" /></p>
 </div>
 <div id="which-songs-are-the-most-frequent" class="section level3">
 <h3>Which Songs Are the Most Frequent?</h3>
-<p>We can also see which songs appear the most in multiple playlists. Many companies include “most popular” items as part of their recommendations to customers.</p>
+<p>We can also see which songs appear the most in multiple playlists. Many companies include “most popular” items as part of their recommendations to customers. We will compare a “most popular” recommendation algorithm to other algorithms a little later.</p>
 <pre class="r"><code>song_frequency_tbl &lt;- playlist_tbl %&gt;%
     count(artist_name, track_name, artist_track_name) %&gt;%
     arrange(desc(n)) %&gt;%
@@ -122,29 +126,29 @@ g_00</code></pre>
 g_01 &lt;- song_frequency_tbl %&gt;%
     filter(rank &lt;= 10) %&gt;% 
     ggplot(aes(x = reorder(artist_track_name, n), 
-                           y    = n, 
-                           fill = n)) +
+               y = n)) +
     geom_bar(stat = &quot;identity&quot;,
              show.legend = FALSE) +
-    scale_fill_gradient2(low=&quot;#000000&quot;, mid=&quot;#000000&quot;, high=&quot;#000000&quot;) +
     coord_flip() +
-    theme_tq() +
-    scale_color_tq() +
+    theme_minimal() +
     theme(legend.direction = &quot;vertical&quot;, 
           legend.position  = &quot;right&quot;,
           panel.grid.major.x = element_blank(),
           panel.grid.major.y = element_blank(),
+          panel.border = element_rect(size     = 0.50, 
+                                      linetype = &quot;solid&quot;,
+                                      colour   = &quot;gray&quot;,
+                                      fill     = NA),
           axis.text.x  = element_text(color=&quot;#000000&quot;),
           axis.text.y  = element_text(color=&quot;#000000&quot;),
           axis.title.x = element_blank(),
           axis.title.y = element_blank()) + 
     labs(title = &quot;Top 10 Artist/Track Names&quot;)
-
 g_01</code></pre>
 <p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-6-1.png" width="100%" /></p>
 </div>
-<div id="condense-the-number-of-songs-in-tibble" class="section level3">
-<h3>Condense the Number of Songs in Tibble</h3>
+<div id="condense-the-number-of-songs-in-data-set" class="section level3">
+<h3>Condense the Number of Songs in Data Set</h3>
 <p>In order for the Recommendation algorithm to run more efficiently, we can reduce the number of songs that do not appear at least 3 times. We also need to convert the condensed playlist tibble into a “wide” format in order to convert it into the proper “matrix” format later.</p>
 <pre class="r"><code>playlist_condensed_tbl &lt;- playlist_tbl %&gt;%
     left_join(song_frequency_tbl) %&gt;%
@@ -154,140 +158,91 @@ g_01</code></pre>
     mutate(value = 1) %&gt;%
     spread(artist_track_name, value, fill = 0)
 ## Joining, by = c(&quot;track_name&quot;, &quot;artist_name&quot;, &quot;artist_track_name&quot;)</code></pre>
-<p>The data is now in the proper format using 1s and 0s to identify if a song is included in a particular playlist.</p>
-<pre class="r"><code>head(playlist_condensed_tbl)
-## # A tibble: 6 x 7,992
-##   source_playlist~ `&#39;Til Tuesday |~ `$NOT ||| GOSHA` `$NOT, Maggie L~
-##   &lt;chr&gt;                       &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
-## 1 Afro_african_he~                0                0                0
-## 2 Afro_afro_hits                  0                0                0
-## 3 Afro_afro_party~                0                0                0
-## 4 Afro_afro_psych~                0                0                0
-## 5 Afro_afrobeat_e~                0                0                0
-## 6 Afro_afroboogie                 0                0                0
-## # ... with 7,988 more variables: `&amp;ME ||| Solaris` &lt;dbl&gt;, `*NSYNC ||| Bye Bye
+<p>The data is now in the proper format using 1s and 0s to identify if a song is included in a particular playlist. Below is a sample of the first 10 columns and 10 rows of the widely formatted tibble.</p>
+<pre class="r"><code>playlist_condensed_tbl %&gt;% 
+  select(1:10) %&gt;%
+  slice(1:10)
+## # A tibble: 10 x 10
+##    source_playlist~ `&#39;Til Tuesday |~ `$NOT ||| GOSHA` `$NOT, Maggie L~
+##    &lt;chr&gt;                       &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+##  1 Afro_african_he~                0                0                0
+##  2 Afro_afro_hits                  0                0                0
+##  3 Afro_afro_party~                0                0                0
+##  4 Afro_afro_psych~                0                0                0
+##  5 Afro_afrobeat_e~                0                0                0
+##  6 Afro_afroboogie                 0                0                0
+##  7 Afro_afropop                    0                0                0
+##  8 Afro_alt_cruise                 0                0                0
+##  9 Afro_beyond_the~                0                0                0
+## 10 Afro_bongo_flava                0                0                0
+## # ... with 6 more variables: `&amp;ME ||| Solaris` &lt;dbl&gt;, `*NSYNC ||| Bye Bye
 ## #   Bye` &lt;dbl&gt;, `*NSYNC ||| It&#39;s Gonna Be Me` &lt;dbl&gt;, `.anxious. ||| Crooked
 ## #   Teeth` &lt;dbl&gt;, `? &amp; The Mysterians ||| 96 Tears` &lt;dbl&gt;, `[ocean jams] |||
-## #   Nova` &lt;dbl&gt;, `_tag ||| busking` &lt;dbl&gt;, `_tag ||| Froosh` &lt;dbl&gt;, `+44 |||
-## #   When Your Heart Stops Beating` &lt;dbl&gt;, `&lt;U+0442&gt;&lt;U+043F&gt;&lt;U+0441&gt;&lt;U+0431&gt; ||| Escape Pod` &lt;dbl&gt;, `&lt;U+0627&gt;&lt;U+062D&gt;&lt;U+0645&gt;&lt;U+062F&gt;
-## #   &lt;U+062E&gt;&lt;U+0644&gt;&lt;U+064A&gt;&lt;U+0644&gt; ||| &lt;U+0642&gt;&lt;U+0644&gt;&lt;U+0628&gt;&lt;U+064A&gt; &lt;U+062F&gt;&lt;U+0642&gt; &lt;U+0627&gt;&lt;U+0644&gt;&lt;U+0643&gt;` &lt;dbl&gt;, `&lt;U+0628&gt;&lt;U+0648&gt; &lt;U+062E&gt;&lt;U+0637&gt;&lt;U+064A&gt;&lt;U+0641&gt; ||| &lt;U+0627&gt;&lt;U+062E&gt;&lt;U+0631&gt; &lt;U+0645&gt;&lt;U+0627&gt; &lt;U+0633&gt;&lt;U+0648&gt;&lt;U+0649&gt;` &lt;dbl&gt;, `&lt;U+BA5C&gt;&lt;U+B85C&gt;&lt;U+C6B0&gt;&lt;U+CE74&gt;&lt;U+D398&gt;,
-## #   Mu.B ||| Menu1 - Puzzle` &lt;dbl&gt;, `070 Shake ||| Guilty Conscience` &lt;dbl&gt;,
-## #   `100 gecs, Charli XCX, Rico Nasty, Kero Kero Bonito ||| ringtone (Remix)
-## #   [feat. Charli XCX, Rico Nasty, Kero Kero Bonito]` &lt;dbl&gt;, `100 gecs, Dylan
-## #   Brady, Laura Les ||| hand crushed by a mallet` &lt;dbl&gt;, `1000volts, Redman,
-## #   Jayceeoh, Nato Feelz, A Boy &amp; A Girl ||| Power Up` &lt;dbl&gt;, `112, The
-## #   Notorious B.I.G. ||| Only You (feat. The Notorious B.I.G.) - Radio
-## #   Mix` &lt;dbl&gt;, `2 Chainz, Drake ||| Big Amount` &lt;dbl&gt;, `2 Chainz, Gucci Mane,
-## #   Quavo ||| Good Drank` &lt;dbl&gt;, `21 Savage ||| Bank Account` &lt;dbl&gt;, `21
-## #   Savage, Summer Walker ||| Secret` &lt;dbl&gt;, `220 KID, GRACEY ||| Don’t Need
-## #   Love (with GRACEY)` &lt;dbl&gt;, `22Gz ||| No Questions` &lt;dbl&gt;, `24kGoldn |||
-## #   CITY OF ANGELS` &lt;dbl&gt;, `2AM ||| &lt;U+C8FD&gt;&lt;U+C5B4&gt;&lt;U+B3C4&gt; &lt;U+BABB&gt; &lt;U+BCF4&gt;&lt;U+B0B4&gt;` &lt;dbl&gt;, `2NE1 ||| I Am the
-## #   Best (&lt;U+B0B4&gt;&lt;U+AC00&gt; &lt;U+C81C&gt;&lt;U+C77C&gt; &lt;U+C798&gt; &lt;U+B098&gt;&lt;U+AC00&gt;)` &lt;dbl&gt;, `3 Doors Down ||| Here Without You` &lt;dbl&gt;,
-## #   `3 Doors Down ||| Kryptonite` &lt;dbl&gt;, `311 ||| All Mixed Up` &lt;dbl&gt;, `38
-## #   Special ||| Caught Up In You` &lt;dbl&gt;, `38 Special ||| Hold On
-## #   Loosely` &lt;dbl&gt;, `4 Non Blondes ||| What&#39;s Up?` &lt;dbl&gt;, `4 Strings ||| Take
-## #   Me Away - Vocal Radio Mix` &lt;dbl&gt;, `47 Soul, Lowkey ||| Hold Your
-## #   Ground` &lt;dbl&gt;, `4B, Aazar ||| Pop Dat` &lt;dbl&gt;, `5 Seconds of Summer |||
-## #   Youngblood` &lt;dbl&gt;, `5 Seconds of Summer, Seeb ||| Easier - Seeb
-## #   Remix` &lt;dbl&gt;, `50 Cent ||| In Da Club` &lt;dbl&gt;, `645AR ||| Yoga` &lt;dbl&gt;,
-## #   `7-Toun ||| Suzana` &lt;dbl&gt;, `808 State ||| Pacific State` &lt;dbl&gt;, `999 |||
-## #   Feelin&#39; Alright with the Crew` &lt;dbl&gt;, `a-ha ||| Take on Me` &lt;dbl&gt;, `a-ha,
-## #   Kygo ||| Take on Me - Kygo Remix` &lt;dbl&gt;, `A-Trak, Ferreck Dawn ||| Coming
-## #   Home` &lt;dbl&gt;, `A Blaze of Feather ||| Carousel` &lt;dbl&gt;, `A Boogie Wit da
-## #   Hoodie, 6ix9ine ||| Swervin (feat. 6ix9ine)` &lt;dbl&gt;, `A Boogie Wit da
-## #   Hoodie, London On Da Track, Roddy Ricch, Gunna ||| Numbers (feat. Roddy
-## #   Ricch, Gunna and London On Da Track)` &lt;dbl&gt;, `A Day To Remember |||
-## #   Degenerates` &lt;dbl&gt;, `A Day To Remember ||| Mindreader` &lt;dbl&gt;, `A Day To
-## #   Remember ||| Paranoia` &lt;dbl&gt;, `A Fine Frenzy ||| Almost Lover` &lt;dbl&gt;, `A
-## #   Flock Of Seagulls ||| I Ran` &lt;dbl&gt;, `A R I Z O N A ||| Nostalgic` &lt;dbl&gt;, `A
-## #   Static Lullaby ||| Stand Up` &lt;dbl&gt;, `A Tribe Called Quest ||| We The
-## #   People....` &lt;dbl&gt;, `A$AP Ferg, Future ||| New Level (feat. Future)` &lt;dbl&gt;,
-## #   `A$AP Rocky, Skepta ||| Praise The Lord (Da Shine) (feat. Skepta)` &lt;dbl&gt;,
-## #   `A.R. Rahman ||| Bigil Bigil Bigiluma` &lt;dbl&gt;, `A.R. Rahman ||| Macchar
-## #   Khan` &lt;dbl&gt;, `A.R. Rahman ||| Mazhai Kuruvi` &lt;dbl&gt;, `A.R. Rahman |||
-## #   Mylapore Blues` &lt;dbl&gt;, `A.R. Rahman, Arijit Singh ||| Enna Sona` &lt;dbl&gt;,
-## #   `A.R. Rahman, Badshah, Tanishk Bagchi, Shashaa Tirupati, Jubin Nautiyal |||
-## #   The Humma Song (From &quot;OK Jaanu&quot;)` &lt;dbl&gt;, `A.R. Rahman, Jonita Gandhi |||
-## #   Mental Manadhil` &lt;dbl&gt;, `A.R. Rahman, Kailash Kher, Sathyaprakash, Deepak,
-## #   Pooja AV ||| Aalaporaan Thamizhan` &lt;dbl&gt;, `A.R. Rahman, Shashaa Tirupati
-## #   ||| Singappenney` &lt;dbl&gt;, `A.R. Rahman, Shashwat Singh ||| Teri Nazar (From
-## #   &quot;99 Songs&quot;)` &lt;dbl&gt;, `A.R. Rahman, Shreya Ghoshal ||| Neethanae` &lt;dbl&gt;,
-## #   `A.R. Rahman, Shreya Ghoshal, Naresh Iyer ||| Munbe Vaa` &lt;dbl&gt;, `A.R.
-## #   Rahman, Sid Sriram, Aaryan Dinesh Kanagaratnam ||| Thalli Pogathey` &lt;dbl&gt;,
-## #   `A.R. Rahman, Sreekanth Hariharan, Madhura Dhara Talluri |||
-## #   Unakaga` &lt;dbl&gt;, `A.R. Rahman, Thalapathy Vijay ||| Verithanam` &lt;dbl&gt;, `A.R.
-## #   Rahman, Vijay Prakash, Shweta Mohan ||| Innum Konjam Naeram` &lt;dbl&gt;, `A.R.
-## #   Rahman, Vijay Prakash, Suzanne D&#39;Mello, Blaaze ||| Hosanna` &lt;dbl&gt;, `Aaliyah
-## #   ||| At Your Best (You Are Love)` &lt;dbl&gt;, `Aaron Copland, Aurora Orchestra,
-## #   Nicholas Collon ||| Copland: Appalachian Spring: VII. Doppio movimento
-## #   (Variations on a Shaker Hymn - Simple Gifts)` &lt;dbl&gt;, `Aaron May |||
-## #   Dreams` &lt;dbl&gt;, `Aaron May ||| On Me` &lt;dbl&gt;, `Aaron Neville |||
-## #   Hercules` &lt;dbl&gt;, `Aaron Neville ||| Tell It Like It Is` &lt;dbl&gt;, `Aaron
-## #   Tippin ||| You&#39;ve Got to Stand for Something` &lt;dbl&gt;, `Aastha Gill, Badshah
-## #   ||| Buzz (feat. Badshah)` &lt;dbl&gt;, `ABBA ||| Gimme! Gimme! Gimme! (A Man
-## #   After Midnight)` &lt;dbl&gt;, `Abbie Lou Johnston ||| Reflection` &lt;dbl&gt;, `Abe
-## #   Hathot ||| 432hz Manara (Lighthouse)` &lt;dbl&gt;, `Abe Hathot ||| Healing
-## #   Bouzouki in 432hz (Firas Limitless)` &lt;dbl&gt;, `Abe Hathot ||| Healing Keys of
-## #   Light` &lt;dbl&gt;, `Abe Hathot, Firas Roby ||| The Sun Has Risen -
-## #   Instrumental` &lt;dbl&gt;, `Abhay Jodhpurkar, Saindhavi ||| Vinmeen` &lt;dbl&gt;,
-## #   `Abimaro ||| Folding` &lt;dbl&gt;, `Above &amp; Beyond ||| Blue Monday` &lt;dbl&gt;, `Above
-## #   &amp; Beyond ||| Strength From Inside` &lt;dbl&gt;, `Above &amp; Beyond, Zoë Johnston |||
-## #   We&#39;re All We Need (feat. Zoë Johnston)` &lt;dbl&gt;, `Absofacto |||
-## #   Dissolve` &lt;dbl&gt;, `AC/DC ||| Back In Black` &lt;dbl&gt;, `AC/DC ||| Highway to
-## #   Hell` &lt;dbl&gt;, `AC/DC ||| T.N.T.` &lt;dbl&gt;, `AC/DC ||| Thunderstruck` &lt;dbl&gt;, ...</code></pre>
-<p>The recommendation algorithms need the data</p>
+## #   Nova` &lt;dbl&gt;</code></pre>
+<p>The recommendation algorithms need the data in a matrix format. The code below performs that transformation.</p>
 <pre class="r"><code>playlist_song_rlab &lt;- playlist_condensed_tbl %&gt;%
     select(-source_playlist_id) %&gt;%
     as.matrix() %&gt;%
     as(&quot;binaryRatingMatrix&quot;)
     </code></pre>
-<pre class="r"><code># eval_recipe &lt;- playlist_song_rlab %&gt;%
-#     evaluationScheme(method = &quot;cross-validation&quot;, k = 5, given = -1)
-# 
-# eval_recipe</code></pre>
-<pre class="r"><code># algorithms_list &lt;- list(
-#     &quot;association rules1&quot;  = list(name  = &quot;AR&quot;,
-#                                    param = list(supp = 0.003, conf = 0.70)),
-#     &quot;association rules2&quot;  = list(name  = &quot;AR&quot;,
-#                                    param = list(supp = 0.003, conf = 0.75)),
-#     &quot;association rules3&quot;  = list(name  = &quot;AR&quot;,
-#                                   param = list(supp = 0.004, conf = 0.70)),
-#     &quot;association rules4&quot;  = list(name  = &quot;AR&quot;,
-#                                   param = list(supp = 0.004, conf = 0.75))
-#  )</code></pre>
+</div>
+<div id="setting-up-the-association-rules-algorithm-and-parameters" class="section level3">
+<h3>Setting Up the Association Rules Algorithm and Parameters</h3>
+<p>Next we will set up a recipe for the recommendation algorithm using the evaluationScheme function. For more information related to this package, please click <strong><a href="https://www.rdocumentation.org/packages/recommenderlab/versions/0.2-5/topics/evaluationScheme">here</a></strong>.</p>
+<pre class="r"><code>eval_recipe &lt;- playlist_song_rlab %&gt;%
+   evaluationScheme(method = &quot;cross-validation&quot;, k = 5, given = -1)
+## Warning in .local(data, ...): The following users do not have enough items
+## leaving no given items: 4, 13, 21, 30, 31, 36, 58, 59, 77, 113, 201, 208, 211,
+## 217, 218, 228, 229, 231, 233, 236, 313, 322, 337, 341, 373, 427, 444, 483, 495,
+## 556, 570, 613, 655, 658, 659, 695, 696, 699, 701, 705, 721, 755, 756, 757, 761,
+## 875, 905, 968, 976, 1004, 1020, 1025, 1026, 1074, 1109, 1124, 1125, 1193
+
+eval_recipe
+## Evaluation scheme using all-but-1 items
+## Method: &#39;cross-validation&#39; with 5 run(s).
+## Good ratings: NA
+## Data set: 1200 x 7991 rating matrix of class &#39;binaryRatingMatrix&#39; with 33577 ratings.</code></pre>
+<p>Next, we will set up 4 various Association Rules settings so that each algorithm can be compared to find the most appropriate support and confidence levels. For more information related to the <strong>recommenderlab::evaluate()</strong> please click <a href="https://cran.r-project.org/web/packages/recommenderlab/vignettes/recommenderlab.pdf">here</a>.</p>
+<pre class="r"><code>algorithms_list &lt;- list(
+    &quot;association rules1&quot;  = list(name  = &quot;AR&quot;,
+                                   param = list(supp = 0.003, conf = 0.70)),
+    &quot;association rules2&quot;  = list(name  = &quot;AR&quot;,
+                                   param = list(supp = 0.003, conf = 0.75)),
+    &quot;association rules3&quot;  = list(name  = &quot;AR&quot;,
+                                  param = list(supp = 0.004, conf = 0.70)),
+    &quot;association rules4&quot;  = list(name  = &quot;AR&quot;,
+                                  param = list(supp = 0.004, conf = 0.75))
+ )</code></pre>
+<p><strong>Warning</strong>, the code below is commented out below since the algorithm was already previously built.</p>
 <pre class="r"><code># !!! WARNING - This section is commented out since it is a long-running script !!!
 
 # results_rlab_arules &lt;- eval_recipe %&gt;%
 #     recommenderlab::evaluate(
 #          method    = algorithms_list,
 #          type      = &quot;topNList&quot;,
-#          n         = 1:10)</code></pre>
-<pre class="r"><code>
-# saveRDS(results_rlab_arules, file = &quot;Models/results_arules.rds&quot;)
+#          n         = 1:10)
 
-results_rlab_arules &lt;- read_rds(&quot;Models/results_arules.rds&quot;)
-
-# plot(results_rlab_arules, annotate = TRUE)
-
+# saveRDS(results_rlab_arules, file = &quot;Models/results_arules.rds&quot;)</code></pre>
+<p>The four (4) various models are saved to the path below. In the code below, we also pull out the True Positive Rate (TPR) as well as the False Positive Rate (FPR) in order to compare and contrast the various parameters in the four (4) Association Rules algorithms.</p>
+<pre class="r"><code>results_rlab_arules &lt;- read_rds(&quot;Models/results_arules.rds&quot;)
 arules01_tbl &lt;- results_rlab_arules$`association rules1`@results[[1]]@cm %&gt;% 
     as_tibble() %&gt;% 
     mutate(arules_model = &quot;arules_model_01&quot;)
-    
 arules02_tbl &lt;- results_rlab_arules$`association rules2`@results[[1]]@cm %&gt;%
     as_tibble() %&gt;% 
     mutate(arules_model = &quot;arules_model_02&quot;)
-    
 arules03_tbl &lt;- results_rlab_arules$`association rules3`@results[[1]]@cm %&gt;%
     as_tibble() %&gt;% 
     mutate(arules_model = &quot;arules_model_03&quot;)
-    
 arules04_tbl &lt;- results_rlab_arules$`association rules4`@results[[1]]@cm %&gt;%
     as_tibble() %&gt;% 
     mutate(arules_model = &quot;arules_model_04&quot;)
-
-arules_combined_tbl &lt;- rbind(arules01_tbl, arules02_tbl, arules03_tbl, arules04_tbl)
-
-arules_combined_tbl %&gt;% glimpse()
+arules_combined_tbl &lt;- rbind(arules01_tbl, arules02_tbl, arules03_tbl, arules04_tbl)</code></pre>
+</div>
+<div id="analyzing-the-four-4-association-rules-algorithms" class="section level3">
+<h3>Analyzing the Four (4) Association Rules Algorithms</h3>
+<p>The final results tibble looks like this.</p>
+<pre class="r"><code>arules_combined_tbl %&gt;% glimpse()
 ## Observations: 40
 ## Variables: 9
 ## $ TP           &lt;dbl&gt; 0.008333333, 0.012500000, 0.016666667, 0.016666667, 0....
@@ -299,20 +254,145 @@ arules_combined_tbl %&gt;% glimpse()
 ## $ TPR          &lt;dbl&gt; 0.008333333, 0.012500000, 0.016666667, 0.016666667, 0....
 ## $ FPR          &lt;dbl&gt; 7.143453e-05, 1.392191e-04, 2.023109e-04, 2.633171e-04...
 ## $ arules_model &lt;chr&gt; &quot;arules_model_01&quot;, &quot;arules_model_01&quot;, &quot;arules_model_01...</code></pre>
+<p>We can graph the four (4) various models as well.</p>
 <pre class="r"><code>arules_combined_tbl %&gt;% 
     ggplot(aes(x=FPR, y=TPR, group=arules_model, color=arules_model)) +
     geom_line(size = 1) +
     theme_minimal() +
-    
     scale_colour_manual(values = c(&quot;#000000&quot;, &quot;#808080&quot;, &quot;#F08080&quot;, &quot;#DC143C&quot;)) +
-    
-    #scale_color_tq() +
     theme(legend.direction = &quot;vertical&quot;, 
           legend.position  = &quot;right&quot;,
           panel.grid.major.x = element_blank(),
           panel.grid.major.y = element_blank(),
           axis.text.x  = element_text(color=&quot;#000000&quot;),
           axis.text.y  = element_text(color=&quot;#000000&quot;)) +
-    labs(title = &quot;A Rules Model Comprarisons&quot;)</code></pre>
-<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-14-1.png" width="100%" /></p>
+    labs(title = &quot;A Rules Model Comparison&quot;)</code></pre>
+<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-15-1.png" width="100%" /></p>
+</div>
+<div id="association-rules-best-model" class="section level3">
+<h3>Association Rules Best Model</h3>
+<p>The <strong>arules_model_01</strong> performs the best since we get most results/recommendations back. In other words, arules_Model_01 will produce 10 song recommendations, which is exactly what we want. The other algorithms fall short of that goal either because the support or confidence levels were set too high.</p>
+<p>We will use the arules_model_01 parameters when comparing this algorithm to other popular methods.</p>
+</div>
+<div id="setting-up-all-algorithms" class="section level3">
+<h3>Setting Up All Algorithms</h3>
+<p>Next, we will compare the Association Rules best performing algorithm will 4 other methods. Those methods include:</p>
+<ul>
+<li>Random (base model)</li>
+<li>Popular Items</li>
+<li>User-Based CF</li>
+<li>Item-Based CF</li>
+<li>Association Rules Model 01</li>
+</ul>
+<p>First, we will set up the algorithm list.</p>
+<pre class="r"><code>algorithms_list &lt;- list(
+    &quot;random items&quot;        = list(name  = &quot;RANDOM&quot;,
+                                 param = NULL),
+    &quot;popular items&quot;       = list(name  = &quot;POPULAR&quot;,
+                                 param = NULL),
+    &quot;user-based CF&quot;       = list(name  = &quot;UBCF&quot;,
+                                 param = list(method = &quot;Cosine&quot;, nn = 500)),
+    &quot;item-based CF&quot;       = list(name  = &quot;IBCF&quot;,
+                                 param = list(k = 5)),
+     &quot;association rules1&quot;  = list(name  = &quot;AR&quot;,
+                                  param = list(supp = 0.003, conf = 0.70))
+)</code></pre>
+<p>Next, will run the <strong>evaluate()</strong> function which will produce the same TPR and FPR stats just as we did before with the Association Rules algorithms.</p>
+<p><strong>Warning</strong>, the code below is commented out below since the algorithm was already previously built.</p>
+<pre class="r"><code># !!! WARNING - Long Running Script !!!
+
+# results_rlab &lt;- eval_recipe %&gt;%
+#      recommenderlab::evaluate(
+#          method    = algorithms_list,
+#          type      = &quot;topNList&quot;,
+#          n         = 1:10)
+
+# saveRDS(results_rlab, file = &quot;Models/results_all_models.rds&quot;)</code></pre>
+<p>Similar to before, we will pull out the True Positive Rate (TPR) as well as the False Positive Rate (FPR) in order to compare and contrast the various parameters in the five (5) recommendation algorithms.</p>
+<pre class="r"><code>results_rlab &lt;- read_rds(&quot;Models/results_all_models.rds&quot;)
+
+random_tbl  &lt;- results_rlab$`random items`@results[[1]]@cm %&gt;% 
+     as_tibble() %&gt;% 
+     mutate(arules_model = &quot;random_model&quot;)
+popular_tbl &lt;- results_rlab$`popular items`@results[[1]]@cm %&gt;% 
+     as_tibble() %&gt;% 
+     mutate(arules_model = &quot;popular_model&quot;) 
+UCBF_tbl  &lt;- results_rlab$`user-based CF`@results[[1]]@cm %&gt;% 
+     as_tibble() %&gt;% 
+     mutate(arules_model = &quot;user_based_CF&quot;)
+ICBF_tbl  &lt;- results_rlab$`item-based CF`@results[[1]]@cm %&gt;% 
+     as_tibble() %&gt;% 
+     mutate(arules_model = &quot;item_based_CF&quot;)
+all_models_combined_tbl &lt;- rbind(random_tbl, popular_tbl, UCBF_tbl, ICBF_tbl, arules01_tbl)</code></pre>
+</div>
+<div id="analyzing-the-five-5-various-algorithms" class="section level3">
+<h3>Analyzing the five (5) Various Algorithms</h3>
+<p>The final results tibble looks like this.</p>
+<pre class="r"><code>all_models_combined_tbl %&gt;% glimpse()
+## Observations: 50
+## Variables: 9
+## $ TP           &lt;dbl&gt; 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000,...
+## $ FP           &lt;dbl&gt; 1.000000, 2.000000, 3.000000, 4.000000, 5.000000, 6.00...
+## $ FN           &lt;dbl&gt; 1.0000000, 1.0000000, 1.0000000, 1.0000000, 1.0000000,...
+## $ TN           &lt;dbl&gt; 7990.000, 7989.000, 7988.000, 7987.000, 7986.000, 7985...
+## $ precision    &lt;dbl&gt; 0.00000000, 0.00000000, 0.00000000, 0.00000000, 0.0000...
+## $ recall       &lt;dbl&gt; 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000,...
+## $ TPR          &lt;dbl&gt; 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000,...
+## $ FPR          &lt;dbl&gt; 0.0001251408, 0.0002502816, 0.0003754224, 0.0005005631...
+## $ arules_model &lt;chr&gt; &quot;random_model&quot;, &quot;random_model&quot;, &quot;random_model&quot;, &quot;rando...</code></pre>
+<p>We can graph the five (5) various models for comparison purposes.</p>
+<pre class="r"><code>all_models_combined_tbl %&gt;% 
+    ggplot(aes(x=FPR, y=TPR, group=arules_model, color=arules_model)) +
+    geom_line(size = 1) +
+    theme_minimal() +
+    scale_colour_manual(values = c(&quot;#000000&quot;, &quot;#808080&quot;, &quot;#F08080&quot;, &quot;#F08080&quot;, &quot;#DC143C&quot;)) +
+    theme(legend.direction = &quot;vertical&quot;, 
+          legend.position  = &quot;right&quot;,
+          panel.grid.major.x = element_blank(),
+          panel.grid.major.y = element_blank(),
+          axis.text.x  = element_text(color=&quot;#000000&quot;),
+          axis.text.y  = element_text(color=&quot;#000000&quot;)) +
+    labs(title = &quot;All Model Comparison&quot;)</code></pre>
+<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-20-1.png" width="100%" /></p>
+</div>
+<div id="the-best-model-user-based-cf" class="section level3">
+<h3>The Best Model = User-Based CF</h3>
+<p>The best performing mdeol based on the true positive rate (TPR) and false-positive rate (FPR) was the User-Based Collaborative Filtering algorithm. We will use this model to produce the recommended playlist below.</p>
+<pre class="r"><code>model_ucbf &lt;- recommenderlab::Recommender(
+    data = playlist_song_rlab, 
+    method = &quot;UBCF&quot;, 
+    param  = list(method = &quot;Cosine&quot;, nn = 500))</code></pre>
+</div>
+<div id="make-predictions" class="section level3">
+<h3>Make predictions</h3>
+<p>We can make playlist recommendations using the model_ucbf.</p>
+<pre class="r"><code>playlist_rec_01 &lt;- c(&quot;Pearl Jam ||| Even Flow&quot;)
+
+new_playlist_rlab &lt;- tibble(items = playlist_song_rlab@data %&gt;% colnames()) %&gt;%
+    mutate(value = as.numeric(items %in% playlist_rec_01)) %&gt;%
+    spread(key = items, value = value) %&gt;%
+    as.matrix() %&gt;%
+    as(&quot;binaryRatingMatrix&quot;)
+
+new_playlist_rlab
+## 1 x 7991 rating matrix of class &#39;binaryRatingMatrix&#39; with 1 ratings.</code></pre>
+<pre class="r"><code>prediction_ucbf &lt;- predict(model_ucbf, newdata = new_playlist_rlab, n = 10)
+
+playlist_recommendation_tbl &lt;- tibble(items = prediction_ucbf@itemLabels) %&gt;%
+  slice(prediction_ucbf@items[[1]]) %&gt;%
+  rename(Song_Recommendations = items)</code></pre>
+<pre class="r"><code>playlist_recommendation_tbl
+## # A tibble: 10 x 1
+##    Song_Recommendations                                   
+##    &lt;chr&gt;                                                  
+##  1 Soundgarden ||| Black Hole Sun                         
+##  2 Nirvana ||| Smells Like Teen Spirit                    
+##  3 Nirvana ||| Heart-Shaped Box                           
+##  4 The Smashing Pumpkins ||| Cherub Rock - Remastered 2011
+##  5 Rage Against The Machine ||| Killing In The Name       
+##  6 Nirvana ||| Come As You Are                            
+##  7 Alice In Chains ||| Would?                             
+##  8 Stone Temple Pilots ||| Interstate Love Song           
+##  9 Queens of the Stone Age ||| No One Knows               
+## 10 Red Hot Chili Peppers ||| Under the Bridge</code></pre>
 </div>
