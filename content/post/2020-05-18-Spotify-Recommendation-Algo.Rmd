@@ -28,7 +28,7 @@ knitr::opts_chunk$set(
 #### Author: Ed Orlando
 
 ### Recognition & Credit
-This article and its contents were heavily influenced by Matt Dancho's Learning Labs Pro Session #11. For more about Learning Labs Pro, please click [here](<https://university.business-science.io/p/learning-labs-pro>).
+This article and its contents were heavily influenced by Matt Dancho's Learning Labs: Session #11. For more about Learning Labs Pro, please click [here](<https://university.business-science.io/p/learning-labs-pro>).
 
 <br>
 
@@ -38,7 +38,7 @@ Many companies and products you interact with every day include some type of Rec
 **[Amazon](<https://www.amazon.com/>)** lists recommended items based on your product purchase history or what you currently have in your shopping cart. 
 
 ### Solution Statement
-This tutorial shows you some of the methods used to create these types of algorithms.  In the example presented, we utilized the **The Rolling Stones song** *Gimme Shelter* to produce the following playlist.
+This tutorial shows you some of the methods used to create these types of algorithms.  In the example presented, we utilized the **The Rolling Stones** song *Gimme Shelter* to produce the following playlist.
 
 * Creedence Clearwater Revival | *Fortunate Son*		
 * Jimi Hendrix | *All Along the Watchtower*		
@@ -54,7 +54,7 @@ This tutorial shows you some of the methods used to create these types of algori
 <br>
 
 ### Load Libraries
-To get started, first load the libraries listed below.
+To get started, install/load the libraries listed below.
 
 ```{r, echo=TRUE, results="hide", warning=FALSE, error=FALSE, message=FALSE}
 # Core & Viz
@@ -88,15 +88,16 @@ A sample of the first 10 observations in the data set is listed below.
 
 ```{r}
 playlist_sample_tbl <- playlist_tbl %>% 
+  filter(genre == "Rock") %>%
   slice(1:10) %>% 
   glimpse()
 ```
 
-Additional columns, including the genre, playlist, and the artist/track name concatenation were all previously added.  For more information on how to add these new columns to the data set, please visit my previous post **[here](<https://ed-orlando07.netlify.app/2020/05/14/loading-multiple-files-from-various-folders-in-r/>)**.  
+Additional columns, including the genre, playlist, and the artist/track name concatenation were all previously added.  For more information on how to add these new columns to the data set from scratch, please visit my previous post **[here](<https://ed-orlando07.netlify.app/2020/05/14/loading-multiple-files-from-various-folders-in-r/>)**.  
 
 <br>
 
-### Analyzing the Data: Which Genres Have the Most Playlists?
+### Analyzing the Data: Which Genres Include the Most Playlists?
 
 Before building the algorithm, let's get a better understanding of the data set.  We can aggregate the total number of songs for each genre with the code below.  
 
@@ -107,7 +108,7 @@ genre_frequency_tbl <- playlist_tbl %>%
     rowid_to_column(var = "rank")
 ```
 
-Next, we can visually see which genre's have the highest number of playlists in the data file using **ggplot2()**. 
+Next, we visually show which genre's have the highest number of playlists in the data file using **ggplot2()**. 
 
 ```{r}
 g_00 <- genre_frequency_tbl %>%
@@ -136,7 +137,7 @@ g_00
 
 ### Which Songs Appear the Most in the Data Set?
 
-We can also see which songs appear the most across multiple playlists.  It is common for many companies to include "most popular" items as part of their recommendations to customers.  We compare a "most popular" recommendation algorithm to other algorithms a little later. 
+We also show which songs appear the most across multiple playlists.  It is common for many companies to include "most popular" items as part of their recommendations to customers.  We compare a "most popular" recommendation algorithm to other algorithms a little later. 
 
 ```{r, warning=FALSE, error=FALSE, message=FALSE}
 song_frequency_tbl <- playlist_tbl %>%
@@ -184,7 +185,7 @@ playlist_condensed_tbl <- playlist_tbl %>%
     spread(artist_track_name, value, fill = 0)
 ```
 
-The data was transformed using 1s and 0s to identify if a song is included in a particular playlist.  Below is a sample of the first 10 columns and 10 rows of the widely formatted tibble.
+The data was transformed using 1s and 0s to identify if a song was included in a particular playlist.  Below is a sample of the first 10 columns and 10 rows of the widely formatted tibble.
 
 ```{r}
 playlist_condensed_tbl %>% 
@@ -199,13 +200,11 @@ playlist_song_rlab <- playlist_condensed_tbl %>%
     select(-source_playlist_id) %>%
     as.matrix() %>%
     as("binaryRatingMatrix")
-    
 ```
 
-### Modeling Part 1:
-### Set Up the Association Rules (arules) Algorithm and Parameters
+### Modeling Part 1: Set Up the Association Rules (arules) Algorithm and Parameters
 
-One popular method used to identify freqent item sets is called **[Association Rules (arules)](<https://cran.r-project.org/web/packages/arules/arules.pdf>)**.  In order to identify an appropriate arules model, we set up and compared 4 different models using 4 different parameters in each.   
+One popular method used to identify frequent item sets is called **[Association Rules (arules)](<https://cran.r-project.org/web/packages/arules/arules.pdf>)**.  In order to identify an appropriate arules model, we set up and compared 4 different arules models.   
 
 In the first step, we set up a recipe for the recommendation algorithm using the evaluationScheme function.  For more information related to this package, please click **[here](<https://www.rdocumentation.org/packages/recommenderlab/versions/0.2-5/topics/evaluationScheme>)**.
 
@@ -246,6 +245,7 @@ algorithms_list <- list(
 In the code below, we pulled out the True Positive Rate (TPR) and the False Positive Rate (FPR) in order to compare and contrast the various parameters in the four (4) Association Rules algorithms.
 ```{r}
 results_rlab_arules <- read_rds("Models/results_arules.rds")
+
 arules01_tbl <- results_rlab_arules$`association rules1`@results[[1]]@cm %>% 
     as_tibble() %>% 
     mutate(arules_model = "arules_model_01")
@@ -258,6 +258,7 @@ arules03_tbl <- results_rlab_arules$`association rules3`@results[[1]]@cm %>%
 arules04_tbl <- results_rlab_arules$`association rules4`@results[[1]]@cm %>%
     as_tibble() %>% 
     mutate(arules_model = "arules_model_04")
+
 arules_combined_tbl <- rbind(arules01_tbl, arules02_tbl, arules03_tbl, arules04_tbl)
 ```
 
@@ -281,10 +282,9 @@ arules_combined_tbl %>%
 
 ### Association Rules Best Model
 
-Although models 2-4 showed a more promising ROC curve, the **arules_model_01** performed the best since it produced the most results/recommendations back.  In other words, arules_model_01 produced 10 song recommendations, while the other models did not.  The other algorithms fall short of the 10 song goal either because the support or confidence levels were set too high.
+Although models 2-4 showed a more promising ROC curve, the **arules_model_01** was selected since it produced the most results/recommendations back.  In other words, arules_model_01 produced 10 song recommendations, while the other models did not.  The other algorithms fall short of the 10 song goal either because the support or confidence levels were set too high.
 
-### Modeling Part 2:
-### Setting Up All Algorithms
+### Modeling Part 2: Set Up All Algorithms
 
 Next, we will compare the Association Rules best performing algorithm will 4 other methods.  Those methods include:
 
@@ -343,6 +343,7 @@ UBCF_tbl  <- results_rlab$`user-based CF`@results[[1]]@cm %>%
 IBCF_tbl  <- results_rlab$`item-based CF`@results[[1]]@cm %>% 
      as_tibble() %>% 
      mutate(arules_model = "item_based_CF")
+
 all_models_combined_tbl <- rbind(random_tbl, popular_tbl, UBCF_tbl, IBCF_tbl, arules01_tbl)
 ```
 
@@ -377,7 +378,7 @@ model_ucbf <- recommenderlab::Recommender(
 ```
 
 ### Enter A Favorite Song
-We can make playlist recommendations using the **model_ucbf** and by passing through 1 song.  For this example, we will plug in one my favorite songs by the **Rolling Stones** called *Gimme Shelter*.
+We made the playlist recommendations using the **model_ucbf** by passing through 1 song.  As mentioned earlier, we plugged in one my favorite songs by the **Rolling Stones** called *Gimme Shelter*.
 
 ```{r}
 playlist_rec_01 <- c("The Rolling Stones ||| Gimme Shelter")
@@ -393,7 +394,7 @@ new_playlist_rlab
 
 ### Make a Playlist Prediction
 
-Below we passed the artist/track name into the model to produce a recommended playlist of 10 songs.  Some songs recommended were **Jimi Hendrix's** *All Along the Watchtower* as well as **The Doors'** *Light My Fire*.  For the full list of recommendations, please see the list below.  
+Some songs recommended using the model produced below were **Jimi Hendrix's** *All Along the Watchtower* as well as **The Doors'** *Light My Fire*.   
 ```{r}
 prediction_ucbf <- predict(model_ucbf, newdata = new_playlist_rlab, n = 10)
 
@@ -401,6 +402,8 @@ playlist_recommendation_tbl <- tibble(items = prediction_ucbf@itemLabels) %>%
   slice(prediction_ucbf@items[[1]]) %>%
   rename(Song_Recommendations = items)
 ```
+
+For the full list of song recommendations, please see the list below. 
 
 ```{r}
 playlist_recommendation_tbl

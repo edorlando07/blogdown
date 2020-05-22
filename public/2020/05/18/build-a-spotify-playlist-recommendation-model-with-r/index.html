@@ -86,7 +86,7 @@
 </div>
 <div id="recognition-credit" class="section level3">
 <h3>Recognition &amp; Credit</h3>
-<p>This article and its contents were heavily influenced by Matt Dancho’s Learning Labs Pro Session #11. For more about Learning Labs Pro, please click <a href="https://university.business-science.io/p/learning-labs-pro">here</a>.</p>
+<p>This article and its contents were heavily influenced by Matt Dancho’s Learning Labs: Session #11. For more about Learning Labs Pro, please click <a href="https://university.business-science.io/p/learning-labs-pro">here</a>.</p>
 <p><br></p>
 </div>
 <div id="problem-statement" class="section level3">
@@ -96,7 +96,7 @@
 </div>
 <div id="solution-statement" class="section level3">
 <h3>Solution Statement</h3>
-<p>This tutorial shows you some of the methods used to create these types of algorithms. In the example presented, we utilized the <strong>The Rolling Stones song</strong> <em>Gimme Shelter</em> to produce the following playlist.</p>
+<p>This tutorial shows you some of the methods used to create these types of algorithms. In the example presented, we utilized the <strong>The Rolling Stones</strong> song <em>Gimme Shelter</em> to produce the following playlist.</p>
 <ul>
 <li>Creedence Clearwater Revival | <em>Fortunate Son</em><br />
 </li>
@@ -121,7 +121,7 @@
 </div>
 <div id="load-libraries" class="section level3">
 <h3>Load Libraries</h3>
-<p>To get started, first load the libraries listed below.</p>
+<p>To get started, install/load the libraries listed below.</p>
 <pre class="r"><code># Core &amp; Viz
 library(tidyverse)
 library(tidyquant)
@@ -144,39 +144,40 @@ library(arulesViz)</code></pre>
 <h3>Viewing the Data</h3>
 <p>A sample of the first 10 observations in the data set is listed below.</p>
 <pre class="r"><code>playlist_sample_tbl &lt;- playlist_tbl %&gt;% 
+  filter(genre == &quot;Rock&quot;) %&gt;%
   slice(1:10) %&gt;% 
   glimpse()
 ## Observations: 10
 ## Variables: 18
-## $ spotify_uri           &lt;chr&gt; &quot;spotify:track:7EFnbc7UnvOyFcb6IhJq9v&quot;, &quot;spot...
-## $ track_name            &lt;chr&gt; &quot;Oreke&quot;, &quot;Know Your Worth&quot;, &quot;Don&#39;t Rush (feat...
-## $ artist_name           &lt;chr&gt; &quot;E Kelly, Joeboy&quot;, &quot;Khalid, Disclosure, DaVid...
-## $ album_name            &lt;chr&gt; &quot;No Secrets&quot;, &quot;Know Your Worth&quot;, &quot;Don&#39;t Rush ...
+## $ spotify_uri           &lt;chr&gt; &quot;spotify:track:7ISL3LO8AWP3fKIXunvqTa&quot;, &quot;spot...
+## $ track_name            &lt;chr&gt; &quot;Joker And The Thief&quot;, &quot;Dear Maria, Count Me ...
+## $ artist_name           &lt;chr&gt; &quot;Wolfmother&quot;, &quot;All Time Low&quot;, &quot;Nickelback&quot;, &quot;...
+## $ album_name            &lt;chr&gt; &quot;Wolfmother&quot;, &quot;So Wrong, It&#39;s Right&quot;, &quot;Silver...
 ## $ disc_number           &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
-## $ track_number          &lt;dbl&gt; 3, 1, 1, 1, 1, 1, 1, 1, 2, 1
-## $ `track_duration_(ms)` &lt;dbl&gt; 182639, 191067, 207640, 164571, 176962, 19609...
+## $ track_number          &lt;dbl&gt; 6, 6, 2, 4, 3, 2, 1, 3, 3, 3
+## $ `track_duration_(ms)` &lt;dbl&gt; 280466, 182826, 223826, 211520, 203346, 20677...
 ## $ added_by              &lt;chr&gt; &quot;spotify:user:&quot;, &quot;spotify:user:&quot;, &quot;spotify:us...
-## $ added_at              &lt;dttm&gt; 2020-05-07 21:59:00, 2020-04-24 07:33:23, 20...
-## $ playlist_name         &lt;chr&gt; &quot;african_heat&quot;, &quot;african_heat&quot;, &quot;african_heat...
-## $ filename              &lt;chr&gt; &quot;./00_Data_Sources/Genres_Moods/Afro/african_...
+## $ added_at              &lt;dttm&gt; 2020-02-28 14:23:27, 2020-02-28 14:23:27, 20...
+## $ playlist_name         &lt;chr&gt; &quot;00s_rock_anthems&quot;, &quot;00s_rock_anthems&quot;, &quot;00s_...
+## $ filename              &lt;chr&gt; &quot;./00_Data_Sources/Genres_Moods/Rock/00s_rock...
 ## $ dot                   &lt;chr&gt; &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;
 ## $ folder_01             &lt;chr&gt; &quot;00_Data_Sources&quot;, &quot;00_Data_Sources&quot;, &quot;00_Dat...
 ## $ folder_02             &lt;chr&gt; &quot;Genres_Moods&quot;, &quot;Genres_Moods&quot;, &quot;Genres_Moods...
-## $ genre                 &lt;chr&gt; &quot;Afro&quot;, &quot;Afro&quot;, &quot;Afro&quot;, &quot;Afro&quot;, &quot;Afro&quot;, &quot;Afro...
-## $ playlist              &lt;chr&gt; &quot;african_heat.csv&quot;, &quot;african_heat.csv&quot;, &quot;afri...
-## $ artist_track_name     &lt;chr&gt; &quot;E Kelly, Joeboy ||| Oreke&quot;, &quot;Khalid, Disclos...
-## $ source_playlist_id    &lt;chr&gt; &quot;Afro_african_heat&quot;, &quot;Afro_african_heat&quot;, &quot;Af...</code></pre>
-<p>Additional columns, including the genre, playlist, and the artist/track name concatenation were all previously added. For more information on how to add these new columns to the data set, please visit my previous post <strong><a href="https://ed-orlando07.netlify.app/2020/05/14/loading-multiple-files-from-various-folders-in-r/">here</a></strong>.</p>
+## $ genre                 &lt;chr&gt; &quot;Rock&quot;, &quot;Rock&quot;, &quot;Rock&quot;, &quot;Rock&quot;, &quot;Rock&quot;, &quot;Rock...
+## $ playlist              &lt;chr&gt; &quot;00s_rock_anthems.csv&quot;, &quot;00s_rock_anthems.csv...
+## $ artist_track_name     &lt;chr&gt; &quot;Wolfmother ||| Joker And The Thief&quot;, &quot;All Ti...
+## $ source_playlist_id    &lt;chr&gt; &quot;Rock_00s_rock_anthems&quot;, &quot;Rock_00s_rock_anthe...</code></pre>
+<p>Additional columns, including the genre, playlist, and the artist/track name concatenation were all previously added. For more information on how to add these new columns to the data set from scratch, please visit my previous post <strong><a href="https://ed-orlando07.netlify.app/2020/05/14/loading-multiple-files-from-various-folders-in-r/">here</a></strong>.</p>
 <p><br></p>
 </div>
-<div id="analyzing-the-data-which-genres-have-the-most-playlists" class="section level3">
-<h3>Analyzing the Data: Which Genres Have the Most Playlists?</h3>
+<div id="analyzing-the-data-which-genres-include-the-most-playlists" class="section level3">
+<h3>Analyzing the Data: Which Genres Include the Most Playlists?</h3>
 <p>Before building the algorithm, let’s get a better understanding of the data set. We can aggregate the total number of songs for each genre with the code below.</p>
 <pre class="r"><code>genre_frequency_tbl &lt;- playlist_tbl %&gt;%
     count(genre) %&gt;%
     arrange(desc(n)) %&gt;%
     rowid_to_column(var = &quot;rank&quot;)</code></pre>
-<p>Next, we can visually see which genre’s have the highest number of playlists in the data file using <strong>ggplot2()</strong>.</p>
+<p>Next, we visually show which genre’s have the highest number of playlists in the data file using <strong>ggplot2()</strong>.</p>
 <pre class="r"><code>g_00 &lt;- genre_frequency_tbl %&gt;%
     ggplot2::ggplot(aes(x = reorder(genre, n), 
                         y = n)) +
@@ -202,7 +203,7 @@ g_00</code></pre>
 </div>
 <div id="which-songs-appear-the-most-in-the-data-set" class="section level3">
 <h3>Which Songs Appear the Most in the Data Set?</h3>
-<p>We can also see which songs appear the most across multiple playlists. It is common for many companies to include “most popular” items as part of their recommendations to customers. We compare a “most popular” recommendation algorithm to other algorithms a little later.</p>
+<p>We also show which songs appear the most across multiple playlists. It is common for many companies to include “most popular” items as part of their recommendations to customers. We compare a “most popular” recommendation algorithm to other algorithms a little later.</p>
 <pre class="r"><code>song_frequency_tbl &lt;- playlist_tbl %&gt;%
     count(artist_name, track_name, artist_track_name) %&gt;%
     arrange(desc(n)) %&gt;%
@@ -244,7 +245,7 @@ g_01</code></pre>
     mutate(value = 1) %&gt;%
     spread(artist_track_name, value, fill = 0)
 ## Joining, by = c(&quot;track_name&quot;, &quot;artist_name&quot;, &quot;artist_track_name&quot;)</code></pre>
-<p>The data was transformed using 1s and 0s to identify if a song is included in a particular playlist. Below is a sample of the first 10 columns and 10 rows of the widely formatted tibble.</p>
+<p>The data was transformed using 1s and 0s to identify if a song was included in a particular playlist. Below is a sample of the first 10 columns and 10 rows of the widely formatted tibble.</p>
 <pre class="r"><code>playlist_condensed_tbl %&gt;% 
   select(1:10) %&gt;%
   slice(1:10)
@@ -269,15 +270,11 @@ g_01</code></pre>
 <pre class="r"><code>playlist_song_rlab &lt;- playlist_condensed_tbl %&gt;%
     select(-source_playlist_id) %&gt;%
     as.matrix() %&gt;%
-    as(&quot;binaryRatingMatrix&quot;)
-    </code></pre>
+    as(&quot;binaryRatingMatrix&quot;)</code></pre>
 </div>
-<div id="modeling-part-1" class="section level3">
-<h3>Modeling Part 1:</h3>
-</div>
-<div id="set-up-the-association-rules-arules-algorithm-and-parameters" class="section level3">
-<h3>Set Up the Association Rules (arules) Algorithm and Parameters</h3>
-<p>One popular method used to identify freqent item sets is called <strong><a href="https://cran.r-project.org/web/packages/arules/arules.pdf">Association Rules (arules)</a></strong>. In order to identify an appropriate arules model, we set up and compared 4 different models using 4 different parameters in each.</p>
+<div id="modeling-part-1-set-up-the-association-rules-arules-algorithm-and-parameters" class="section level3">
+<h3>Modeling Part 1: Set Up the Association Rules (arules) Algorithm and Parameters</h3>
+<p>One popular method used to identify frequent item sets is called <strong><a href="https://cran.r-project.org/web/packages/arules/arules.pdf">Association Rules (arules)</a></strong>. In order to identify an appropriate arules model, we set up and compared 4 different arules models.</p>
 <p>In the first step, we set up a recipe for the recommendation algorithm using the evaluationScheme function. For more information related to this package, please click <strong><a href="https://www.rdocumentation.org/packages/recommenderlab/versions/0.2-5/topics/evaluationScheme">here</a></strong>.</p>
 <pre class="r"><code>eval_recipe &lt;- playlist_song_rlab %&gt;%
    evaluationScheme(method = &quot;cross-validation&quot;, k = 5, given = -1)
@@ -310,6 +307,7 @@ eval_recipe
 # saveRDS(results_rlab_arules, file = &quot;Models/results_arules.rds&quot;)</code></pre>
 <p>In the code below, we pulled out the True Positive Rate (TPR) and the False Positive Rate (FPR) in order to compare and contrast the various parameters in the four (4) Association Rules algorithms.</p>
 <pre class="r"><code>results_rlab_arules &lt;- read_rds(&quot;Models/results_arules.rds&quot;)
+
 arules01_tbl &lt;- results_rlab_arules$`association rules1`@results[[1]]@cm %&gt;% 
     as_tibble() %&gt;% 
     mutate(arules_model = &quot;arules_model_01&quot;)
@@ -322,6 +320,7 @@ arules03_tbl &lt;- results_rlab_arules$`association rules3`@results[[1]]@cm %&gt
 arules04_tbl &lt;- results_rlab_arules$`association rules4`@results[[1]]@cm %&gt;%
     as_tibble() %&gt;% 
     mutate(arules_model = &quot;arules_model_04&quot;)
+
 arules_combined_tbl &lt;- rbind(arules01_tbl, arules02_tbl, arules03_tbl, arules04_tbl)</code></pre>
 </div>
 <div id="analyzing-the-four-4-association-rules-algorithms" class="section level3">
@@ -343,13 +342,10 @@ arules_combined_tbl &lt;- rbind(arules01_tbl, arules02_tbl, arules03_tbl, arules
 </div>
 <div id="association-rules-best-model" class="section level3">
 <h3>Association Rules Best Model</h3>
-<p>Although models 2-4 showed a more promising ROC curve, the <strong>arules_model_01</strong> performed the best since it produced the most results/recommendations back. In other words, arules_model_01 produced 10 song recommendations, while the other models did not. The other algorithms fall short of the 10 song goal either because the support or confidence levels were set too high.</p>
+<p>Although models 2-4 showed a more promising ROC curve, the <strong>arules_model_01</strong> was selected since it produced the most results/recommendations back. In other words, arules_model_01 produced 10 song recommendations, while the other models did not. The other algorithms fall short of the 10 song goal either because the support or confidence levels were set too high.</p>
 </div>
-<div id="modeling-part-2" class="section level3">
-<h3>Modeling Part 2:</h3>
-</div>
-<div id="setting-up-all-algorithms" class="section level3">
-<h3>Setting Up All Algorithms</h3>
+<div id="modeling-part-2-set-up-all-algorithms" class="section level3">
+<h3>Modeling Part 2: Set Up All Algorithms</h3>
 <p>Next, we will compare the Association Rules best performing algorithm will 4 other methods. Those methods include:</p>
 <ul>
 <li>Random Selection</li>
@@ -396,6 +392,7 @@ UBCF_tbl  &lt;- results_rlab$`user-based CF`@results[[1]]@cm %&gt;%
 IBCF_tbl  &lt;- results_rlab$`item-based CF`@results[[1]]@cm %&gt;% 
      as_tibble() %&gt;% 
      mutate(arules_model = &quot;item_based_CF&quot;)
+
 all_models_combined_tbl &lt;- rbind(random_tbl, popular_tbl, UBCF_tbl, IBCF_tbl, arules01_tbl)</code></pre>
 </div>
 <div id="analyzing-the-five-5-various-algorithms" class="section level3">
@@ -425,7 +422,7 @@ all_models_combined_tbl &lt;- rbind(random_tbl, popular_tbl, UBCF_tbl, IBCF_tbl,
 </div>
 <div id="enter-a-favorite-song" class="section level3">
 <h3>Enter A Favorite Song</h3>
-<p>We can make playlist recommendations using the <strong>model_ucbf</strong> and by passing through 1 song. For this example, we will plug in one my favorite songs by the <strong>Rolling Stones</strong> called <em>Gimme Shelter</em>.</p>
+<p>We made the playlist recommendations using the <strong>model_ucbf</strong> by passing through 1 song. As mentioned earlier, we plugged in one my favorite songs by the <strong>Rolling Stones</strong> called <em>Gimme Shelter</em>.</p>
 <pre class="r"><code>playlist_rec_01 &lt;- c(&quot;The Rolling Stones ||| Gimme Shelter&quot;)
 
 new_playlist_rlab &lt;- tibble(items = playlist_song_rlab@data %&gt;% colnames()) %&gt;%
@@ -439,12 +436,13 @@ new_playlist_rlab
 </div>
 <div id="make-a-playlist-prediction" class="section level3">
 <h3>Make a Playlist Prediction</h3>
-<p>Below we passed the artist/track name into the model to produce a recommended playlist of 10 songs. Some songs recommended were <strong>Jimi Hendrix’s</strong> <em>All Along the Watchtower</em> as well as <strong>The Doors’</strong> <em>Light My Fire</em>. For the full list of recommendations, please see the list below.</p>
+<p>Some songs recommended using the model produced below were <strong>Jimi Hendrix’s</strong> <em>All Along the Watchtower</em> as well as <strong>The Doors’</strong> <em>Light My Fire</em>.</p>
 <pre class="r"><code>prediction_ucbf &lt;- predict(model_ucbf, newdata = new_playlist_rlab, n = 10)
 
 playlist_recommendation_tbl &lt;- tibble(items = prediction_ucbf@itemLabels) %&gt;%
   slice(prediction_ucbf@items[[1]]) %&gt;%
   rename(Song_Recommendations = items)</code></pre>
+<p>For the full list of song recommendations, please see the list below.</p>
 <pre class="r"><code>playlist_recommendation_tbl
 ## # A tibble: 10 x 1
 ##    Song_Recommendations                                             
