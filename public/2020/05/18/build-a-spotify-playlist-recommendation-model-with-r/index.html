@@ -93,8 +93,7 @@
 <h3>Problem &amp; Solution Statements</h3>
 <p>Many companies and products you interact with every day include some type of Recommendation system. For example, the <strong><a href="https://www.netflix.com/">Netflix</a></strong> app recommends movies based on your history and what is trending. <strong><a href="https://www.amazon.com/">Amazon</a></strong> lists recommended items based on your product purchase history or what you have recently viewed.</p>
 <p>How are these recommendation algorithms developed?</p>
-<p>This tutorial shows you some of the methods used to create these types of algorithms. The idea is that a user will be able to select an artist and a song they enjoy. The algorithm will then populate 10 new songs that the user might also like. An example of the final output product is listed below. For more info about Spotify click <strong><a href="https://www.spotify.com/us/about-us/contact/">here</a></strong>.</p>
-<pre class="r"><code>#knitr::include_graphics(&quot;../../static/&quot;)</code></pre>
+<p>This tutorial shows you some of the methods used to create these types of algorithms. The idea is that a user will be able to select an artist and a song they enjoy. The algorithm will then populate 10 new songs that the user might also like. For more info about Spotify, click <strong><a href="https://www.spotify.com/us/about-us/contact/">here</a></strong>.</p>
 <p><br></p>
 </div>
 <div id="load-libraries" class="section level3">
@@ -176,7 +175,7 @@ library(arulesViz)</code></pre>
           axis.title.y = element_blank()) + 
     labs(title = &quot;Genre Song Frequency&quot;)
 g_00</code></pre>
-<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-6-1.png" width="100%" /></p>
+<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-5-1.png" width="100%" /></p>
 </div>
 <div id="which-songs-are-the-most-frequent" class="section level3">
 <h3>Which Songs Are the Most Frequent?</h3>
@@ -208,7 +207,7 @@ g_01 &lt;- song_frequency_tbl %&gt;%
           axis.title.y = element_blank()) + 
     labs(title = &quot;Top 10 Artist/Track Names&quot;)
 g_01</code></pre>
-<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-7-1.png" width="100%" /></p>
+<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-6-1.png" width="100%" /></p>
 </div>
 <div id="condense-the-number-of-songs-in-data-set" class="section level3">
 <h3>Condense the Number of Songs in Data Set</h3>
@@ -330,7 +329,7 @@ arules_combined_tbl &lt;- rbind(arules01_tbl, arules02_tbl, arules03_tbl, arules
           axis.text.x  = element_text(color=&quot;#000000&quot;),
           axis.text.y  = element_text(color=&quot;#000000&quot;)) +
     labs(title = &quot;A Rules Model Comparison&quot;)</code></pre>
-<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-16-1.png" width="100%" /></p>
+<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-15-1.png" width="100%" /></p>
 </div>
 <div id="association-rules-best-model" class="section level3">
 <h3>Association Rules Best Model</h3>
@@ -416,7 +415,7 @@ all_models_combined_tbl &lt;- rbind(random_tbl, popular_tbl, UCBF_tbl, ICBF_tbl,
           axis.text.x  = element_text(color=&quot;#000000&quot;),
           axis.text.y  = element_text(color=&quot;#000000&quot;)) +
     labs(title = &quot;All Model Comparison&quot;)</code></pre>
-<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-21-1.png" width="100%" /></p>
+<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-20-1.png" width="100%" /></p>
 </div>
 <div id="the-best-model-user-based-cf" class="section level3">
 <h3>The Best Model = User-Based CF</h3>

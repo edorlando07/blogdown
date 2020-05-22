@@ -21,7 +21,8 @@ categories: R
 knitr::opts_chunk$set(
     echo = TRUE,
     collapse = TRUE,
-    out.width = "100%")
+    out.width = "100%"
+    )
 ```
 
 #### Author: Ed Orlando
@@ -36,12 +37,7 @@ Many companies and products you interact with every day include some type of Rec
 
 How are these recommendation algorithms developed?  
 
-This tutorial shows you some of the methods used to create these types of algorithms.  The idea is that a user will be able to select an artist and a song they enjoy.  The algorithm will then populate 10 new songs that the user might also like.  An example of the final output product is listed below. For more info about Spotify  click **[here](<https://www.spotify.com/us/about-us/contact/>)**.
-
-
-```{r}
-#knitr::include_graphics("../../static/")
-```
+This tutorial shows you some of the methods used to create these types of algorithms.  The idea is that a user will be able to select an artist and a song they enjoy.  The algorithm will then populate 10 new songs that the user might also like.  For more info about Spotify, click **[here](<https://www.spotify.com/us/about-us/contact/>)**.
 
 <br>
 
