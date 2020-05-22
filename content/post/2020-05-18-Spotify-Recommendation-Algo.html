@@ -27,10 +27,34 @@ categories: R
 <p>This article and its contents were heavily influenced by Matt Dancho’s Learning Labs Pro Session #11. For more about Learning Labs Pro, please click <a href="https://university.business-science.io/p/learning-labs-pro">here</a>.</p>
 <p><br></p>
 </div>
-<div id="problem-solution-statements" class="section level3">
-<h3>Problem &amp; Solution Statements</h3>
-<p>Many companies and products you interact with every day include some type of Recommendation system. For example, the <strong><a href="https://www.netflix.com/">Netflix</a></strong> app recommends movies based on your history and what is trending. <strong><a href="https://www.amazon.com/">Amazon</a></strong> lists recommended items based on your product purchase history or what you have recently viewed.</p>
-<p>This tutorial shows you some of the methods used to create these types of algorithms. In the example presented, a user will be able to select an musical artist and a song they enjoy. The algorithm will then populate 10 new songs that the user might also like. For more info about Spotify and the products they offer, click <strong><a href="https://www.spotify.com/us/about-us/contact/">here</a></strong>.</p>
+<div id="problem-statement" class="section level3">
+<h3>Problem Statement</h3>
+<p>Many companies and products you interact with every day include some type of Recommendation system. For example, the <strong><a href="https://www.netflix.com/">Netflix</a></strong> app recommends movies based on your history and what is trending.</p>
+<p><strong><a href="https://www.amazon.com/">Amazon</a></strong> lists recommended items based on your product purchase history or what you currently have in your shopping cart.</p>
+</div>
+<div id="solution-statement" class="section level3">
+<h3>Solution Statement</h3>
+<p>This tutorial shows you some of the methods used to create these types of algorithms. In the example presented, we utilized the The Rolling Stones song “Gimme Shelter” to produce the playlist.</p>
+<ul>
+<li>Creedence Clearwater Revival | <em>Fortunate Son</em><br />
+</li>
+<li>Jimi Hendrix | <em>All Along the Watchtower</em><br />
+</li>
+<li>Buffalo Springfield | <em>For What It’s Worth</em><br />
+</li>
+<li>Cream | <em>Sunshine Of Your Love</em><br />
+</li>
+<li>Steppenwolf | <em>Magic Carpet Ride</em><br />
+</li>
+<li>The Byrds | <em>Turn! Turn! Turn! (To Everything There Is a Season)</em><br />
+</li>
+<li>The Doors | <em>Light My Fire</em></li>
+<li>The Kingsmen | <em>Louie Louie</em><br />
+</li>
+<li>? &amp; The Mysterians | <em>96 Tears</em><br />
+</li>
+<li>David Bowie | <em>Space Oddity - 2015 Remaster</em></li>
+</ul>
 <p><br></p>
 </div>
 <div id="load-libraries" class="section level3">
@@ -342,7 +366,7 @@ all_models_combined_tbl &lt;- rbind(random_tbl, popular_tbl, UBCF_tbl, IBCF_tbl,
 <div id="set-up-favorite-song" class="section level3">
 <h3>Set Up Favorite Song</h3>
 <p>We can make playlist recommendations using the model_ucbf and by passing through 1 song. For this example, we will plug in one my favorite songs written by the Rolling Stones called “Paint It Black.”</p>
-<pre class="r"><code>playlist_rec_01 &lt;- c(&quot;The Rolling Stones ||| Paint It, Black&quot;)
+<pre class="r"><code>playlist_rec_01 &lt;- c(&quot;The Rolling Stones ||| Gimme Shelter&quot;)
 
 new_playlist_rlab &lt;- tibble(items = playlist_song_rlab@data %&gt;% colnames()) %&gt;%
     mutate(value = as.numeric(items %in% playlist_rec_01)) %&gt;%
@@ -355,7 +379,7 @@ new_playlist_rlab
 </div>
 <div id="make-a-playlist-prediction" class="section level3">
 <h3>Make a Playlist Prediction</h3>
-<p>Below we are passing the artist/track name into the model to produce a recommended playlist of 10 songs. Some songs recommended include Jerry Lee Lewis - Great Balls of Fire as well as Foghat - Slow Ride. For the full list of recommendations, please see the list below.</p>
+<p>Below we are passing the artist/track name into the model to produce a recommended playlist of 10 songs. Some songs recommended include Jimi Hendrix’s “All Along the Watchtower” as well as The Doors’ “Light My Fire”. For the full list of recommendations, please see the list below.</p>
 <pre class="r"><code>prediction_ucbf &lt;- predict(model_ucbf, newdata = new_playlist_rlab, n = 10)
 
 playlist_recommendation_tbl &lt;- tibble(items = prediction_ucbf@itemLabels) %&gt;%
@@ -363,18 +387,18 @@ playlist_recommendation_tbl &lt;- tibble(items = prediction_ucbf@itemLabels) %&g
   rename(Song_Recommendations = items)</code></pre>
 <pre class="r"><code>playlist_recommendation_tbl
 ## # A tibble: 10 x 1
-##    Song_Recommendations                             
-##    &lt;chr&gt;                                            
-##  1 Jerry Lee Lewis ||| Great Balls of Fire          
-##  2 Ike &amp; Tina Turner ||| River Deep - Mountain High 
-##  3 The Beach Boys ||| Surfin&#39; U.S.A. - Remastered   
-##  4 Sex Pistols ||| God Save The Queen               
-##  5 Castaways ||| Liar, Liar                         
-##  6 The Standells ||| Dirty Water                    
-##  7 Foghat ||| Slow Ride                             
-##  8 Heart ||| Barracuda                              
-##  9 Heart ||| Crazy On You                           
-## 10 Led Zeppelin ||| Whole Lotta Love - 1990 Remaster</code></pre>
+##    Song_Recommendations                                             
+##    &lt;chr&gt;                                                            
+##  1 Creedence Clearwater Revival ||| Fortunate Son                   
+##  2 Jimi Hendrix ||| All Along the Watchtower                        
+##  3 Buffalo Springfield ||| For What It&#39;s Worth                      
+##  4 Cream ||| Sunshine Of Your Love                                  
+##  5 Steppenwolf ||| Magic Carpet Ride                                
+##  6 The Byrds ||| Turn! Turn! Turn! (To Everything There Is a Season)
+##  7 The Doors ||| Light My Fire                                      
+##  8 The Kingsmen ||| Louie Louie                                     
+##  9 ? &amp; The Mysterians ||| 96 Tears                                  
+## 10 David Bowie ||| Space Oddity - 2015 Remaster</code></pre>
 </div>
 <div id="next-steps" class="section level3">
 <h3>Next steps</h3>

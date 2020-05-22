@@ -19,7 +19,8 @@
       <guid>/2020/05/18/build-a-spotify-playlist-recommendation-model-with-r/</guid>
       <description>Author: Ed OrlandoRecognition &amp;amp; CreditThis article and its contents were heavily influenced by Matt Dancho’s Learning Labs Pro Session #11. For more about Learning Labs Pro, please click here.
 
-Problem &amp;amp; Solution StatementsMany companies and products you interact with every day include some type of Recommendation system. For example, the Netflix app recommends movies based on your history and what is trending. Amazon lists recommended items based on your product purchase history or what you have recently viewed.</description>
+Problem StatementMany companies and products you interact with every day include some type of Recommendation system. For example, the Netflix app recommends movies based on your history and what is trending.
+Amazon lists recommended items based on your product purchase history or what you currently have in your shopping cart.</description>
     </item>
     
   </channel>

@@ -32,10 +32,24 @@ This article and its contents were heavily influenced by Matt Dancho's Learning 
 
 <br>
 
-### Problem & Solution Statements
-Many companies and products you interact with every day include some type of Recommendation system.  For example, the **[Netflix](<https://www.netflix.com/>)** app recommends movies based on your history and what is trending.  **[Amazon](<https://www.amazon.com/>)** lists recommended items based on your product purchase history or what you have recently viewed.   
+### Problem Statement
+Many companies and products you interact with every day include some type of Recommendation system.  For example, the **[Netflix](<https://www.netflix.com/>)** app recommends movies based on your history and what is trending.  
 
-This tutorial shows you some of the methods used to create these types of algorithms.  In the example presented, a user will be able to select an musical artist and a song they enjoy.  The algorithm will then populate 10 new songs that the user might also like.  For more info about Spotify and the products they offer, click **[here](<https://www.spotify.com/us/about-us/contact/>)**.
+**[Amazon](<https://www.amazon.com/>)** lists recommended items based on your product purchase history or what you currently have in your shopping cart. 
+
+### Solution Statement
+This tutorial shows you some of the methods used to create these types of algorithms.  In the example presented, we utilized the The Rolling Stones song "Gimme Shelter" to produce the playlist.
+
+* Creedence Clearwater Revival | *Fortunate Son*		
+* Jimi Hendrix | *All Along the Watchtower*		
+* Buffalo Springfield | *For What It's Worth*			
+* Cream | *Sunshine Of Your Love*			
+* Steppenwolf | *Magic Carpet Ride*			
+* The Byrds | *Turn! Turn! Turn! (To Everything There Is a Season)*			
+* The Doors | *Light My Fire*
+* The Kingsmen | *Louie Louie*			
+* ? & The Mysterians | *96 Tears*			
+* David Bowie | *Space Oddity - 2015 Remaster*
 
 <br>
 
@@ -367,7 +381,7 @@ model_ucbf <- recommenderlab::Recommender(
 We can make playlist recommendations using the model_ucbf and by passing through 1 song.  For this example, we will plug in one my favorite songs written by the Rolling Stones called "Paint It Black."
 
 ```{r}
-playlist_rec_01 <- c("The Rolling Stones ||| Paint It, Black")
+playlist_rec_01 <- c("The Rolling Stones ||| Gimme Shelter")
 
 new_playlist_rlab <- tibble(items = playlist_song_rlab@data %>% colnames()) %>%
     mutate(value = as.numeric(items %in% playlist_rec_01)) %>%
@@ -380,7 +394,7 @@ new_playlist_rlab
 
 ### Make a Playlist Prediction
 
-Below we are passing the artist/track name into the model to produce a recommended playlist of 10 songs.  Some songs recommended include Jerry Lee Lewis - Great Balls of Fire as well as Foghat - Slow Ride.  For the full list of recommendations, please see the list below.  
+Below we are passing the artist/track name into the model to produce a recommended playlist of 10 songs.  Some songs recommended include Jimi Hendrix's "All Along the Watchtower" as well as The Doors' "Light My Fire".  For the full list of recommendations, please see the list below.  
 ```{r}
 prediction_ucbf <- predict(model_ucbf, newdata = new_playlist_rlab, n = 10)
 
