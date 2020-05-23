@@ -32,6 +32,7 @@ categories: R
 <p>Many companies and products you interact with every day include some type of Recommendation system. For example, the <strong><a href="https://www.netflix.com/">Netflix</a></strong> app recommends movies based on your history and what is trending.</p>
 <p><strong><a href="https://www.amazon.com/">Amazon</a></strong> lists recommended items based on your product purchase history or what you currently have in your shopping cart.</p>
 <p>Often these algorithms use your data along with other individuals data to try and identify groups that have similar characteristics and share similar tastes. Although these algorithms are far from perfect, often times they present better recommendations than just random selection or no recommendation at all.</p>
+<p>The goal for this project is to create a model that will produce a recommended playlist of 10 songs based on songs that I already enjoy. In a few weeks, I will also have a Shiny application that will allow anyone to also populate recommended playlists based on their individual tastes.</p>
 </div>
 <div id="solution-statement" class="section level3">
 <h3>Solution Statement</h3>
@@ -67,9 +68,6 @@ categories: R
 library(tidyverse)
 library(tidyquant)
 library(plotly)
-
-# Data Cleaning
-library(stringi)
 
 # Modeling
 library(recommenderlab)
@@ -144,6 +142,7 @@ library(arulesViz)</code></pre>
     labs(title = &quot;Genre Song Frequency&quot;)
 g_00</code></pre>
 <p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-5-1.png" width="100%" /></p>
+<p><br></p>
 </div>
 <div id="which-individual-songs-appear-the-most-in-the-data-set" class="section level3">
 <h3>Which Individual Songs Appear the Most in the Data Set?</h3>
@@ -177,10 +176,11 @@ g_01 &lt;- song_frequency_tbl %&gt;%
 
 g_01</code></pre>
 <p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-6-1.png" width="100%" /></p>
+<p><br></p>
 </div>
 <div id="condense-the-number-of-songs-in-data-set" class="section level3">
 <h3>Condense the Number of Songs in Data Set</h3>
-<p>In order for the Recommendation algorithm to run more efficiently, we reduced the number of songs that do not appear at least 3 times. We also converted the condensed playlist tibble into a “wide” format.</p>
+<p>In order for the Recommendation algorithm to run more efficiently, we filtered out the songs that do not appear at least 3 times. We also converted the condensed playlist tibble into a “wide” format.</p>
 <pre class="r"><code>playlist_condensed_tbl &lt;- playlist_tbl %&gt;%
     left_join(song_frequency_tbl) %&gt;%
     filter(n &gt;= 3) %&gt;%
@@ -244,7 +244,7 @@ g_01</code></pre>
 #          n         = 1:10)
 
 # saveRDS(results_rlab_arules, file = &quot;Models/results_arules.rds&quot;)</code></pre>
-<p>In the code below, we pulled out the True Positive Rate (TPR) and the False Positive Rate (FPR) in order to compare and contrast the various parameters in the four (4) Association Rules algorithms.</p>
+<p>In the code below, we pulled out the True Positive Rate <strong>(TPR)</strong> and the False Positive Rate <strong>(FPR)</strong> in order to compare and contrast the various parameters in the four (4) Association Rules algorithms.</p>
 <pre class="r"><code>results_rlab_arules &lt;- read_rds(&quot;Models/results_arules.rds&quot;)
 
 arules01_tbl &lt;- results_rlab_arules$`association rules1`@results[[1]]@cm %&gt;% 
@@ -261,6 +261,7 @@ arules04_tbl &lt;- results_rlab_arules$`association rules4`@results[[1]]@cm %&gt
     mutate(arules_model = &quot;arules_model_04&quot;)
 
 arules_combined_tbl &lt;- rbind(arules01_tbl, arules02_tbl, arules03_tbl, arules04_tbl)</code></pre>
+<p><br></p>
 </div>
 <div id="analyzing-the-four-4-association-rules-algorithms" class="section level3">
 <h3>Analyzing the Four (4) Association Rules Algorithms</h3>
@@ -278,10 +279,11 @@ arules_combined_tbl &lt;- rbind(arules01_tbl, arules02_tbl, arules03_tbl, arules
           axis.text.y  = element_text(color=&quot;#000000&quot;)) +
     labs(title = &quot;A Rules Model Comparison&quot;)</code></pre>
 <p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-14-1.png" width="100%" /></p>
+<p><br></p>
 </div>
 <div id="association-rules-best-model" class="section level3">
 <h3>Association Rules Best Model</h3>
-<p>Although models 2-4 showed a more promising ROC curve, the <strong>arules_model_01</strong> was selected since it produced the most results/recommendations. In other words, arules_model_01 produced 10 song recommendations, while the other models stopped short of 10 songs. The other algorithms fall short of the 10 song goal either because the support or confidence levels were set too high.</p>
+<p>Although models 2-4 showed a more promising ROC curve initially, the <strong>arules_model_01</strong> was selected since it produced the most results/recommendations. In other words, arules_model_01 produced 10 song recommendations, while the other models stopped short of 10 songs. The other algorithms fall short of the <strong>10 song recommendation goal</strong> either because the support or confidence levels were set too high.</p>
 <p><br></p>
 </div>
 <div id="modeling-part-2-set-up-all-algorithms" class="section level3">
@@ -333,6 +335,7 @@ IBCF_tbl  &lt;- results_rlab$`item-based CF`@results[[1]]@cm %&gt;%
      mutate(arules_model = &quot;item_based_CF&quot;)
 
 all_models_combined_tbl &lt;- rbind(random_tbl, popular_tbl, UBCF_tbl, IBCF_tbl, arules01_tbl)</code></pre>
+<p><br></p>
 </div>
 <div id="analyzing-the-five-5-various-algorithms" class="section level3">
 <h3>Analyzing the five (5) Various Algorithms</h3>
@@ -350,6 +353,7 @@ all_models_combined_tbl &lt;- rbind(random_tbl, popular_tbl, UBCF_tbl, IBCF_tbl,
           axis.text.y  = element_text(color=&quot;#000000&quot;)) +
     labs(title = &quot;All Model Comparison&quot;)</code></pre>
 <p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-18-1.png" width="100%" /></p>
+<p><br></p>
 </div>
 <div id="the-best-model-user-based-cf" class="section level3">
 <h3>The Best Model = User-Based CF</h3>
@@ -358,6 +362,7 @@ all_models_combined_tbl &lt;- rbind(random_tbl, popular_tbl, UBCF_tbl, IBCF_tbl,
     data = playlist_song_rlab, 
     method = &quot;UBCF&quot;, 
     param  = list(method = &quot;Cosine&quot;, nn = 500))</code></pre>
+<p><br></p>
 </div>
 <div id="enter-a-favorite-song" class="section level3">
 <h3>Enter A Favorite Song</h3>
@@ -372,6 +377,7 @@ new_playlist_rlab &lt;- tibble(items = playlist_song_rlab@data %&gt;% colnames()
 
 new_playlist_rlab
 ## 1 x 7991 rating matrix of class &#39;binaryRatingMatrix&#39; with 1 ratings.</code></pre>
+<p><br></p>
 </div>
 <div id="make-a-playlist-prediction" class="section level3">
 <h3>Make a Playlist Prediction</h3>
@@ -396,8 +402,9 @@ playlist_recommendation_tbl &lt;- tibble(items = prediction_ucbf@itemLabels) %&g
 ##  8 The Kingsmen ||| Louie Louie                                     
 ##  9 ? &amp; The Mysterians ||| 96 Tears                                  
 ## 10 David Bowie ||| Space Oddity - 2015 Remaster</code></pre>
+<p><br></p>
 </div>
 <div id="next-steps" class="section level3">
 <h3>Next steps</h3>
-<p>In the next few weeks, I plan to create a Shiny app which will allow you to enter your favorite song and receive your recommended playlist. For questions or comments about this article, please send me a message on <a href="https://www.linkedin.com/in/edorlando07/">LinkedIn</a>.</p>
+<p>In the next few weeks, I plan to create a Shiny app which will allow you to enter your favorite song and receive a customized recommended playlist based on your tastes. For questions or comments about this article, please send me a message on <a href="https://www.linkedin.com/in/edorlando07/">LinkedIn</a>.</p>
 </div>
