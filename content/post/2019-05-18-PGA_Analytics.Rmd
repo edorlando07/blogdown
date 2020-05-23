@@ -1,0 +1,30 @@
+---
+title: "What Separates the Top PGA Tour Players from the Rest of the Field"
+author: "Ed Orlando"
+date: '2019-02-11'
+output:
+  html_document:
+    df_print: paged
+description: This blog walks viewers through how to create explainable machine learning algorithms to see what makes the top PGA players the best.
+tags:
+- LIME
+- tidyverse
+- Tableau
+- H2O
+- Business Science University
+categories: R
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    echo = TRUE,
+    collapse = TRUE,
+    out.width = "100%"
+    )
+```
+
+#### Author: Ed Orlando
+
+This article identifies what separates the top PGA Tour players from the rest of the competition using advanced machine learning techniques.
+
+The article was written using Tableau Public and the machine learning techniques were performed in R.  The entire contents as well as the access to the data and code can be viewed [here](<https://public.tableau.com/profile/ed.orlando#!/vizhome/PGATourAnalytics/PGATourAnalytics>).

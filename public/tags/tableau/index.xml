@@ -21,5 +21,16 @@
 I was also inspired to create this data science blog based on the work performed by Matt Dancho. His online learning platform Business Science University (BSU) walks you through how professional data scientists set up, build, and deploy bleeding edge machine learning models using R.</description>
     </item>
     
+    <item>
+      <title>What Separates the Top PGA Tour Players from the Rest of the Field</title>
+      <link>/2019/02/11/what-separates-the-top-pga-tour-players-from-the-rest-of-the-field/</link>
+      <pubDate>Mon, 11 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/02/11/what-separates-the-top-pga-tour-players-from-the-rest-of-the-field/</guid>
+      <description>Author: Ed OrlandoThis article identifies what separates the top PGA Tour players from the rest of the competition using advanced machine learning techniques.
+The article was written using Tableau Public and the machine learning techniques were performed in R. The entire contents as well as the access to the data and code can be viewed here.
+</description>
+    </item>
+    
   </channel>
 </rss>
