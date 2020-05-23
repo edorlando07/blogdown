@@ -27,4 +27,4 @@ knitr::opts_chunk$set(
 
 This article identifies what separates the top PGA Tour players from the rest of the competition using advanced machine learning techniques.
 
-The article was written using Tableau Public and the machine learning techniques were performed in R.  The entire contents as well as the access to the data and code can be viewed [here](<https://public.tableau.com/profile/ed.orlando#!/vizhome/PGATourAnalytics/PGATourAnalytics>).
+The article was written using Tableau Public and the machine learning techniques were performed in R.  The entire contents as well as the access to the data and code can be viewed **[here](<https://public.tableau.com/profile/ed.orlando#!/vizhome/PGATourAnalytics/PGATourAnalytics>)**.

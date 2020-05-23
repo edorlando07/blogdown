@@ -1,5 +1,5 @@
 ---
-title: "My First Post: Gratitude and Motivation"
+title: "Gratitude and Motivation"
 author: "Ed Orlando"
 date: 2020-05-10
 categories: ["R"]
@@ -18,8 +18,6 @@ First, I want to give a shout out to the team at **[White Lodging](<https://www.
 I was also inspired to create this data science blog based on the work performed by **[Matt Dancho](<https://www.linkedin.com/in/mattdancho/>)**.  His online learning platform **[Business Science University](<https://www.business-science.io/>)** (BSU) walks you through how professional data scientists set up, build, and deploy bleeding edge machine learning models using **[R](<https://rstudio.com/>)**.  I have completed three (3) out of the four (4) BSU courses and will officially publish some projects in the upcoming weeks.
 
 In addition, another BSU student, **[Jason Dexter](<https://www.linkedin.com/in/jdex/>)**, recently created his blog which gave me motivation to formally document some of my own personal projects.  His blog can be viewed **[here](<https://www.exploringdata.org/>)**.
-
-<!-- Lastly, I also want to thank my grad school professors at **[Valparaiso University](<https://www.valpo.edu/>)** including **[Sonja Streuber](<https://www.linkedin.com/in/verbalicon/>)**, **[Karl Schmitt](<https://www.linkedin.com/in/karl-schmitt-83365b29/>)**, and **[James Caristi](<https://www.linkedin.com/in/james-caristi-5049a12/>)**.  Grad school provided a great foundation that helped me learn the math and theory behind various modeling techniques.  They also introduced me to various software platforms including **[R](<https://rstudio.com/>)** and continue to be a valuable resource to this day. -->
 
 This blog will help me organize my data science projects as well as sharpen my communication skills.  Stay tuned for more posts and analysis.  If you have questions or comments, please send me a message **[here](<https://www.linkedin.com/in/edorlando07/>)**.
 
