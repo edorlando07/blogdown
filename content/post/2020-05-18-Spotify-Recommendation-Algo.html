@@ -32,7 +32,7 @@ categories: R
 <p>Many companies and products you interact with every day include some type of Recommendation system. For example, the <strong><a href="https://www.netflix.com/">Netflix</a></strong> app recommends movies based on your history and what is trending.</p>
 <p><strong><a href="https://www.amazon.com/">Amazon</a></strong> lists recommended items based on your product purchase history or what you currently have in your shopping cart.</p>
 <p>Often these algorithms use your data along with other individuals data to try and identify groups that have similar characteristics and share similar tastes. Although these algorithms are far from perfect, often times they present better recommendations than just random selection or no recommendation at all.</p>
-<p>The goal for this project is to create a model that will produce a recommended playlist of 10 songs based on songs that I already enjoy. In a few weeks, I will also have a Shiny application that will allow anyone to also populate recommended playlists based on their individual tastes.</p>
+<p>The goal for this project is to create a model that will produce a recommended playlist of 10 songs using 1 favorite song as an input. In a few weeks, I will build a Shiny application that will allow anyone to also populate recommended playlists based on their individual tastes.</p>
 </div>
 <div id="solution-statement" class="section level3">
 <h3>Solution Statement</h3>
@@ -57,7 +57,7 @@ categories: R
 </li>
 <li>David Bowie | <em>Space Oddity - 2015 Remaster</em></li>
 </ul>
-<p>What was great about this recommendation was that it introduced me to a couple songs I have never heard before that were pretty solid. In addition, it offered some songs I know, recognize, and like as well. Finally, there were a few songs that I did not particaully enjoy.</p>
+<p>What was great about this recommendation was that it introduced me to a couple songs I have never heard before that were pretty solid. In addition, it offered some songs I know, recognize, and like as well. Finally, there were a few songs that I did not particularly enjoy.</p>
 <p>The best part is that someone can use this model to create another playlist using one out of the ten songs recommended to create another unique playlist. Obviously there will eventually be some overlap, but this is a quick way to build a unique customized playlist of your own.</p>
 <p><br></p>
 </div>
@@ -244,7 +244,7 @@ g_01</code></pre>
 #          n         = 1:10)
 
 # saveRDS(results_rlab_arules, file = &quot;Models/results_arules.rds&quot;)</code></pre>
-<p>In the code below, we pulled out the True Positive Rate <strong>(TPR)</strong> and the False Positive Rate <strong>(FPR)</strong> in order to compare and contrast the various parameters in the four (4) Association Rules algorithms.</p>
+<p>In the code below, we pulled out the True Positive Rate <strong>(TPR)</strong> and the False Positive Rate <strong>(FPR)</strong> in order to evaluate the various parameters in the four (4) Association Rules algorithms.</p>
 <pre class="r"><code>results_rlab_arules &lt;- read_rds(&quot;Models/results_arules.rds&quot;)
 
 arules01_tbl &lt;- results_rlab_arules$`association rules1`@results[[1]]@cm %&gt;% 
@@ -283,7 +283,7 @@ arules_combined_tbl &lt;- rbind(arules01_tbl, arules02_tbl, arules03_tbl, arules
 </div>
 <div id="association-rules-best-model" class="section level3">
 <h3>Association Rules Best Model</h3>
-<p>Although models 2-4 showed a more promising ROC curve initially, the <strong>arules_model_01</strong> was selected since it produced the most results/recommendations. In other words, arules_model_01 produced 10 song recommendations, while the other models stopped short of 10 songs. The other algorithms fall short of the <strong>10 song recommendation goal</strong> either because the support or confidence levels were set too high.</p>
+<p>Although models 2-4 showed a more promising ROC curve initially, the <strong>arules_model_01</strong> was selected since it produced the most results/recommendations. In other words, <strong>arules_model_01</strong> produced 10 song recommendations, while the other models stopped short of 10 songs. The other algorithms fall short of the <strong>10 song recommendation goal</strong> either because the support or confidence levels were set too high.</p>
 <p><br></p>
 </div>
 <div id="modeling-part-2-set-up-all-algorithms" class="section level3">
@@ -292,8 +292,8 @@ arules_combined_tbl &lt;- rbind(arules01_tbl, arules02_tbl, arules03_tbl, arules
 <ul>
 <li>Random Selection</li>
 <li>Popular Items</li>
-<li>User-Based CF</li>
-<li>Item-Based CF</li>
+<li><a href="https://medium.com/sfu-cspmp/recommendation-systems-user-based-collaborative-filtering-using-n-nearest-neighbors-bf7361dc24e0">User-Based CF</a></li>
+<li><a href="https://medium.com/@cfpinela/recommender-systems-user-based-and-item-based-collaborative-filtering-5d5f375a127f">Item-Based CF</a></li>
 </ul>
 <p>Just as we did previously, we set up the various algorithm list.</p>
 <pre class="r"><code>algorithms_list &lt;- list(
@@ -355,9 +355,9 @@ all_models_combined_tbl &lt;- rbind(random_tbl, popular_tbl, UBCF_tbl, IBCF_tbl,
 <p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-18-1.png" width="100%" /></p>
 <p><br></p>
 </div>
-<div id="the-best-model-user-based-cf" class="section level3">
-<h3>The Best Model = User-Based CF</h3>
-<p>The best performing model based on the true positive rate (TPR) and false-positive rate (FPR) was the <strong><a href="https://cran.r-project.org/web/packages/recommenderlab/vignettes/recommenderlab.pdf">User-Based Collaborative Filtering (UBCF)</a></strong> algorithm. We used this model to produce the recommendedation model and playlist below.</p>
+<div id="the-best-overall-model-user-based-collaborative-filtering" class="section level3">
+<h3>The Best Overall Model = User Based Collaborative Filtering</h3>
+<p>The best performing model based on the true positive rate (TPR) and false-positive rate (FPR) was the <strong><a href="https://cran.r-project.org/web/packages/recommenderlab/vignettes/recommenderlab.pdf">User-Based Collaborative Filtering (UBCF)</a></strong> algorithm. We used this model to produce the recommendation model and playlist below.</p>
 <pre class="r"><code>model_ucbf &lt;- recommenderlab::Recommender(
     data = playlist_song_rlab, 
     method = &quot;UBCF&quot;, 
@@ -366,7 +366,7 @@ all_models_combined_tbl &lt;- rbind(random_tbl, popular_tbl, UBCF_tbl, IBCF_tbl,
 </div>
 <div id="enter-a-favorite-song" class="section level3">
 <h3>Enter A Favorite Song</h3>
-<p>We made the playlist recommendations using the <strong>model_ucbf</strong> by passing through 1 song. As mentioned earlier, we plugged in one my favorite songs by the <strong>Rolling Stones</strong> called <em>Gimme Shelter</em>.</p>
+<p>We made the playlist recommendations using the <strong>model_ubcf</strong> by passing through 1 song. As mentioned earlier, we plugged in one my favorite songs by the <strong>Rolling Stones</strong> called <em>Gimme Shelter</em>.</p>
 <pre class="r"><code>playlist_rec_01 &lt;- c(&quot;The Rolling Stones ||| Gimme Shelter&quot;)
 
 new_playlist_rlab &lt;- tibble(items = playlist_song_rlab@data %&gt;% colnames()) %&gt;%

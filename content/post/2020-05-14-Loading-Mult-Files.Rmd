@@ -15,7 +15,7 @@ knitr::opts_chunk$set(collapse = TRUE)
 
 ### Problem Statement
 
-This tutorial shows you how to load multiple files from multiple folders using R.  As a bonus, this article will also show you how to add the folder and file names to the tibble. 
+This tutorial shows you how to load multiple files from multiple folders using R.  As a **bonus**, this article will also show you how to add the folder and file names to the tibble. 
 
 ### Load Libraries
 **Tidyverse** and **readxl** are the only libraries required for this tutorial.

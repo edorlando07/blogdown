@@ -51,8 +51,8 @@ I was also inspired to create this data science blog based on the work performed
       <pubDate>Mon, 11 Feb 2019 00:00:00 +0000</pubDate>
       
       <guid>/2019/02/11/what-separates-the-top-pga-tour-players-from-the-rest-of-the-field/</guid>
-      <description>Author: Ed OrlandoThis article identifies what separates the top PGA Tour players from the rest of the competition using advanced machine learning techniques.
-The article was written using Tableau Public and the machine learning techniques were performed in R.
+      <description>Author: Ed OrlandoThis article identifies what separates the top PGA Tour players from the rest of the competition using H2O and LIME.
+The article and visualization were produced using Tableau Public and the predictions and explainable machine learning techniques were performed in R.
 Click here for the full article.
 </description>
     </item>
