@@ -29,8 +29,7 @@ library(tidyverse)library(readxl)
       <pubDate>Sun, 10 May 2020 00:00:00 +0000</pubDate>
       
       <guid>/2020/05/10/gratitude-and-motivation/</guid>
-      <description>Author: Ed OrlandoFirst, I want to give a shout out to the team at White Lodging. Our team leader Adam Hutsler and BI Manager Max Thomas are always coming up with creative ways to solve complex problems and create business value using Tableau and R.
-I was also inspired to create this data science blog based on the work performed by Matt Dancho. His online learning platform Business Science University (BSU) walks you through how professional data scientists set up, build, and deploy bleeding edge machine learning models using R.</description>
+      <description>Author: Ed OrlandoFirst, I want to give a shout out to the team at White Lodging. Our team leader Adam Hutsler and Business Intelligence Manager Max Thomas are always coming up with creative ways to solve complex problems and create business value using Tableau and R. I also want to thank former Business Intelligence team members, Alex Williams and Troy Hill for their encouragement and advice throughout the years.</description>
     </item>
     
   </channel>
