@@ -39,7 +39,7 @@ Many companies and products you interact with every day include some type of Rec
 
 Often these algorithms use your data along with other individuals data to try and identify groups that have similar characteristics and share similar tastes.  Although these algorithms are far from perfect, often times they present better recommendations than just random selection or no recommendation at all.
 
-The goal for this project is to create a model that will produce a recommended playlist of 10 songs based on songs that I already enjoy.  In a few weeks, I will also have a Shiny application that will allow anyone to also populate recommended playlists based on their individual tastes.
+The goal for this project is to create a model that will produce a recommended playlist of 10 songs using 1 favorite song as an input.  In a few weeks, I will build a Shiny application that will allow anyone to also populate recommended playlists based on their individual tastes.
 
 ### Solution Statement
 This tutorial shows you some of the methods used to create these types of algorithms.  In the example presented, we utilized one of my favorite songs by **The Rolling Stones** called *Gimme Shelter* to produce the following playlist.
@@ -55,7 +55,7 @@ This tutorial shows you some of the methods used to create these types of algori
 * ? & The Mysterians | *96 Tears*			
 * David Bowie | *Space Oddity - 2015 Remaster*
 
-What was great about this recommendation was that it introduced me to a couple songs I have never heard before that were pretty solid.  In addition, it offered some songs I know, recognize, and like as well.  Finally, there were a few songs that I did not particaully enjoy.  
+What was great about this recommendation was that it introduced me to a couple songs I have never heard before that were pretty solid.  In addition, it offered some songs I know, recognize, and like as well.  Finally, there were a few songs that I did not particularly enjoy.  
 
 The best part is that someone can use this model to create another playlist using one out of the ten songs recommended to create another unique playlist.  Obviously there will eventually be some overlap, but this is a quick way to build a unique customized playlist of your own.
 
@@ -254,7 +254,7 @@ algorithms_list <- list(
 # saveRDS(results_rlab_arules, file = "Models/results_arules.rds")
 ```
 
-In the code below, we pulled out the True Positive Rate **(TPR)** and the False Positive Rate **(FPR)** in order to compare and contrast the various parameters in the four (4) Association Rules algorithms.
+In the code below, we pulled out the True Positive Rate **(TPR)** and the False Positive Rate **(FPR)** in order to evaluate the various parameters in the four (4) Association Rules algorithms.
 ```{r}
 results_rlab_arules <- read_rds("Models/results_arules.rds")
 
@@ -298,7 +298,7 @@ arules_combined_tbl %>%
 
 ### Association Rules Best Model
 
-Although models 2-4 showed a more promising ROC curve initially, the **arules_model_01** was selected since it produced the most results/recommendations.  In other words, arules_model_01 produced 10 song recommendations, while the other models stopped short of 10 songs.  The other algorithms fall short of the **10 song recommendation goal** either because the support or confidence levels were set too high.
+Although models 2-4 showed a more promising ROC curve initially, the **arules_model_01** was selected since it produced the most results/recommendations.  In other words, **arules_model_01** produced 10 song recommendations, while the other models stopped short of 10 songs.  The other algorithms fall short of the **10 song recommendation goal** either because the support or confidence levels were set too high.
 
 <br> 
 
@@ -308,8 +308,8 @@ Next, we will compare the Association Rules best performing algorithm will 4 oth
 
 * Random Selection
 * Popular Items
-* User-Based CF
-* Item-Based CF
+* [User-Based CF](<https://medium.com/sfu-cspmp/recommendation-systems-user-based-collaborative-filtering-using-n-nearest-neighbors-bf7361dc24e0>)
+* [Item-Based CF](<https://medium.com/@cfpinela/recommender-systems-user-based-and-item-based-collaborative-filtering-5d5f375a127f>)
 
 Just as we did previously, we set up the various algorithm list.  
 ```{r}
@@ -385,9 +385,9 @@ all_models_combined_tbl %>%
 
 <br>
 
-### The Best Model = User-Based CF
+### The Best Overall Model = User Based Collaborative Filtering
 
-The best performing model based on the true positive rate (TPR) and false-positive rate (FPR) was the **[User-Based Collaborative Filtering (UBCF)](<https://cran.r-project.org/web/packages/recommenderlab/vignettes/recommenderlab.pdf>)** algorithm.  We used this model to produce the recommendedation model and playlist below.
+The best performing model based on the true positive rate (TPR) and false-positive rate (FPR) was the **[User-Based Collaborative Filtering (UBCF)](<https://cran.r-project.org/web/packages/recommenderlab/vignettes/recommenderlab.pdf>)** algorithm.  We used this model to produce the recommendation model and playlist below.
 
 ```{r}
 model_ucbf <- recommenderlab::Recommender(
@@ -399,7 +399,7 @@ model_ucbf <- recommenderlab::Recommender(
 <br>
 
 ### Enter A Favorite Song
-We made the playlist recommendations using the **model_ucbf** by passing through 1 song.  As mentioned earlier, we plugged in one my favorite songs by the **Rolling Stones** called *Gimme Shelter*.
+We made the playlist recommendations using the **model_ubcf** by passing through 1 song.  As mentioned earlier, we plugged in one my favorite songs by the **Rolling Stones** called *Gimme Shelter*.
 
 ```{r}
 playlist_rec_01 <- c("The Rolling Stones ||| Gimme Shelter")
