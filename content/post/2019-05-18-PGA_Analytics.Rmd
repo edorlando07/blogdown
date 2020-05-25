@@ -27,6 +27,6 @@ knitr::opts_chunk$set(
 
 This article identifies what separates the top PGA Tour players from the rest of the competition using H2O and LIME.
 
-The article and visualization were produced using Tableau Public and the predictions and explainable machine learning techniques were performed in R.  
+The article and visualizations were produced using Tableau Public and the predictions and explainable machine learning techniques were performed in R.  
 
 **[Click here for the full article](<https://public.tableau.com/profile/ed.orlando#!/vizhome/PGATourAnalytics/PGATourAnalytics>)**.

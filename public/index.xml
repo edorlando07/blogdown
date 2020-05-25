@@ -51,7 +51,7 @@ library(tidyverse)library(readxl)
       
       <guid>/2019/02/11/what-separates-the-top-pga-tour-players-from-the-rest-of-the-field/</guid>
       <description>Author: Ed OrlandoThis article identifies what separates the top PGA Tour players from the rest of the competition using H2O and LIME.
-The article and visualization were produced using Tableau Public and the predictions and explainable machine learning techniques were performed in R.
+The article and visualizations were produced using Tableau Public and the predictions and explainable machine learning techniques were performed in R.
 Click here for the full article.
 </description>
     </item>
