@@ -437,6 +437,6 @@ playlist_recommendation_tbl
 <br>
 
 ### Conclusion
-Although the final product did not produce a fully scalable application due to the server constraints, the application does provide some fun interactivity which allows viewers the chance to see how the algorithm influences their playlists.  
+Unfortunately, the final product did not produce a 100% fully scalable application which included every available artist due to the server constraints.  However, the application does provide some fun interactivity which allows viewers a chance to see how the algorithm influences their playlists.  
 
 For questions or comments about this article, please send me a message on [LinkedIn](<https://www.linkedin.com/in/edorlando07/>).
