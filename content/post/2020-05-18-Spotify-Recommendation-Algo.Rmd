@@ -28,9 +28,7 @@ knitr::opts_chunk$set(
 #### Author: Ed Orlando
 
 ### Recognition & Credit
-This article and its contents were heavily influenced by Matt Dancho's Learning Labs: Session #11. For more about Learning Labs Pro, please click [here](<https://university.business-science.io/p/learning-labs-pro>).  The application can be viewed by clicking the link below.
-
-**[Spotify Playlist Recommendation Shiny App](<https://edorlando82.shinyapps.io/Spotify_Shiny_App/>)**
+This article and its contents were heavily influenced by Matt Dancho's Learning Labs: Session #11. For more about Learning Labs Pro, please click [here](<https://university.business-science.io/p/learning-labs-pro>).  
 
 <br>
 
@@ -43,8 +41,10 @@ Often these algorithms use your data along with other individuals data to try an
 
 The goal for this project is to create a model that will produce a recommended playlist of 10 songs using 1 favorite song as an input.  .
 
+<br>
+
 ### Solution Statement
-This tutorial shows you some of the methods used to create these types of algorithms.  In the example presented, we utilized one of my favorite songs by **The Rolling Stones** called *Gimme Shelter* to produce the following playlist.  In order to create your own playlist, click **[here](<https://edorlando82.shinyapps.io/Spotify_Shiny_App/>)** for the Shiny app.
+This tutorial shows you some of the methods used to create these types of algorithms.  In the example presented, we utilized one of my favorite songs by **The Rolling Stones** called *Gimme Shelter* to produce the following playlist.  
 
 * Creedence Clearwater Revival | *Fortunate Son*		
 * Jimi Hendrix | *All Along the Watchtower*		
@@ -56,6 +56,10 @@ This tutorial shows you some of the methods used to create these types of algori
 * The Kingsmen | *Louie Louie*			
 * ? & The Mysterians | *96 Tears*			
 * David Bowie | *Space Oddity - 2015 Remaster*
+
+In order to create your own playlist, click the link below.  
+
+**[Spotify Playlist Recommendation Shiny App](<https://edorlando82.shinyapps.io/Spotify_Shiny_App/>)**
 
 What was great about this recommendation was that it introduced me to a couple songs I have never heard before that were pretty solid.  In addition, it offered some songs I know, recognize, and like as well.  Finally, there were a few songs that I did not particularly enjoy.  
 
