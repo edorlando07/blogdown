@@ -28,7 +28,9 @@ knitr::opts_chunk$set(
 #### Author: Ed Orlando
 
 ### Recognition & Credit
-This article and its contents were heavily influenced by Matt Dancho's Learning Labs: Session #11. For more about Learning Labs Pro, please click [here](<https://university.business-science.io/p/learning-labs-pro>).
+This article and its contents were heavily influenced by Matt Dancho's Learning Labs: Session #11. For more about Learning Labs Pro, please click [here](<https://university.business-science.io/p/learning-labs-pro>).  The application can be viewed by clicking the link below.
+
+**[Spotify Playlist Recommendation Shiny App](<https://edorlando82.shinyapps.io/Spotify_Shiny_App/>)**
 
 <br>
 
@@ -39,10 +41,10 @@ Many companies and products you interact with every day include some type of Rec
 
 Often these algorithms use your data along with other individuals data to try and identify groups that have similar characteristics and share similar tastes.  Although these algorithms are far from perfect, often times they present better recommendations than just random selection or no recommendation at all.
 
-The goal for this project is to create a model that will produce a recommended playlist of 10 songs using 1 favorite song as an input.  In a few weeks, I will build a Shiny application that will allow anyone to also populate recommended playlists based on their individual tastes.
+The goal for this project is to create a model that will produce a recommended playlist of 10 songs using 1 favorite song as an input.  .
 
 ### Solution Statement
-This tutorial shows you some of the methods used to create these types of algorithms.  In the example presented, we utilized one of my favorite songs by **The Rolling Stones** called *Gimme Shelter* to produce the following playlist.
+This tutorial shows you some of the methods used to create these types of algorithms.  In the example presented, we utilized one of my favorite songs by **The Rolling Stones** called *Gimme Shelter* to produce the following playlist.  In order to create your own playlist, click **[here](<https://edorlando82.shinyapps.io/Spotify_Shiny_App/>)** for the Shiny app.
 
 * Creedence Clearwater Revival | *Fortunate Son*		
 * Jimi Hendrix | *All Along the Watchtower*		
@@ -434,5 +436,7 @@ playlist_recommendation_tbl
 
 <br>
 
-### Next steps
-In the next few weeks, I plan to create a Shiny app which will allow you to enter your favorite song and receive a customized recommended playlist based on your tastes.  For questions or comments about this article, please send me a message on [LinkedIn](<https://www.linkedin.com/in/edorlando07/>).
+### Conclusion
+Although the final product did not produce a fully scalable application due to the server constraints, the application does provide some fun interactivity which allows viewers the chance to see how the algorithm influences their playlists.  
+
+For questions or comments about this article, please send me a message on [LinkedIn](<https://www.linkedin.com/in/edorlando07/>).
