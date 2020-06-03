@@ -1,0 +1,299 @@
+---
+title: "Predicting Employee Attrition"
+author: "Ed Orlando"
+date: '2020-06-03'
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+runtime: shiny
+tags:
+- flexdashboard
+- shinyjs
+- tidyverse
+- tidyquant
+- readxl
+- scales
+- formattable
+- plotly
+- shiny
+- DT
+- correlationfunnel
+- h2o
+- iml
+- DALEX
+categories: R
+---
+
+```{r setup, include=FALSE}
+
+# Libraries
+
+# App
+library(flexdashboard)
+library(shinyjs)
+
+# Core
+library(tidyverse)
+library(tidyquant)
+library(readxl)
+library(scales)
+library(formattable)
+
+# Visualizations
+library(plotly)
+library(shiny)
+library(DT)
+
+# Machine Learning
+library(correlationfunnel)
+library(h2o)
+library(iml)
+library(DALEX)
+
+# Additonal Packages
+library(coin)
+library(strucchange)
+library(party)
+
+
+# Data
+data_path        <- "Data_Sources/2020_06_03_Attrition_Data/data_processed_tbl.csv"
+var_imp_path     <- "Data_Sources/2020_06_03_Attrition_Data/var_import_tbl_GBM_grid__1_AutoML_20200409_082230_model_28.csv"
+predictions_path <- "Data_Sources/2020_06_03_Attrition_Data/cv_pred_acc_tbl_GBM_grid__1_AutoML_20200409_082230_model_28.csv"
+telco_path       <- "Data_Sources/2020_06_03_Attrition_Data/00_telco_all_data.xlsx"
+
+data_tbl         <- read.csv(data_path)
+var_imp_tbl      <- read.csv(var_imp_path)
+predictions_tbl  <- read.csv(predictions_path)
+telco_tbl        <- read_excel(telco_path)
+
+# Scripts
+source("Scripts/2020_06_03_Attrition/process_data_types.R")
+source("Scripts/2020_06_03_Attrition/rank_correlations.R")
+source("Scripts/2020_06_03_Attrition/plot_correlation_funnel_EO.R")
+source("Scripts/2020_06_03_Attrition/plot_var_importance.R")
+source("Scripts/2020_06_03_Attrition/data_prep_predictions.R")
+source("Scripts/2020_06_03_Attrition/plot_predictions.R")
+source("Scripts/2020_06_03_Attrition/predict_h2o.R")
+source("Scripts/2020_06_03_Attrition/plot_LIME_Shapley.R")
+source("Scripts/2020_06_03_Attrition/plot_LIME_Shapley_live.R")
+
+# Models
+#h2o.shutdown()
+h2o.init()
+h2o_gbm <- h2o.loadModel("Models/GBM_grid__1_AutoML_20200409_082230_model_28")
+
+```
+
+Written by: Ed Orlando, Data Scientist
+<br><br>
+
+## Project Description
+Reducing turnover in an organization is vital. Using a fabricated data set, this project utilized advanced machine learning methods that accurately predicted which employees have a higher or lesser likelihood to leave.  This project also displayed which key features influenced Employee Attrition at both the macro level as well as at the individual employee level.
+<br><br>
+
+## Acknowledgement
+I want to thank and give credit to **[Matt Dancho](<https://www.linkedin.com/in/mattdancho/>)**, CEO and Founder of **[Business Science University](<https://www.business-science.io/>)**.  The advanced machine learning methods taught in his courses were heavily implemented in this application.  Business Science University is truly an end-to-end journey that gently walks you through how professional data scientists set up, build, and deploy bleeding edge machine learning models.
+<br><br>
+
+## Contents
+1. Data Descriptions, Correlations, and Variable Importance
+2. H2O's GBM Model Metrics
+3. Top 15 Employees Most Likely to Leave
+4. Explain Why Individual Employees Are Likely to Leave Using Shapley
+5. Takeaways and Next Steps
+<br><br>
+
+## 1. Data Descriptions, Correlations, And Variable Importance
+This application utilized a dummy data set provided by **[Business Science University's](<https://www.business-science.io/>)** 201 course. The attributes used in the prediction model included items such as:
+
+* Overtime
+* Education & Experience
+* Engagement
+* Department & Position
+* Demographics
+* Performance
+* And More…
+<br><br>
+
+### Correlation Funnel
+The **[Correlation Funnel](<https://business-science.github.io/correlationfunnel/index.html>)** below examined each of the features in the model and identified the Top 10 relationships with Employee Attrition. The features most highly associated with Attrition include **Overtime**, **Monthly Income**, and **Stock Option Levels**.  
+
+The viz below is interactive and more information related to the associations can be viewed by hovering over each of the circles above.
+
+```{r, include=FALSE}
+
+new_data_types_tbl <- process_data_types(data_tbl)
+
+rank_corr_tbl      <- rank_correlations(new_data_types_tbl)
+
+top_10_corr_tbl    <- new_data_types_tbl %>%
+    binarize() %>%
+    correlate("Attrition__Yes") %>%
+    left_join(rank_corr_tbl) %>%
+    filter(corr_rank <= 11) %>%
+    filter(feature != "Attrition") %>%
+    select(-corr_rank)
+
+```
+
+```{r, echo=FALSE, warning=FALSE}
+top_10_corr_tbl %>%
+  plot_correlation_funnel_EO(interactive = TRUE)
+```
+
+<br>
+
+### H2O's Variable Importance Plot
+
+Similar to the **[Correlation Funnel](<https://business-science.github.io/correlationfunnel/index.html>)** shown above, the features that heavily influenced the predictive model were identified using **[H2O's Variable Importance Plot](<http://docs.h2o.ai/h2o/latest-stable/h2o-docs/variable-importance.html>)** (VIP) which can be viewed below.  
+
+```{r, echo=FALSE, warning=FALSE}
+var_imp_tbl <- var_imp_tbl %>% 
+  mutate(variable = fct_reorder(variable, scaled_importance))
+
+plot_02 <- var_imp_tbl %>%
+  plot_var_importance()
+
+# Did not utilize ggplotly here since there was no reason for
+# interactivity
+plot_02
+```
+
+One major difference between the two methods is that the Correlation Funnel examined the relationships on a linear scale, while H2O's VIP calculated the relationships using tree-based methods.  
+
+The other key difference is that the Correlation Funnel broke up the features into smaller bins so that one can see how the various factors or quartiles influenced attrition.  In the Correlation Funnel, Overtime was broken out into "Yes" and "No" levels of detail.  Although Overtime was labeled as the most important feature the H2O Importance Plot, that next layer of detail was not provided. 
+
+<br>
+
+### Key Features Comparison: Correlation Funnel versus H2O's Variable Importance Plot
+
+The Correlation Funnel and the Variable Importance Plot provided very useful information about the data.  Both plots showed similarities based on how each ranked the importance of the features.  For example, Overtime, Monthly Income, and Stock Option Levels were all Top 5 influencers in both the Correlation Funnel as well as H2O's VIP.
+
+However, there were some differences in how each of them ranked the key features and their relative influence.  For example, the Correlation Funnel listed Marital Status as one of the top 5 key contributors, while H2O's VIP did not even list it in the Top 10.  
+
+Regardless, both the Correlation Funnel and H2O's Variable Importance Plot compliment each other well and they should both be looked at during the EDA phase of the data analysis.
+
+<br>
+
+## 2.0 H2O's GBM Model Metrics
+
+H2O's AutoML Gradient Boosting Model (GBM) was applied to predict Employee's Attrition likelihood of leaving.  The GBM was the most accurate individual model (lowest logloss).  The entire model cross-validation accuracy metrics are listed below.
+
+* Logloss: 0.323
+* AUC: 0.833
+* Accuracy: 0.882
+* Recall: 0.626
+* Precision: 0.645
+
+Note: The percentage of individuals that were termed in the data set was 237 compared to 1,233 currently with the company.  This calculated to a base attrition ratio of **19.2%**.  The model accurately identified **62.6%** of the individuals most likely to leave.  This means that the GBM model was **2.3x more likely** to predict someone leaving versus random selection.
+
+<br>
+
+## 3.0 Top 15 Employees Most Likely to Leave
+
+The associates still employed by the company and have the highest likelihood of leaving are listed below.  Employee Number **2021** has a **70.6%** probability of leaving the company compared to the median probability of **8.9%**.  These are the associates that need to be most heavily monitored.  The company should also develop action plans to retain these associates, especially if they are strong performers.
+
+```{r, echo=FALSE, warning=FALSE}
+predictions_tbl <- predictions_tbl %>%
+  select(predict, Yes, Attrition)
+
+telco_EE_tbl  <- telco_tbl %>%
+  select(EmployeeNumber)
+
+pred_with_all_features_tbl <- cbind(predictions_tbl, telco_EE_tbl)
+
+pred_tbl <- data_prep_predictions(pred_with_all_features_tbl)
+
+plot_predictions(pred_tbl)
+```
+
+
+<br>
+
+## 4.0 Explain Why Individual Employees are Likely to Leave Using Shapley
+
+Before developing an action plan to retain employees, the manager first needs to know why an individual was identified as a high risk of leaving.  In the previous section, **Employee 2021** was identified as a high risk.  The probability of the individual leaving was **70.9%** compared to a median probability of all other employees at **8.9%**.  In the chart below, we highlighted the Top 5 features that influenced Employee 2021's probability.  The bars listed in red all support the individual's chance of leaving, while the gray bars (if applicable) support the individual's chance of staying.
+
+<br>
+
+```{r, include=FALSE}
+# LOAD ML MODEL ----
+
+h2o.predict(h2o_gbm, newdata = as.h2o(data_tbl)) %>%
+   as_tibble()
+
+# SHAPLEY ----
+
+features_tbl <- data_tbl %>% select(-Attrition)
+
+response_vec <- data_tbl %>% pull(Attrition) %>% as.numeric() - 1
+
+predict_h2o(h2o_gbm, newdata = data_tbl)
+
+predictor_gbm <- Predictor$new(
+  model       = h2o_gbm,
+  data        = features_tbl,
+  y           = response_vec,
+  predict.fun = predict_h2o,
+  class       = "classification"
+)
+
+EE_row_num <- 1223
+
+# SHAPLEY ----
+shapley_rf <- Shapley$new(
+  predictor  = predictor_gbm,
+  x.interest = data_tbl %>% slice(EE_row_num) %>% select(-Attrition),
+  sample.size = 200
+)
+
+shapley_feature <- shapley_rf$results$feature %>%
+  enframe() %>%
+  rename(index = name,
+         feature = value)
+
+shapley_feature_value <- shapley_rf$results$feature.value %>%
+  enframe() %>%
+  rename(index = name,
+         feature_value = value)
+
+shapley_phi <- shapley_rf$results$phi %>%
+  enframe() %>%
+  rename(index = name,
+         phi = value)
+
+shapley_tbl <- shapley_feature %>%
+  left_join(shapley_feature_value) %>%
+  left_join(shapley_phi) %>%
+  mutate(phi_abs = round(abs(phi),3)) %>%
+  arrange(-phi_abs) %>%
+  mutate(row_num = row_number()) %>%
+  filter(row_num <= 5) %>%
+  rename(feature_desc = feature_value) %>%
+  mutate(Importance = phi) %>%
+  mutate(Importance_formatted = digits(phi, 3))
+
+```
+
+### ML Explanation Using Shapley
+#### Employee ID 2021 (Probability of Leaving = 70.6%)
+```{r, echo=FALSE, warning=FALSE}
+plot_LIME_Shapley(shapley_tbl)
+```
+
+Employee 2021 was listed as likely to leave since the employee works **overtime**, the **monthly income is comparatively low**, **age is equal to 21**, the position is a **Sales Rep**, and the employee does not have any **Stock Options**.  Some of these items are not actionable, but a manager might be able to reduce overtime in the department as well as talk to HR regarding Stock Option Level opportunities for all associates.
+
+A method called **Shapley** was used to calculate the features that influenced the employee's probability.  Shapley "is a method from coalitional game theory that produces what's called Shapley values (Lundberg & Lee, 2016). The idea behind Shapley values is to assess every combination of predictors to determine each predictors impact" **http://uc-r.github.io/iml-pkg#shap**. 
+
+If you want view the features that influence other Employees, click the [here](<>) and change the Employee Number.  
+
+<br>
+
+## 5.0 Takeaways and Next Steps
+This application walked you through the various machine learning models used to identify what features influenced Employee Attrition both at a global level as well as a local level.  It also allows viewers to interact with the local explainers by changing the employee numbers in the **[Employee Attrition Shiny App](<>)**.
+
+For questions related to this analysis, please message me on **[LinkedIn](<https://www.linkedin.com/in/edorlando07/>)**.
+
+
+

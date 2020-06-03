@@ -6,10 +6,19 @@
     <description>Recent content in plotly on A Hugo website</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 18 May 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 03 Jun 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/plotly/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Predicting Employee Attrition</title>
+      <link>/2020/06/03/predicting-employee-attrition/</link>
+      <pubDate>Wed, 03 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/06/03/predicting-employee-attrition/</guid>
+      <description>Written by: Ed Orlando, Data ScientistProject DescriptionReducing turnover in an organization is vital. Using a fabricated data set, this project utilized advanced machine learning methods that accurately predicted which employees have a higher or lesser likelihood to leave. This project also displayed which key features influenced Employee Attrition at both the macro level as well as at the individual employee level.AcknowledgementI want to thank and give credit to Matt Dancho, CEO and Founder of Business Science University.</description>
+    </item>
     
     <item>
       <title>Build a Spotify Playlist Recommendation Model With R</title>

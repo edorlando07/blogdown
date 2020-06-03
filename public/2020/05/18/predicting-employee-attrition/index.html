@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.69.2" />
+
+
+<title>PREDICTING EMPLOYEE ATTRITION - A Hugo website</title>
+<meta property="og:title" content="PREDICTING EMPLOYEE ATTRITION - A Hugo website">
+
+
+  <link href='/favicon.ico' rel='icon' type='image/x-icon'/>
+
+
+
+  
+
+
+
+
+
+
+
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/logo.png"
+         width="75"
+         height="75"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="https://ed-orlando07-home.netlify.app/">@Home</a></li>
+    
+    <li><a href="/">Blog</a></li>
+    
+    <li><a href="https://ed-orlando07.netlify.app/pdfs/CV_Orlando.pdf">CV</a></li>
+    
+    <li><a href="https://github.com/edorlando07/blogdown">GitHub</a></li>
+    
+    <li><a href="https://www.linkedin.com/in/edorlando07/">LinkedIn</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">7 min read</span>
+    
+
+    <h1 class="article-title">PREDICTING EMPLOYEE ATTRITION</h1>
+
+    
+    <span class="article-date">2020-05-18</span>
+    
+
+    <div class="article-content">
+      
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/plotly-binding/plotly.js"></script>
+<script src="/rmarkdown-libs/typedarray/typedarray.min.js"></script>
+<script src="/rmarkdown-libs/jquery/jquery.min.js"></script>
+<link href="/rmarkdown-libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/crosstalk/js/crosstalk.min.js"></script>
+<link href="/rmarkdown-libs/plotly-htmlwidgets-css/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/plotly-main/plotly-latest.min.js"></script>
+
+
+<p>Written by: Ed Orlando, Data Scientist
+<br><br></p>
+<div id="section-project-description" class="section level4">
+<h4>Project Description</h4>
+<p>Reducing turnover in an organization is vital. Using a fabricated data set, this project utilized advanced machine learning methods that accurately predicted which employees have a higher or lesser likelihood to leave. This project also displayed which key features influenced Employee Attrition at both the macro level as well as at the individual employee level.</p>
+<p><br><br></p>
+</div>
+<div id="section-acknowledgement" class="section level4">
+<h4>Acknowledgement</h4>
+<p>I want to thank and give credit to <strong><a href="https://www.linkedin.com/in/mattdancho/">Matt Dancho</a></strong>, CEO and Founder of <strong><a href="https://www.business-science.io/">Business Science University</a></strong>. The advanced machine learning methods taught in his courses were heavily implemented in this application. Business Science University is truly an end-to-end journey that gently walks you through how professional data scientists set up, build, and deploy bleeding edge machine learning models.
+<br><br></p>
+</div>
+<div id="section-contents" class="section level4">
+<h4>Contents</h4>
+<ol style="list-style-type: decimal">
+<li>Data Descriptions, Correlations, and Variable Importance</li>
+<li>H2O’s GBM Model Metrics</li>
+<li>Top 15 Employees Most Likely to Leave</li>
+<li>Explain Why Individual Employees Are Likely to Leave Using Shapley</li>
+<li>Takeaways and Next Steps
+<br><br></li>
+</ol>
+</div>
+<div id="section-data-descriptions-correlations-and-variable-importance" class="section level4">
+<h4>1. Data Descriptions, Correlations, And Variable Importance</h4>
+<p>This application utilized a dummy data set provided by <strong><a href="https://www.business-science.io/">Business Science University’s</a></strong> 201 course. The attributes used in the prediction model included items such as:</p>
+<ul>
+<li>Overtime</li>
+<li>Education &amp; Experience</li>
+<li>Engagement</li>
+<li>Department &amp; Position</li>
+<li>Demographics</li>
+<li>Performance</li>
+<li>And More…
+<br><br></li>
+</ul>
+<div id="section-correlation-funnel" class="section level5">
+<h5>Correlation Funnel</h5>
+<p>The <strong><a href="https://business-science.github.io/correlationfunnel/index.html">Correlation Funnel</a></strong> below examined each of the features in the model and identified the Top 10 relationships with Employee Attrition. The features most highly associated with Attrition include <strong>Overtime</strong>, <strong>Monthly Income</strong>, and <strong>Stock Option Levels</strong>.</p>
+<p>The viz below is interactive and more information related to the associations can be viewed by hovering over each of the circles above.</p>
+<pre class="r"><code>top_10_corr_tbl %&gt;%
+  plot_correlation_funnel_EO(interactive = TRUE)</code></pre>
+<div id="htmlwidget-1" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"data":[{"x":[0,0],"y":[0.4,10.6],"text":"","type":"scatter","mode":"lines","line":{"width":1.88976377952756,"color":"rgba(255,0,0,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[-0.246117994245804,0.246117994245804,0.206951992225667,0.195342355161261,0.183351649250061,0.17541855360922,0.169140910574195,0.161500337984576,0.158770498298498,0.157234270114793,-0.151048571597372,0.133094712208399,-0.113980565049336,-0.108122903184442,-0.104302610622741,-0.103481737833152,0.0982904854596026,-0.0910857078896233,-0.0909836512072824,-0.0898720458171103,-0.0888698417497812,-0.0877163458893424,-0.086205217201947,-0.0833163841644976,-0.082993924081346,-0.080472149582789,-0.0786960496461546,-0.070564585705562,-0.0637649644853823,-0.0607466522033654,-0.0437392882244059,-0.0425328515490338,-0.0373789745399447,-0.03692975942326,0.0362150820698559,-0.0343232151590679,-0.0299806300112645,-0.0243837616277089,0.0197743684592596,0.0102708152947105,-0.00174838646797998,-0.000359571340436571],"y":[10,10,9,8,7,6,5,4,3,2,8,1,5,4,3,1,2,9,6,7,2,6,9,2,2,8,2,7,4,3,1,7,5,4,2,5,9,1,2,8,3,2],"text":["OverTime<br />Bin: No<br />Correlation: -0.246","OverTime<br />Bin: Yes<br />Correlation: 0.246","MonthlyIncome<br />Bin: -Inf_2911<br />Correlation: 0.207","StockOptionLevel<br />Bin: 0<br />Correlation: 0.195","YearsAtCompany<br />Bin: -Inf_3<br />Correlation: 0.183","MaritalStatus<br />Bin: Single<br />Correlation: 0.175","TotalWorkingYears<br />Bin: -Inf_6<br />Correlation: 0.169","YearsInCurrentRole<br />Bin: -Inf_2<br />Correlation: 0.162","Age<br />Bin: -Inf_30<br />Correlation: 0.159","JobRole<br />Bin: Sales_Representative<br />Correlation: 0.157","StockOptionLevel<br />Bin: 1<br />Correlation: -0.151","YearsWithCurrManager<br />Bin: -Inf_2<br />Correlation: 0.133","TotalWorkingYears<br />Bin: 15_Inf<br />Correlation: -0.114","YearsInCurrentRole<br />Bin: 7_Inf<br />Correlation: -0.108","Age<br />Bin: 36_43<br />Correlation: -0.104","YearsWithCurrManager<br />Bin: 7_Inf<br />Correlation: -0.103","JobRole<br />Bin: Laboratory_Technician<br />Correlation: 0.098","MonthlyIncome<br />Bin: 8379_Inf<br />Correlation: -0.091","MaritalStatus<br />Bin: Married<br />Correlation: -0.091","YearsAtCompany<br />Bin: 9_Inf<br />Correlation: -0.09","JobRole<br />Bin: Research_Director<br />Correlation: -0.089","MaritalStatus<br />Bin: Divorced<br />Correlation: -0.088","MonthlyIncome<br />Bin: 4919_8379<br />Correlation: -0.086","JobRole<br />Bin: Manager<br />Correlation: -0.083","JobRole<br />Bin: Manufacturing_Director<br />Correlation: -0.083","StockOptionLevel<br />Bin: 2<br />Correlation: -0.08","JobRole<br />Bin: Healthcare_Representative<br />Correlation: -0.079","YearsAtCompany<br />Bin: 5_9<br />Correlation: -0.071","YearsInCurrentRole<br />Bin: 3_7<br />Correlation: -0.064","Age<br />Bin: 43_Inf<br />Correlation: -0.061","YearsWithCurrManager<br />Bin: 3_7<br />Correlation: -0.044","YearsAtCompany<br />Bin: 3_5<br />Correlation: -0.043","TotalWorkingYears<br />Bin: 10_15<br />Correlation: -0.037","YearsInCurrentRole<br />Bin: 2_3<br />Correlation: -0.037","JobRole<br />Bin: Human_Resources<br />Correlation: 0.036","TotalWorkingYears<br />Bin: 6_10<br />Correlation: -0.034","MonthlyIncome<br />Bin: 2911_4919<br />Correlation: -0.03","YearsWithCurrManager<br />Bin: 2_3<br />Correlation: -0.024","JobRole<br />Bin: Sales_Executive<br />Correlation: 0.02","StockOptionLevel<br />Bin: 3<br />Correlation: 0.01","Age<br />Bin: 30_36<br />Correlation: -0.002","JobRole<br />Bin: Research_Scientist<br />Correlation: 0"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,0,0,1)","opacity":0.55,"size":5.66929133858268,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":26.2283105022831,"r":7.30593607305936,"b":36.4632627646326,"l":117.227065172271},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(44,62,80,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.385,0.385],"tickmode":"array","ticktext":["-0.2","0.0","0.2"],"tickvals":[-0.2,0,0.2],"categoryorder":"array","categoryarray":["-0.2","0.0","0.2"],"nticks":null,"ticks":"outside","tickcolor":"rgba(204,204,204,1)","ticklen":3.65296803652968,"tickwidth":0.22139200221392,"showticklabels":true,"tickfont":{"color":"rgba(0,0,0,1)","family":"","size":10.6268161062682},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y","title":{"text":"Supports Staying |----------------------------------| Supports Leaving","font":{"color":"rgba(44,62,80,1)","family":"","size":11.9551681195517}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.4,10.6],"tickmode":"array","ticktext":["YearsWithCurrManager","JobRole","Age","YearsInCurrentRole","TotalWorkingYears","MaritalStatus","YearsAtCompany","StockOptionLevel","MonthlyIncome","OverTime"],"tickvals":[1,2,3,4,5,6,7,8,9,10],"categoryorder":"array","categoryarray":["YearsWithCurrManager","JobRole","Age","YearsInCurrentRole","TotalWorkingYears","MaritalStatus","YearsAtCompany","StockOptionLevel","MonthlyIncome","OverTime"],"nticks":null,"ticks":"outside","tickcolor":"rgba(204,204,204,1)","ticklen":3.65296803652968,"tickwidth":0.22139200221392,"showticklabels":true,"tickfont":{"color":"rgba(0,0,0,1)","family":"","size":10.6268161062682},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(242,242,242,1)","gridwidth":0.132835201328352,"zeroline":false,"anchor":"x","title":{"text":"","font":{"color":"rgba(44,62,80,1)","family":"","size":11.9551681195517}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":"transparent","line":{"color":"rgba(44,62,80,1)","width":0.33208800332088,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(44,62,80,1)","family":"","size":11.689497716895}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"31d422e24ebb":{"xintercept":{},"type":"scatter"},"31d43a815393":{"colour":{},"alpha":{},"x":{},"y":{},"text":{}}},"cur_data":"31d422e24ebb","visdat":{"31d422e24ebb":["function (y) ","x"],"31d43a815393":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<p><br></p>
+</div>
+<div id="section-h2os-variable-importance-plot" class="section level5">
+<h5>H2O’s Variable Importance Plot</h5>
+<p>Similar to the <strong><a href="https://business-science.github.io/correlationfunnel/index.html">Correlation Funnel</a></strong> shown above, the features that heavily influenced the predictive model were identified using <strong><a href="http://docs.h2o.ai/h2o/latest-stable/h2o-docs/variable-importance.html">H2O’s Variable Importance Plot</a></strong> (VIP) which can be viewed below.</p>
+<pre class="r"><code>var_imp_tbl &lt;- var_imp_tbl %&gt;% 
+  mutate(variable = fct_reorder(variable, scaled_importance))
+
+plot_02 &lt;- var_imp_tbl %&gt;%
+  plot_var_importance()
+
+# Did not utilize ggplotly here since there was no reason for
+# interactivity
+plot_02</code></pre>
+<pre><code>## Warning: Removed 5 rows containing missing values (position_stack).</code></pre>
+<pre><code>## Warning: Removed 5 rows containing missing values (geom_text).</code></pre>
+<p><img src="/post/2020-06-03-Attrition_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>One major difference between the two methods is that the Correlation Funnel examined the relationships on a linear scale, while H2O’s VIP calculated the relationships using tree-based methods.</p>
+<p>The other key difference is that the Correlation Funnel broke up the features into smaller bins so that one can see how the various factors or quartiles influenced attrition. In the Correlation Funnel, Overtime was broken out into “Yes” and “No” levels of detail. Although Overtime was labeled as the most important feature the H2O Importance Plot, that next layer of detail was not provided.</p>
+<p><br></p>
+</div>
+<div id="section-key-features-comparison-correlation-funnel-versus-h2os-variable-importance-plot" class="section level5">
+<h5>Key Features Comparison: Correlation Funnel versus H2O’s Variable Importance Plot</h5>
+<p>The Correlation Funnel and the Variable Importance Plot provided very useful information about the data. Both plots showed similarities based on how each ranked the importance of the features. For example, Overtime, Monthly Income, and Stock Option Levels were all Top 5 influencers in both the Correlation Funnel as well as H2O’s VIP.</p>
+<p>However, there were some differences in how each of them ranked the key features and their relative influence. For example, the Correlation Funnel listed Marital Status as one of the top 5 key contributors, while H2O’s VIP did not even list it in the Top 10.</p>
+<p>Regardless, both the Correlation Funnel and H2O’s Variable Importance Plot compliment each other well and they should both be looked at during the EDA phase of the data analysis.</p>
+<p><br></p>
+</div>
+</div>
+<div id="section-h2os-gbm-model-metrics" class="section level4">
+<h4>2.0 H2O’s GBM Model Metrics</h4>
+<p>H2O’s AutoML Gradient Boosting Model (GBM) was applied to predict Employee’s Attrition likelihood of leaving. The GBM was the most accurate individual model (lowest logloss). The entire model cross-validation accuracy metrics are listed below.</p>
+<ul>
+<li>Logloss: 0.323</li>
+<li>AUC: 0.833</li>
+<li>Accuracy: 0.882</li>
+<li>Recall: 0.626</li>
+<li>Precision: 0.645</li>
+</ul>
+<p>Note: The percentage of individuals that were termed in the data set was 237 compared to 1,233 currently with the company. This calculated to a base attrition ratio of <strong>19.2%</strong>. The model accurately identified <strong>62.6%</strong> of the individuals most likely to leave. This means that the GBM model was <strong>2.3x more likely</strong> to predict someone leaving versus random selection.</p>
+<p><br></p>
+</div>
+<div id="section-top-15-employees-most-likely-to-leave" class="section level4">
+<h4>3.0 Top 15 Employees Most Likely to Leave</h4>
+<p>The associates still employed by the company and have the highest likelihood of leaving are listed below. Employee Number <strong>2021</strong> has a <strong>70.6%</strong> probability of leaving the company compared to the median probability of <strong>8.9%</strong>. These are the associates that need to be most heavily monitored. The company should also develop action plans to retain these associates, especially if they are strong performers.</p>
+<pre class="r"><code>predictions_tbl &lt;- predictions_tbl %&gt;%
+  select(predict, Yes, Attrition)
+
+telco_EE_tbl  &lt;- telco_tbl %&gt;%
+  select(EmployeeNumber)
+
+pred_with_all_features_tbl &lt;- cbind(predictions_tbl, telco_EE_tbl)
+
+pred_tbl &lt;- data_prep_predictions(pred_with_all_features_tbl)
+
+plot_predictions(pred_tbl)</code></pre>
+<p><img src="/post/2020-06-03-Attrition_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><br></p>
+</div>
+<div id="section-explain-why-individual-employees-are-likely-to-leave-using-shapley" class="section level4">
+<h4>4.0 Explain Why Individual Employees are Likely to Leave Using Shapley</h4>
+<p>Before developing an action plan to retain employees, the manager first needs to know why an individual was identified as a high risk of leaving. In the previous section, <strong>Employee 2021</strong> was identified as a high risk. The probability of the individual leaving was <strong>70.9%</strong> compared to a median probability of all other employees at <strong>8.9%</strong>. In the chart below, we highlighted the Top 5 features that influenced Employee 2021’s probability. The bars listed in red all support the individual’s chance of leaving, while the gray bars (if applicable) support the individual’s chance of staying.</p>
+<p><br></p>
+<pre class="r"><code># LOAD ML MODEL ----
+
+h2o.predict(h2o_gbm, newdata = as.h2o(data_tbl)) %&gt;%
+   as_tibble()
+
+# SHAPLEY ----
+
+features_tbl &lt;- data_tbl %&gt;% select(-Attrition)
+
+response_vec &lt;- data_tbl %&gt;% pull(Attrition) %&gt;% as.numeric() - 1
+
+predict_h2o(h2o_gbm, newdata = data_tbl)
+
+predictor_gbm &lt;- Predictor$new(
+  model       = h2o_gbm,
+  data        = features_tbl,
+  y           = response_vec,
+  predict.fun = predict_h2o,
+  class       = &quot;classification&quot;
+)
+
+EE_row_num &lt;- 1223
+
+# SHAPLEY ----
+shapley_rf &lt;- Shapley$new(
+  predictor  = predictor_gbm,
+  x.interest = data_tbl %&gt;% slice(EE_row_num) %&gt;% select(-Attrition),
+  sample.size = 200
+)
+
+shapley_feature &lt;- shapley_rf$results$feature %&gt;%
+  enframe() %&gt;%
+  rename(index = name,
+         feature = value)
+
+shapley_feature_value &lt;- shapley_rf$results$feature.value %&gt;%
+  enframe() %&gt;%
+  rename(index = name,
+         feature_value = value)
+
+shapley_phi &lt;- shapley_rf$results$phi %&gt;%
+  enframe() %&gt;%
+  rename(index = name,
+         phi = value)
+
+shapley_tbl &lt;- shapley_feature %&gt;%
+  left_join(shapley_feature_value) %&gt;%
+  left_join(shapley_phi) %&gt;%
+  mutate(phi_abs = round(abs(phi),3)) %&gt;%
+  arrange(-phi_abs) %&gt;%
+  mutate(row_num = row_number()) %&gt;%
+  filter(row_num &lt;= 5) %&gt;%
+  rename(feature_desc = feature_value) %&gt;%
+  mutate(Importance = phi) %&gt;%
+  mutate(Importance_formatted = digits(phi, 3))</code></pre>
+<pre><code>## Joining, by = &quot;index&quot;
+## Joining, by = &quot;index&quot;</code></pre>
+<div id="section-ml-explanation-using-shapley" class="section level5">
+<h5>ML Explanation Using Shapley</h5>
+<div id="section-employee-id-2021-probability-of-leaving-70.6" class="section level6">
+<h6>Employee ID 2021 (Probability of Leaving = 70.6%)</h6>
+<pre class="r"><code>plot_LIME_Shapley(shapley_tbl)</code></pre>
+<p><img src="/post/2020-06-03-Attrition_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>Employee 2021 was listed as likely to leave since the employee works <strong>overtime</strong>, the <strong>monthly income is comparatively low</strong>, <strong>age is equal to 21</strong>, the position is a <strong>Sales Rep</strong>, and the employee does not have any <strong>Stock Options</strong>. Some of these items are not actionable, but a manager might be able to reduce overtime in the department as well as talk to HR regarding Stock Option Level opportunities for all associates.</p>
+<p>A method called <strong>Shapley</strong> was used to calculate the features that influenced the employee’s probability. Shapley “is a method from coalitional game theory that produces what’s called Shapley values (Lundberg &amp; Lee, 2016). The idea behind Shapley values is to assess every combination of predictors to determine each predictors impact” <strong><a href="http://uc-r.github.io/iml-pkg#shap" class="uri">http://uc-r.github.io/iml-pkg#shap</a></strong>.</p>
+<p>If you want view the features that influence other Employees, click the <a href="">here</a> and change the Employee Number.</p>
+<p><br></p>
+</div>
+</div>
+</div>
+<div id="section-takeaways-and-next-steps" class="section level4">
+<h4>5.0 Takeaways and Next Steps</h4>
+<p>This application walked you through the various machine learning models used to identify what features influenced Employee Attrition both at a global level as well as a local level. It also allows viewers to interact with the local explainers by changing the employee numbers in the <strong><a href="">Employee Attrition Shiny App</a></strong>.</p>
+<p>For questions related to this analysis, please message me on <strong><a href="%20https://www.linkedin.com/in/edorlando07/">LinkedIn</a></strong>.</p>
+</div>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+<script src="/js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+  </body>
+</html>
+

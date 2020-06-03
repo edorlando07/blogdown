@@ -1,0 +1,16 @@
+,variable,relative_importance,scaled_importance,percentage,index_num,scaled_importance_format
+1,OverTime,108.1803436,1,0.148832898,1,100%
+2,MonthlyIncome,75.53276062,0.698211506,0.103916842,2,70%
+3,JobRole,73.20433807,0.676687979,0.100713433,3,68%
+4,TotalWorkingYears,52.1187706,0.481776715,0.071704225,4,48%
+5,StockOptionLevel,44.24511337,0.408994018,0.060871765,5,41%
+6,JobSatisfaction_Desc,36.37599564,0.336253282,0.05004555,6,34%
+7,EnvironmentSatisfaction_Desc,35.03582382,0.323864971,0.048201762,7,32%
+8,Age,31.90088844,0.294886181,0.043888765,8,29%
+9,YearsWithCurrManager,26.61216736,0.245998177,0.036612622,9,25%
+10,DistanceFromHome,25.94281578,0.23981081,0.035691738,10,24%
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,

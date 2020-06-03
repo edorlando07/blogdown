@@ -6,10 +6,136 @@
     <description>Recent content in Tags on A Hugo website</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 18 May 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 03 Jun 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>correlationfunnel</title>
+      <link>/tags/correlationfunnel/</link>
+      <pubDate>Wed, 03 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/correlationfunnel/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>DALEX</title>
+      <link>/tags/dalex/</link>
+      <pubDate>Wed, 03 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/dalex/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>DT</title>
+      <link>/tags/dt/</link>
+      <pubDate>Wed, 03 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/dt/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>flexdashboard</title>
+      <link>/tags/flexdashboard/</link>
+      <pubDate>Wed, 03 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/flexdashboard/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>formattable</title>
+      <link>/tags/formattable/</link>
+      <pubDate>Wed, 03 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/formattable/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>H2O</title>
+      <link>/tags/h2o/</link>
+      <pubDate>Wed, 03 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/h2o/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>iml</title>
+      <link>/tags/iml/</link>
+      <pubDate>Wed, 03 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/iml/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>plotly</title>
+      <link>/tags/plotly/</link>
+      <pubDate>Wed, 03 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/plotly/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>readxl</title>
+      <link>/tags/readxl/</link>
+      <pubDate>Wed, 03 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/readxl/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>scales</title>
+      <link>/tags/scales/</link>
+      <pubDate>Wed, 03 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/scales/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>shiny</title>
+      <link>/tags/shiny/</link>
+      <pubDate>Wed, 03 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/shiny/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>shinyjs</title>
+      <link>/tags/shinyjs/</link>
+      <pubDate>Wed, 03 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/shinyjs/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tidyquant</title>
+      <link>/tags/tidyquant/</link>
+      <pubDate>Wed, 03 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/tidyquant/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tidyverse</title>
+      <link>/tags/tidyverse/</link>
+      <pubDate>Wed, 03 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/tidyverse/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>arules</title>
@@ -30,15 +156,6 @@
     </item>
     
     <item>
-      <title>plotly</title>
-      <link>/tags/plotly/</link>
-      <pubDate>Mon, 18 May 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/plotly/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>R Markdown</title>
       <link>/tags/r-markdown/</link>
       <pubDate>Mon, 18 May 2020 00:00:00 +0000</pubDate>
@@ -53,15 +170,6 @@
       <pubDate>Mon, 18 May 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/recommenderlab/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>tidyverse</title>
-      <link>/tags/tidyverse/</link>
-      <pubDate>Mon, 18 May 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/tidyverse/</guid>
       <description></description>
     </item>
     
@@ -111,15 +219,6 @@
     </item>
     
     <item>
-      <title>readxl</title>
-      <link>/tags/readxl/</link>
-      <pubDate>Thu, 14 May 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/readxl/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Spotify</title>
       <link>/tags/spotify/</link>
       <pubDate>Thu, 14 May 2020 00:00:00 +0000</pubDate>
@@ -143,15 +242,6 @@
       <pubDate>Mon, 11 Feb 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/business-science-university/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>H2O</title>
-      <link>/tags/h2o/</link>
-      <pubDate>Mon, 11 Feb 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/h2o/</guid>
       <description></description>
     </item>
     
