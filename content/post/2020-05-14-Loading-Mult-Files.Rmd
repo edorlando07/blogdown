@@ -173,7 +173,5 @@ song_tidy_tbl <- song_tbl %>%
 
 The final tibble is complete and **tidy** with all **794 songs** listed.  To view the complete list of my articles, please click **[here](<https://ed-orlando07.netlify.app/>)**.  If you have questions or comments, please message me on **[linkedin](<https://www.linkedin.com/in/edorlando07/>)**.
 
-```{r}
-song_tidy_tbl %>% glimpse()
-```
+For access to more articles, please check out my **[blog](<https://ed-orlando07.netlify.app/>)**.
 

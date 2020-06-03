@@ -104,6 +104,11 @@ I want to thank and give credit to **[Matt Dancho](<https://www.linkedin.com/in/
 5. Takeaways and Next Steps
 <br><br>
 
+## Live Interactive Web Application
+To see what influences the attrition risk at the individual employee level, please click the link below.
+
+**[Individual Employee Risks Explained](<https://edorlando82.shinyapps.io/attrition_app_live/>)**
+
 ## 1. Data Descriptions, Correlations, And Variable Importance
 This application utilized a dummy data set provided by **[Business Science University's](<https://www.business-science.io/>)** 201 course. The attributes used in the prediction model included items such as:
 
@@ -286,14 +291,16 @@ Employee 2021 was listed as likely to leave since the employee works **overtime*
 
 A method called **Shapley** was used to calculate the features that influenced the employee's probability.  Shapley "is a method from coalitional game theory that produces what's called Shapley values (Lundberg & Lee, 2016). The idea behind Shapley values is to assess every combination of predictors to determine each predictors impact" **http://uc-r.github.io/iml-pkg#shap**. 
 
-If you want view the features that influence other Employees, click the [here](<>) and change the Employee Number.  
+If you want view the features that influence other Employees, click the **[here](<https://edorlando82.shinyapps.io/attrition_app_live/>)** and change the Employee Number.  
 
 <br>
 
 ## 5.0 Takeaways and Next Steps
-This application walked you through the various machine learning models used to identify what features influenced Employee Attrition both at a global level as well as a local level.  It also allows viewers to interact with the local explainers by changing the employee numbers in the **[Employee Attrition Shiny App](<>)**.
+This application walked you through the various machine learning models used to identify what features influenced Employee Attrition both at a global level as well as a local level.  It also allows viewers to interact with the local explainers by changing the employee numbers in the **[Employee Attrition Shiny App](<https://edorlando82.shinyapps.io/attrition_app_live/>)**.
 
-For questions related to this analysis, please message me on **[LinkedIn](<https://www.linkedin.com/in/edorlando07/>)**.
+For questions related to this analysis, please message me on **[LinkedIn](<https://www.linkedin.com/in/edorlando07/>)**.  
+
+For access to more articles, please check out my **[blog](<https://ed-orlando07.netlify.app/>)**.
 
 
 

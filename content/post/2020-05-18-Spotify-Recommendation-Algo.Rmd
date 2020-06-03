@@ -443,4 +443,6 @@ playlist_recommendation_tbl
 ### Conclusion
 Unfortunately, the final product did not produce a 100% fully scalable application which included every available artist due to the server constraints.  However, the application does provide some fun interactivity which allows viewers a chance to see how the algorithm influences their playlists.  
 
-For questions or comments about this article, please send me a message on [LinkedIn](<https://www.linkedin.com/in/edorlando07/>).
+For questions or comments about this article, please send me a message on **[LinkedIn](<https://www.linkedin.com/in/edorlando07/>)**.
+
+For access to more articles, please check out my **[blog](<https://ed-orlando07.netlify.app/>)**.
