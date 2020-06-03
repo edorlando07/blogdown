@@ -1,5 +1,5 @@
 ---
-title: "Predicting Employee Attrition"
+title: "Predicting Employee Attrition with R"
 author: "Ed Orlando"
 date: '2020-06-03'
 output: 
@@ -104,10 +104,10 @@ I want to thank and give credit to **[Matt Dancho](<https://www.linkedin.com/in/
 5. Takeaways and Next Steps
 <br><br>
 
-## Live Interactive Web Application
-To see what influences the attrition risk at the individual employee level, please click the link below.
+## Interactive Web Application
+Click **[here](<https://edorlando82.shinyapps.io/attrition_app_live/>)** for an interative Shiny application that lists the individual employee risk of leaving.  More importantly, it describes the features that associated with that individual employee risk level.
 
-**[Individual Employee Risks Explained](<https://edorlando82.shinyapps.io/attrition_app_live/>)**
+<br>
 
 ## 1. Data Descriptions, Correlations, And Variable Importance
 This application utilized a dummy data set provided by **[Business Science University's](<https://www.business-science.io/>)** 201 course. The attributes used in the prediction model included items such as:

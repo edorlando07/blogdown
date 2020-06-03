@@ -12,11 +12,11 @@
     
     
     <item>
-      <title>Predicting Employee Attrition</title>
-      <link>/2020/06/03/predicting-employee-attrition/</link>
+      <title>Predicting Employee Attrition with R</title>
+      <link>/2020/06/03/predicting-employee-attrition-with-r/</link>
       <pubDate>Wed, 03 Jun 2020 00:00:00 +0000</pubDate>
       
-      <guid>/2020/06/03/predicting-employee-attrition/</guid>
+      <guid>/2020/06/03/predicting-employee-attrition-with-r/</guid>
       <description>Written by: Ed Orlando, Data ScientistProject DescriptionReducing turnover in an organization is vital. Using a fabricated data set, this project utilized advanced machine learning methods that accurately predicted which employees have a higher or lesser likelihood to leave. This project also displayed which key features influenced Employee Attrition at both the macro level as well as at the individual employee level.AcknowledgementI want to thank and give credit to Matt Dancho, CEO and Founder of Business Science University.</description>
     </item>
     
@@ -26,10 +26,11 @@
       <pubDate>Mon, 18 May 2020 00:00:00 +0000</pubDate>
       
       <guid>/2020/05/18/build-a-spotify-playlist-recommendation-model-with-r/</guid>
-      <description>Author: Ed OrlandoRecognition &amp;amp; CreditThis article and its contents were heavily influenced by Matt Dancho’s Learning Labs: Session #11. For more about Learning Labs Pro, please click here.
+      <description>Author: Ed OrlandoRecognition &amp;amp; CreditThis article and its contents were heavily influenced by Matt Dancho’s Learning Labs Pro: Session #11.
 
-Problem StatementMany companies and products you interact with every day include some type of Recommendation system. For example, the Netflix app recommends movies based on your history and what is trending.
-Amazon lists recommended items based on your product purchase history or what you currently have in your shopping cart.</description>
+Interactive Playlist ApplicationIf you are interested in creating your own playlist, please check out the Spotify Playlist Recommendation Shiny App.
+
+Problem StatementMany companies and products you interact with every day include some type of Recommendation system. For example, the Netflix app recommends movies based on your history and what is trending.</description>
     </item>
     
     <item>
