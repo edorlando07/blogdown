@@ -175,13 +175,17 @@ song_tidy_tbl <- song_tbl %>%
 
 <br>
 
+### Final Tidy Tibble
+
 The final tibble is complete and **tidy** with all **794 songs** listed.  
 ```{r}
 song_tidy_tbl %>% 
   glimpse()
 ```
 
-If you have questions or comments, please message me on **[linkedin](<https://www.linkedin.com/in/edorlando07/>)**.
+<br>
 
-If you want to check out some other data science articles, please check out my **[blog](<https://ed-orlando07.netlify.app/>)**.
+If you have questions or comments, please message me on **[LinkedIn](<https://www.linkedin.com/in/edorlando07/>)**.
+
+If you want to check out my other data science articles, please check out my **[blog](<https://ed-orlando07.netlify.app/>)**.
 
