@@ -14,7 +14,9 @@ description: "This blog walks viewers through how to programmatically load multi
 </div>
 <div id="problem-statement" class="section level3">
 <h3>Problem Statement</h3>
-<p>This tutorial shows you how to load multiple files from multiple folders using R. As a <strong>bonus</strong>, this article will also show you how to add the folder and file names to the tibble.</p>
+<p>This tutorial shows you how to load multiple files from multiple folders using R.</p>
+<p>As a <strong>bonus</strong>, this article will also show you how to add the folder and file names to the final tibble.</p>
+<p><br></p>
 </div>
 <div id="load-libraries" class="section level3">
 <h3>Load Libraries</h3>
@@ -26,8 +28,8 @@ library(readxl)</code></pre>
 <div id="data-description" class="section level3">
 <h3>Data Description</h3>
 <p>In this example, <strong>Spotify playlist data</strong> was downloaded using <strong><a href="https://rawgit.com/watsonbox/exportify/master/exportify.html">Exportify</a></strong>. Each .xlsx file contains information about the playlist including the artist name, track name, album name, and song duration.</p>
-<p>To access the .xlsx files and the folder structure, <a href="https://ed-orlando07.netlify.app/zip_files/Genres.zip">click here</a>.</p>
-<p>A sample of one of the the data files is listed below.</p>
+<p>If you want to follow along and access the .xlsx files and the folder structure, click <strong><a href="https://ed-orlando07.netlify.app/zip_files/Genres.zip">here</a></strong>.</p>
+<p>A sample of one of the the playlist data files is listed below.</p>
 <pre><code>## Observations: 62
 ## Variables: 9
 ## $ `&lt;U+FEFF&gt;Spotify URI`         &lt;chr&gt; &quot;spotify:track:3hP7U1NmWEyeZRpLA1BhYj&quot;, &quot;spo...
@@ -63,7 +65,7 @@ library(readxl)</code></pre>
 </div>
 <div id="create-function-to-list-all-files-in-each-folder" class="section level3">
 <h3>Create Function to List All Files in Each Folder</h3>
-<p>A custom function called <strong>list_files_in_folder()</strong> was created that lists the .xlsx files in each genre folder. The custom function utilized <strong>base::list.files()</strong> that lists each file under a particular folder.</p>
+<p>A custom function called <strong>list_files_in_folder()</strong> was created that lists the .xlsx files in each genre folder.</p>
 <pre class="r"><code>list_files_in_folder &lt;- function(genre) {
     list.files(path = str_c(&quot;Data_Sources/2020_05_14_Loading_Mult_Files/Genres/&quot;, genre),
                           pattern = &quot;*.xlsx&quot;, 
@@ -86,7 +88,7 @@ library(readxl)</code></pre>
 </div>
 <div id="create-genre-list" class="section level3">
 <h3>Create Genre List</h3>
-<p>Next, the <strong>genre_list()</strong> was generated which included all three (3) genres. This list allows us to map the <strong>list_files_in_folder()</strong> function to multiple genre folders later on.</p>
+<p>Next, a <strong>genre_list()</strong> was created to include all three (3) genres. This list allows us to map the <strong>list_files_in_folder()</strong> function to multiple genre folders later on.</p>
 <pre class="r"><code>genre_list &lt;- c(&quot;Country&quot;, &quot;Hip_Hop&quot;, &quot;Rock&quot;)</code></pre>
 <p><br></p>
 </div>
@@ -171,6 +173,27 @@ playlist_list$value
                      sep    = &quot;/&quot;,
                      remove = FALSE)</code></pre>
 <p><br></p>
-<p>The final tibble is complete and <strong>tidy</strong> with all <strong>794 songs</strong> listed. To view the complete list of my articles, please click <strong><a href="https://ed-orlando07.netlify.app/">here</a></strong>. If you have questions or comments, please message me on <strong><a href="https://www.linkedin.com/in/edorlando07/">linkedin</a></strong>.</p>
-<p>For access to more articles, please check out my <strong><a href="https://ed-orlando07.netlify.app/">blog</a></strong>.</p>
+<p>The final tibble is complete and <strong>tidy</strong> with all <strong>794 songs</strong> listed.</p>
+<pre class="r"><code>song_tidy_tbl %&gt;% 
+  glimpse()
+## Observations: 794
+## Variables: 16
+## $ `&lt;U+FEFF&gt;Spotify URI`         &lt;chr&gt; &quot;spotify:track:3hP7U1NmWEyeZRpLA1BhYj&quot;, &quot;spo...
+## $ `Track Name`          &lt;chr&gt; &quot;Prop Me Up Beside the Jukebox (If I Die)&quot;, &quot;...
+## $ `Artist Name`         &lt;chr&gt; &quot;Joe Diffie&quot;, &quot;Brooks &amp; Dunn&quot;, &quot;Deana Carter&quot;...
+## $ `Album Name`          &lt;chr&gt; &quot;The Essential Joe Diffie&quot;, &quot;#1s ... and then...
+## $ `Disc Number`         &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+## $ `Track Number`        &lt;dbl&gt; 7, 15, 1, 6, 2, 5, 2, 11, 9, 2, 1, 7, 2, 1, 2...
+## $ `Track Duration (ms)` &lt;dbl&gt; 226973, 198226, 290466, 247626, 223832, 21669...
+## $ `Added By`            &lt;chr&gt; &quot;spotify:user:&quot;, &quot;spotify:user:&quot;, &quot;spotify:us...
+## $ `Added At`            &lt;chr&gt; &quot;2020-03-29T22:18:52Z&quot;, &quot;2020-03-29T22:18:52Z...
+## $ playlist_name         &lt;chr&gt; &quot;90s_country&quot;, &quot;90s_country&quot;, &quot;90s_country&quot;, ...
+## $ filename              &lt;chr&gt; &quot;Data_Sources/2020_05_14_Loading_Mult_Files/G...
+## $ Folder_01             &lt;chr&gt; &quot;Data_Sources&quot;, &quot;Data_Sources&quot;, &quot;Data_Sources...
+## $ Folder_02             &lt;chr&gt; &quot;2020_05_14_Loading_Mult_Files&quot;, &quot;2020_05_14_...
+## $ Folder_03             &lt;chr&gt; &quot;Genres&quot;, &quot;Genres&quot;, &quot;Genres&quot;, &quot;Genres&quot;, &quot;Genr...
+## $ Genre                 &lt;chr&gt; &quot;Country&quot;, &quot;Country&quot;, &quot;Country&quot;, &quot;Country&quot;, &quot;...
+## $ Playlist              &lt;chr&gt; &quot;90s_country.xlsx&quot;, &quot;90s_country.xlsx&quot;, &quot;90s_...</code></pre>
+<p>If you have questions or comments, please message me on <strong><a href="https://www.linkedin.com/in/edorlando07/">linkedin</a></strong>.</p>
+<p>If you want to check out some other data science articles, please check out my <strong><a href="https://ed-orlando07.netlify.app/">blog</a></strong>.</p>
 </div>

@@ -15,7 +15,11 @@ knitr::opts_chunk$set(collapse = TRUE)
 
 ### Problem Statement
 
-This tutorial shows you how to load multiple files from multiple folders using R.  As a **bonus**, this article will also show you how to add the folder and file names to the tibble. 
+This tutorial shows you how to load multiple files from multiple folders using R.  
+
+As a **bonus**, this article will also show you how to add the folder and file names to the final tibble.
+
+<br>
 
 ### Load Libraries
 **Tidyverse** and **readxl** are the only libraries required for this tutorial.
@@ -30,9 +34,9 @@ library(readxl)
 ### Data Description
 In this example, **Spotify playlist data** was downloaded using **[Exportify](<https://rawgit.com/watsonbox/exportify/master/exportify.html>)**.  Each .xlsx file contains information about the playlist including the artist name, track name, album name, and song duration.
 
-To access the .xlsx files and the folder structure, [click here](https://ed-orlando07.netlify.app/zip_files/Genres.zip).
+If you want to follow along and access the .xlsx files and the folder structure, click **[here](https://ed-orlando07.netlify.app/zip_files/Genres.zip)**.
 
-A sample of one of the the data files is listed below.
+A sample of one of the the playlist data files is listed below.
 
 ```{r, echo=FALSE, results="hide", warning=FALSE, error=FALSE, message=FALSE}
 data_sample <- readxl::read_excel(path = "Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Country/90s_country.xlsx")
@@ -71,7 +75,7 @@ list.files(path = "Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Country/",
 
 ### Create Function to List All Files in Each Folder
 
-A custom function called **list_files_in_folder()** was created that lists the .xlsx files in each genre folder. The custom function utilized **base::list.files()** that lists each file under a particular folder.
+A custom function called **list_files_in_folder()** was created that lists the .xlsx files in each genre folder. 
 
 ```{r, echo=TRUE}
 list_files_in_folder <- function(genre) {
@@ -95,7 +99,7 @@ list_files_in_folder("Country")
 <br>
 
 ### Create Genre List
-Next, the **genre_list()** was generated which included all three (3) genres.  This list allows us to map the **list_files_in_folder()** function to multiple genre folders later on.
+Next, a **genre_list()** was created to include all three (3) genres.  This list allows us to map the **list_files_in_folder()** function to multiple genre folders later on.
 ```{r}
 genre_list <- c("Country", "Hip_Hop", "Rock")
 ```
@@ -171,7 +175,13 @@ song_tidy_tbl <- song_tbl %>%
 
 <br>
 
-The final tibble is complete and **tidy** with all **794 songs** listed.  To view the complete list of my articles, please click **[here](<https://ed-orlando07.netlify.app/>)**.  If you have questions or comments, please message me on **[linkedin](<https://www.linkedin.com/in/edorlando07/>)**.
+The final tibble is complete and **tidy** with all **794 songs** listed.  
+```{r}
+song_tidy_tbl %>% 
+  glimpse()
+```
 
-For access to more articles, please check out my **[blog](<https://ed-orlando07.netlify.app/>)**.
+If you have questions or comments, please message me on **[linkedin](<https://www.linkedin.com/in/edorlando07/>)**.
+
+If you want to check out some other data science articles, please check out my **[blog](<https://ed-orlando07.netlify.app/>)**.
 

@@ -30,7 +30,9 @@
       <pubDate>Thu, 14 May 2020 00:00:00 +0000</pubDate>
       
       <guid>/2020/05/14/loading-multiple-files-from-various-folders-in-r/</guid>
-      <description>Author: Ed OrlandoProblem StatementThis tutorial shows you how to load multiple files from multiple folders using R. As a bonus, this article will also show you how to add the folder and file names to the tibble.
+      <description>Author: Ed OrlandoProblem StatementThis tutorial shows you how to load multiple files from multiple folders using R.
+As a bonus, this article will also show you how to add the folder and file names to the final tibble.
+
 Load LibrariesTidyverse and readxl are the only libraries required for this tutorial.
 library(tidyverse)library(readxl)
 Data DescriptionIn this example, Spotify playlist data was downloaded using Exportify.</description>
