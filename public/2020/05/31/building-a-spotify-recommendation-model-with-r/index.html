@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.69.2" />
+
+
+<title>Building a Spotify Recommendation Model With R - A Hugo website</title>
+<meta property="og:title" content="Building a Spotify Recommendation Model With R - A Hugo website">
+
+
+  <link href='/favicon.ico' rel='icon' type='image/x-icon'/>
+
+
+
+  
+  <meta property="description" content="This blog walks viewers through how to create a playlist recommendation algorithm using recommenderlab and arules packages">
+  
+
+
+
+
+
+
+
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/logo.png"
+         width="75"
+         height="75"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="https://ed-orlando07-home.netlify.app/">@Home</a></li>
+    
+    <li><a href="/">Blog</a></li>
+    
+    <li><a href="https://ed-orlando07.netlify.app/pdfs/CV_Orlando.pdf">CV</a></li>
+    
+    <li><a href="https://github.com/edorlando07/blogdown">GitHub</a></li>
+    
+    <li><a href="https://www.linkedin.com/in/edorlando07/">LinkedIn</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">3 min read</span>
+    
+
+    <h1 class="article-title">Building a Spotify Recommendation Model With R</h1>
+
+    
+    <span class="article-date">2020-05-31</span>
+    
+
+    <div class="article-content">
+      
+
+
+<div id="author-ed-orlando" class="section level3">
+<h3>Author: Ed Orlando</h3>
+</div>
+<div id="problem-statement" class="section level3">
+<h3>Problem Statement</h3>
+<p>This tutorial shows you how to create a Spotify Recommendation Algorithm using the <strong>recommenderlab()</strong> and <strong>arules()</strong> packages.</p>
+</div>
+<div id="load-libraries" class="section level3">
+<h3>Load Libraries</h3>
+<p>To get started, first load the libbraries listed below.</p>
+<pre class="r"><code># Core &amp; Viz
+library(tidyverse)
+library(tidyquant)
+library(plotly)
+
+# Modeling
+library(recommenderlab)
+library(arules)
+library(arulesViz)</code></pre>
+</div>
+<div id="load-data" class="section level3">
+<h3>Load Data</h3>
+<p>The data was previously downloaded using <strong><a href="https://rawgit.com/watsonbox/exportify/master/exportify.html">Exportify</a></strong>. There were 27 various genres included and each genre has 10-60 various playlists included. We will analyze more of this detail later, but first, let’s load the data.</p>
+<pre class="r"><code>playlist_tbl &lt;- read_csv2(&quot;Data_Sources/2020_05_20_Spotify_Playlist_Data/all_playlists.csv&quot;)</code></pre>
+</div>
+<div id="viewing-the-data" class="section level3">
+<h3>Viewing the Data</h3>
+<p>The data consists of <strong>~103K songs</strong> and has <strong>18 variables</strong>. You may view the .csv file <strong><a href="https://ed-orlando07.netlify.app/zip_files/Spotify_Playlist.zip">here</a></strong>. The columns included in the data set are listed below.</p>
+<p>Additional columns, including the genre, playlist, artist/track name concatenation were all previously engineered. For more information related to engineering these columns, please visit my previous post <strong><a href="https://ed-orlando07.netlify.app/2020/05/14/loading-multiple-files-from-various-folders-in-r/">here</a></strong>.</p>
+<pre class="r"><code>playlist_tbl %&gt;% glimpse()
+## Observations: 103,517
+## Variables: 18
+## $ spotify_uri           &lt;chr&gt; &quot;spotify:track:7EFnbc7UnvOyFcb6IhJq9v&quot;, &quot;spot...
+## $ track_name            &lt;chr&gt; &quot;Oreke&quot;, &quot;Know Your Worth&quot;, &quot;Don&#39;t Rush (feat...
+## $ artist_name           &lt;chr&gt; &quot;E Kelly, Joeboy&quot;, &quot;Khalid, Disclosure, DaVid...
+## $ album_name            &lt;chr&gt; &quot;No Secrets&quot;, &quot;Know Your Worth&quot;, &quot;Don&#39;t Rush ...
+## $ disc_number           &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+## $ track_number          &lt;dbl&gt; 3, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, ...
+## $ `track_duration_(ms)` &lt;dbl&gt; 182639, 191067, 207640, 164571, 176962, 19609...
+## $ added_by              &lt;chr&gt; &quot;spotify:user:&quot;, &quot;spotify:user:&quot;, &quot;spotify:us...
+## $ added_at              &lt;dttm&gt; 2020-05-07 21:59:00, 2020-04-24 07:33:23, 20...
+## $ playlist_name         &lt;chr&gt; &quot;african_heat&quot;, &quot;african_heat&quot;, &quot;african_heat...
+## $ filename              &lt;chr&gt; &quot;./00_Data_Sources/Genres_Moods/Afro/african_...
+## $ dot                   &lt;chr&gt; &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, &quot;.&quot;, ...
+## $ folder_01             &lt;chr&gt; &quot;00_Data_Sources&quot;, &quot;00_Data_Sources&quot;, &quot;00_Dat...
+## $ folder_02             &lt;chr&gt; &quot;Genres_Moods&quot;, &quot;Genres_Moods&quot;, &quot;Genres_Moods...
+## $ genre                 &lt;chr&gt; &quot;Afro&quot;, &quot;Afro&quot;, &quot;Afro&quot;, &quot;Afro&quot;, &quot;Afro&quot;, &quot;Afro...
+## $ playlist              &lt;chr&gt; &quot;african_heat.csv&quot;, &quot;african_heat.csv&quot;, &quot;afri...
+## $ artist_track_name     &lt;chr&gt; &quot;E Kelly, Joeboy ||| Oreke&quot;, &quot;Khalid, Disclos...
+## $ source_playlist_id    &lt;chr&gt; &quot;Afro_african_heat&quot;, &quot;Afro_african_heat&quot;, &quot;Af...</code></pre>
+</div>
+<div id="which-genres-have-the-most-playlists" class="section level3">
+<h3>Which Genres Have the Most Playlists?</h3>
+<p>Next, we can view which genre’s have the highest number of playlists in the data file using <strong>ggplot2()</strong>.</p>
+<pre class="r"><code>genre_frequency_tbl &lt;- playlist_tbl %&gt;%
+    count(genre) %&gt;%
+    arrange(desc(n)) %&gt;%
+    rowid_to_column(var = &quot;rank&quot;)
+
+genre_frequency_tbl
+## # A tibble: 27 x 3
+##     rank genre                n
+##    &lt;int&gt; &lt;chr&gt;            &lt;int&gt;
+##  1     1 Chill            10476
+##  2     2 Mood              7919
+##  3     3 Dance_Electronic  7747
+##  4     4 Country           6930
+##  5     5 Rock              6704
+##  6     6 Focus             6122
+##  7     7 Desi              5561
+##  8     8 Classical         5324
+##  9     9 Decades           5106
+## 10    10 Indie             4901
+## # ... with 17 more rows
+
+g_00 &lt;- genre_frequency_tbl %&gt;%
+    ggplot2::ggplot(aes(x = reorder(genre, n), 
+                           y    = n, 
+                           fill = n)) +
+  
+    geom_bar(stat = &quot;identity&quot;,
+             show.legend = FALSE) +
+    
+    scale_fill_gradient2(low=&quot;#FFFFFF&quot;, mid=&quot;#A9A9A9&quot;, high=&quot;#000000&quot;) +
+    
+    coord_flip() +
+    
+    theme_tq() +
+  
+    scale_color_tq() +
+  
+    theme(legend.direction = &quot;vertical&quot;, 
+          legend.position  = &quot;right&quot;,
+          panel.grid.major.x = element_blank(),
+          panel.grid.major.y = element_blank(),
+          axis.text.x  = element_text(color=&quot;#000000&quot;),
+          axis.text.y  = element_text(color=&quot;#000000&quot;),
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank()) + 
+  
+    labs(title = &quot;Genre Song Frequency&quot;)
+
+g_00</code></pre>
+<p><img src="/post/2020-05-18-Spotify-Recommendation-Algo_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+<script src="/js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+  </body>
+</html>
+

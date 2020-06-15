@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.69.2" />
+
+
+<title>Spotify Recommendation Model With R - A Hugo website</title>
+<meta property="og:title" content="Spotify Recommendation Model With R - A Hugo website">
+
+
+  <link href='/favicon.ico' rel='icon' type='image/x-icon'/>
+
+
+
+  
+  <meta property="description" content="This blog walks viewers through how to create a playlist recommendation algorithm using recommenderlab and arules packages">
+  
+
+
+
+
+
+
+
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/logo.png"
+         width="75"
+         height="75"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="https://ed-orlando07-home.netlify.app/">@Home</a></li>
+    
+    <li><a href="/">Blog</a></li>
+    
+    <li><a href="https://ed-orlando07.netlify.app/pdfs/CV_Orlando.pdf">CV</a></li>
+    
+    <li><a href="https://github.com/edorlando07/blogdown">GitHub</a></li>
+    
+    <li><a href="https://www.linkedin.com/in/edorlando07/">LinkedIn</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">1 min read</span>
+    
+
+    <h1 class="article-title">Spotify Recommendation Model With R</h1>
+
+    
+    <span class="article-date">2020-05-20</span>
+    
+
+    <div class="article-content">
+      
+
+
+<div id="author-ed-orlando" class="section level3">
+<h3>Author: Ed Orlando</h3>
+</div>
+<div id="problem-statement" class="section level3">
+<h3>Problem Statement</h3>
+<p>This tutorial shows you how to create a Spotify Recommendation Algorithm using the <strong>recommenderlab()</strong> and <strong>arules()</strong> packages.</p>
+</div>
+<div id="load-libraries" class="section level3">
+<h3>Load Libraries</h3>
+<p>To get started, first load the libbraries listed below.</p>
+<pre class="r"><code># Core &amp; Viz
+library(tidyverse)
+library(tidyquant)
+library(plotly)
+
+# Modeling
+library(recommenderlab)
+library(arules)
+library(arulesViz)</code></pre>
+</div>
+<div id="load-data" class="section level3">
+<h3>Load Data</h3>
+<p>Data was previously downloaded and organized. You may view the data <a href="https://ed-orlando07.netlify.app/zip_files/Spotify_Playlist.zip">here</a></p>
+</div>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+
+    
+  </body>
+</html>
+

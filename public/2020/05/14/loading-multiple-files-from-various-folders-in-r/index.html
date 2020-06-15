@@ -102,8 +102,8 @@ library(readxl)</code></pre>
 <p>In this example, <strong>Spotify playlist data</strong> was downloaded using <strong><a href="https://rawgit.com/watsonbox/exportify/master/exportify.html">Exportify</a></strong>. Each .xlsx file contains information about the playlist including the artist name, track name, album name, and song duration.</p>
 <p>If you want to follow along and access the .xlsx files and the folder structure, click <strong><a href="https://ed-orlando07.netlify.app/zip_files/Genres.zip">here</a></strong>.</p>
 <p>A sample of one of the the playlist data files is listed below.</p>
-<pre><code>## Observations: 62
-## Variables: 9
+<pre><code>## Rows: 62
+## Columns: 9
 ## $ `&lt;U+FEFF&gt;Spotify URI`         &lt;chr&gt; &quot;spotify:track:3hP7U1NmWEyeZRpLA1BhYj&quot;, &quot;spo...
 ## $ `Track Name`          &lt;chr&gt; &quot;Prop Me Up Beside the Jukebox (If I Die)&quot;, &quot;...
 ## $ `Artist Name`         &lt;chr&gt; &quot;Joe Diffie&quot;, &quot;Brooks &amp; Dunn&quot;, &quot;Deana Carter&quot;...
@@ -131,8 +131,9 @@ library(readxl)</code></pre>
 <pre class="r"><code>list.files(path = &quot;Data_Sources/2020_05_14_Loading_Mult_Files/Genres/Country/&quot;, 
           full.names = FALSE, 
           recursive  = FALSE)
-## [1] &quot;90s_country.xlsx&quot;            &quot;chillin_on_a_dirt_road.xlsx&quot;
-## [3] &quot;women_of_country.xlsx&quot;</code></pre>
+## [1] &quot;90s_country.csv&quot;             &quot;90s_country.xlsx&quot;           
+## [3] &quot;chillin_on_a_dirt_road.xlsx&quot; &quot;forever_country.csv&quot;        
+## [5] &quot;women_of_country.xlsx&quot;</code></pre>
 <p><br></p>
 </div>
 <div id="create-function-to-list-all-files-in-each-folder" class="section level3">
@@ -217,8 +218,8 @@ playlist_list$value
     )</code></pre>
 <pre class="r"><code>song_tbl %&gt;% 
   glimpse()
-## Observations: 794
-## Variables: 11
+## Rows: 794
+## Columns: 11
 ## $ `&lt;U+FEFF&gt;Spotify URI`         &lt;chr&gt; &quot;spotify:track:3hP7U1NmWEyeZRpLA1BhYj&quot;, &quot;spo...
 ## $ `Track Name`          &lt;chr&gt; &quot;Prop Me Up Beside the Jukebox (If I Die)&quot;, &quot;...
 ## $ `Artist Name`         &lt;chr&gt; &quot;Joe Diffie&quot;, &quot;Brooks &amp; Dunn&quot;, &quot;Deana Carter&quot;...
@@ -251,8 +252,8 @@ playlist_list$value
 <p>The final tibble is complete and <strong>tidy</strong> with all <strong>794 songs</strong> listed.</p>
 <pre class="r"><code>song_tidy_tbl %&gt;% 
   glimpse()
-## Observations: 794
-## Variables: 16
+## Rows: 794
+## Columns: 16
 ## $ `&lt;U+FEFF&gt;Spotify URI`         &lt;chr&gt; &quot;spotify:track:3hP7U1NmWEyeZRpLA1BhYj&quot;, &quot;spo...
 ## $ `Track Name`          &lt;chr&gt; &quot;Prop Me Up Beside the Jukebox (If I Die)&quot;, &quot;...
 ## $ `Artist Name`         &lt;chr&gt; &quot;Joe Diffie&quot;, &quot;Brooks &amp; Dunn&quot;, &quot;Deana Carter&quot;...
